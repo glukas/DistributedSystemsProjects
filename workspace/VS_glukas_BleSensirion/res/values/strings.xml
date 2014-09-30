@@ -4,5 +4,24 @@
     <string name="app_name">VS_glukas_BleSensirion</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="ble_not_supported">BLe not supported!</string>
+    <string name="error_bluetooth_not_supported">Bluetooth not supported!</string>
+	<string name="unknown_device">Unknown Device</string>
+	<string name="label_data">Data:</string>
+    <string name="label_device_address">Device address:</string>
+    <string name="label_state">State:</string>
+    <string name="no_data">No data</string>
+    <string name="connected">Connected</string>
+    <string name="disconnected">Disconnected</string>
+    <string name="title_devices">BLE Device Scan</string>
+ 	<string name="btn_running">Running!</string>
+    <string name="unknown_characteristic">Unknown characteristic</string>
+    <string name="unknown_service">Unknown service</string>
+	
+    <!-- Menu items -->
+    <string name="menu_connect">Connect</string>
+    <string name="menu_disconnect">Disconnect</string>
+	<string name="menu_scan">scan</string>
+	<string name="menu_stop">stop</string>
 
 </resources>

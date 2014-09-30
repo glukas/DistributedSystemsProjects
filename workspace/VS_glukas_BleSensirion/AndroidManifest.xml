@@ -6,7 +6,14 @@
 
     <uses-sdk
         android:minSdkVersion="18"
-        android:targetSdkVersion="18" />
+        android:targetSdkVersion="10" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+
+    <uses-feature
+        android:name="android.hardware.bluetooth_le"
+        android:required="false" />
+    
 
     <application
         android:allowBackup="true"
@@ -22,6 +29,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".DeviceScanActivity"/>
+        <activity android:name=".DeviceControlActivity"/>
+        <service android:name=".BluetoothLeService" />
     </application>
 
 </manifest>
