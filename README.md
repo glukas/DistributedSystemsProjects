@@ -2,7 +2,9 @@ DistributedSystemsProjects
 ==========================
 
 ETHZ
+
 Distributed Systems lecture
+
 October 2014
 
 Project 1 (warm up)
