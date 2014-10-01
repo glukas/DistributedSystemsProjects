@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 public class SensorActivity extends Activity {
 
@@ -11,6 +12,11 @@ public class SensorActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_sensor);
+		//TODO instead actually show sensor data
+		//     (for this, one would first need to get the Sensor with the given type)
+		TextView text = (TextView) this.findViewById(R.id.title_field);
+		text.setText(String.format("%d", this.getIntent().getIntExtra(MainActivity.EXTRA_SENSOR_TYPE, 0)));
+		
 	}
 
 	@Override

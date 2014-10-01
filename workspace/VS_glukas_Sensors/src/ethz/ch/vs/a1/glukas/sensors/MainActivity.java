@@ -18,6 +18,11 @@ import android.widget.ListView;
 
 public class MainActivity extends Activity implements OnItemClickListener {
 
+	public static final String EXTRA_SENSOR_TYPE = "ch.ethz.VS.a1.glukas.sensor.extra_sensor_type";
+	
+	ListView listView;
+	List<Sensor> sensors;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -25,14 +30,15 @@ public class MainActivity extends Activity implements OnItemClickListener {
 		
 		//get list of sensors
 		SensorManager sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-		List<Sensor> sensors = sensorManager.getSensorList(Sensor.TYPE_ALL);
+		
+		sensors = sensorManager.getSensorList(Sensor.TYPE_ALL);
 		//create ArrayAdapter & bind to list view
 		ArrayAdapter<Sensor> adapter = new ArrayAdapter<Sensor>(this, R.layout.list_row, sensors);
 		
-		ListView listview = (ListView)findViewById(R.id.listView1);
-		listview.setAdapter(adapter);
+		listView = (ListView)findViewById(R.id.listView1);
+		listView.setAdapter(adapter);
 		
-		listview.setOnItemClickListener(this);
+		listView.setOnItemClickListener(this);
 	}
 
 	@Override
@@ -59,7 +65,9 @@ public class MainActivity extends Activity implements OnItemClickListener {
 		//here the new activity should is started
 		Intent startSensorActivity = new Intent(this, SensorActivity.class);
 		//here we need to set the information of the sensor that was selected
-		//startSensorActivity.putExtra(name, value)
+		Sensor sensor = sensors.get(position);
+		startSensorActivity.putExtra(EXTRA_SENSOR_TYPE, sensor.getType());
+		
 		startActivity(startSensorActivity);
 		
 	}
