@@ -1,9 +1,16 @@
 package ethz.ch.vs.a1.glukas.sensors;
 
+import java.util.List;
+
 import android.app.Activity;
+import android.content.Context;
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 public class MainActivity extends Activity {
 
@@ -11,6 +18,15 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		
+		//get list of sensors
+		SensorManager sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+		List<Sensor> sensors = sensorManager.getSensorList(Sensor.TYPE_ALL);
+		//create ArrayAdapter & bind to list view
+		ArrayAdapter<Sensor> adapter = new ArrayAdapter<Sensor>(this, R.layout.list_row, sensors);
+		
+		ListView listview = (ListView)findViewById(R.id.listView1);
+		listview.setAdapter(adapter);
 	}
 
 	@Override
