@@ -3,6 +3,7 @@ package ethz.ch.vs.a1.glukas.sensors;
 import java.util.List;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
@@ -55,8 +56,11 @@ public class MainActivity extends Activity implements OnItemClickListener {
 
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-		//here the new activity should be started instead.
-		view.setBackgroundColor(Color.BLUE);
+		//here the new activity should is started
+		Intent startSensorActivity = new Intent(this, SensorActivity.class);
+		//here we need to set the information of the sensor that was selected
+		//startSensorActivity.putExtra(name, value)
+		startActivity(startSensorActivity);
 		
 	}
 }
