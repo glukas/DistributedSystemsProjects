@@ -11,4 +11,7 @@ public class Settings {
 	public static final String ACTIVATE_STR = "activate";
 	public static final String SENSITIVITY_STR = "sensitivity";
 	public static final String TIMEOUT_STR = "timeout";
+
+	public static final int MIN_TIMEOUT = 50;
+	public static final int MAX_TIMEOUT = 1000;
 }

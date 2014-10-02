@@ -4,15 +4,22 @@ import ch.ethz.inf.vs.a1.vs_glukas_antitheft.R;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
+import android.widget.SeekBar;
+import android.widget.SeekBar.OnSeekBarChangeListener;
+import android.widget.TextView;
 import android.widget.ToggleButton;
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements OnSeekBarChangeListener {
 	
 	Intent iService;
-
+	SharedPreferences preferences;
+	TextView timeoutValueView;
+	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,8 +30,17 @@ public class MainActivity extends Activity {
         
         //Views
         ((Button)findViewById(R.id.toggleButton)).setText(R.string.button_off);
+        //get a reference to the settings
+        preferences = this.getSharedPreferences(Settings.SETTINGS_FILENAME, MODE_PRIVATE);
+        //Set connection to seek bar
+        SeekBar seekBar = (SeekBar) findViewById(R.id.timeoutBar);
+        seekBar.setOnSeekBarChangeListener(this);
+        seekBar.setMax(timeoutToSeekBarProgress(Settings.MAX_TIMEOUT));
+        seekBar.setProgress(timeoutToSeekBarProgress(getTimeout()));
+        //set text view to show current timeout value
+        timeoutValueView = (TextView) findViewById(R.id.timeoutValue);
+        timeoutValueView.setText(String.format("%s : %d",R.string.timeout, getTimeout()));
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -45,4 +61,44 @@ public class MainActivity extends Activity {
     		((Button)v).setText(R.string.button_off);
     	}
     }
+    
+    private int timeoutToSeekBarProgress(int timeout) {
+    	return timeout-Settings.MIN_TIMEOUT;
+    }
+    
+    private int getTimeout() {
+    	assert(preferences != null);
+    	return preferences.getInt(Settings.TIMEOUT_STR, Settings.TIMEOUT_DEFAULT);
+    }
+    
+
+	private Object progressToTimeout(int progress) {
+		return progress+Settings.MIN_TIMEOUT;
+	}
+    
+    ////
+    //OnSeekBarChange interface
+    ////
+
+	@Override
+	public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+		if (timeoutValueView != null) {
+			timeoutValueView.setText(String.format("%d", progressToTimeout(progress)));
+		}
+	}
+
+	@Override
+	public void onStartTrackingTouch(SeekBar seekBar) {
+	}
+
+	@Override
+	public void onStopTrackingTouch(SeekBar seekBar) {
+		//calculate new timeout
+		int current = seekBar.getProgress();
+		int newTimeout = Settings.MIN_TIMEOUT + current;
+		//store in preferences
+		Editor preferencesEditor = preferences.edit();
+		preferencesEditor.putInt(Settings.TIMEOUT_STR, newTimeout);
+		preferencesEditor.apply();
+	}
 }

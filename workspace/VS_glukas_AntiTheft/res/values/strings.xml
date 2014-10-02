@@ -6,5 +6,6 @@
     <string name="title">Anti Theft</string>
     <string name="button_off">Off</string>
     <string name="button_on">On</string>
+    <string name="timeout">Timeout</string>
 
 </resources>

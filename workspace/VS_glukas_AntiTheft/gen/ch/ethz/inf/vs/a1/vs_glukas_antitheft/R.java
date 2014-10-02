@@ -24,7 +24,10 @@ public final class R {
         public static final int ic_launcher=0x7f020000;
     }
     public static final class id {
-        public static final int action_settings=0x7f090002;
+        public static final int action_settings=0x7f090005;
+        public static final int textView1=0x7f090002;
+        public static final int timeoutBar=0x7f090003;
+        public static final int timeoutValue=0x7f090004;
         public static final int title=0x7f090000;
         public static final int toggleButton=0x7f090001;
     }
@@ -42,6 +45,7 @@ public final class R {
         public static final int app_name=0x7f060000;
         public static final int button_off=0x7f060003;
         public static final int button_on=0x7f060004;
+        public static final int timeout=0x7f060005;
         public static final int title=0x7f060002;
     }
     public static final class style {
