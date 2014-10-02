@@ -5,7 +5,7 @@
  * should not be modified by hand.
  */
 
-package ch.ethz.inf.vs.a1.glukas.ble;
+package com.example.vs_myown_blesensirion;
 
 public final class R {
     public static final class attr {
@@ -49,15 +49,12 @@ public final class R {
         public static final int ble_not_supported=0x7f050003;
         public static final int error_bluetooth_not_supported=0x7f050004;
         public static final int hello_world=0x7f050002;
-        public static final int label_state=0x7f050006;
         /**  Menu items 
          */
-        public static final int menu_refresh=0x7f050008;
-        public static final int menu_scan=0x7f050009;
-        public static final int menu_stop=0x7f05000a;
-        public static final int title_activity_device_control=0x7f05000b;
-        public static final int title_devices=0x7f050007;
-        public static final int unknown_device=0x7f050005;
+        public static final int menu_refresh=0x7f050005;
+        public static final int menu_scan=0x7f050006;
+        public static final int menu_stop=0x7f050007;
+        public static final int title_activity_device_control=0x7f050008;
     }
     public static final class style {
         /** 

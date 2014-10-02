@@ -1,6 +1,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="ch.ethz.inf.vs.a1.glukas.ble.MainActivity" >
+    tools:context="com.example.vs_myown_blesensirion.MainActivity" >
+
 
     <item
         android:id="@+id/action_settings"
@@ -11,7 +12,9 @@
         android:id="@+id/menu_refresh"
         android:orderInCategory="1"
         android:checkable="false"
-        android:showAsAction="ifRoom"/>
+        android:showAsAction="ifRoom"
+		android:title="@string/menu_refresh"
+    	/>
     <item
         android:id="@+id/menu_scan"
         android:orderInCategory="100"
