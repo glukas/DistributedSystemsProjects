@@ -4,6 +4,7 @@ import ch.ethz.inf.vs.a1.vs_glukas_antitheft.R;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.Service;
+import android.content.SharedPreferences;
 import android.support.v4.app.NotificationCompat;
 
 public abstract class AbstractAntiTheftService extends Service {
@@ -14,8 +15,8 @@ public abstract class AbstractAntiTheftService extends Service {
 	protected NotificationCompat.Builder notifBuilder;
 	protected Notification notif;
 	protected int stateProgressBar = 0;
-	protected int timeout = Settings.TIMEOUT_DEFAULT;
-
+	protected SharedPreferences preferences;
+	
 	@Override
 	public void onCreate() {
 		
@@ -32,6 +33,8 @@ public abstract class AbstractAntiTheftService extends Service {
 		//Initialize movement detector
 		listener = new MovementDetector();
 		listener.setCallbackService(this);
+		//get a reference to the shared preferences
+		preferences = this.getSharedPreferences(Settings.SETTINGS_FILENAME, 0);
 	}
 	
 	@Override
@@ -57,4 +60,12 @@ public abstract class AbstractAntiTheftService extends Service {
 	 * Reset the progress bar to zero
 	 */
 	public abstract void resetProgressBar();
+	
+	protected int getTimeout() {
+		return preferences.getInt(Settings.TIMEOUT_STR, Settings.TIMEOUT_DEFAULT);
+	}
+	
+	protected int getSensitivity() {
+		return preferences.getInt(Settings.SENSITIVITY_STR, Settings.SENSITIVITY_DEFAULT);
+	}
 }

@@ -25,7 +25,7 @@ public class AntiTheftServiceImpl extends AbstractAntiTheftService {
 	
 	public void incrProgressBar(int toIncr){
 		stateProgressBar += toIncr;
-		notifBuilder.setProgress(timeout, stateProgressBar, false);
+		notifBuilder.setProgress(getTimeout(), stateProgressBar, false);
 		notif = notifBuilder.build();
 		notif.flags = Notification.FLAG_ONGOING_EVENT;
 		notifManager.notify(notifId, notif);
