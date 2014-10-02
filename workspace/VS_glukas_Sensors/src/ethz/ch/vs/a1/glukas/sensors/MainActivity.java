@@ -5,19 +5,20 @@ import java.util.List;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 
-public class MainActivity extends Activity implements OnItemClickListener {
+public class MainActivity extends Activity implements OnItemClickListener, OnClickListener {
 
 	public static final String EXTRA_SENSOR_TYPE = "ch.ethz.VS.a1.glukas.sensor.extra_sensor_type";
 	
@@ -29,6 +30,14 @@ public class MainActivity extends Activity implements OnItemClickListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
+		setupListView();
+		
+		//set up the button
+		Button button = (Button)findViewById(R.id.start_actuators);
+		button.setOnClickListener(this);
+	}
+
+	private void setupListView() {
 		//get list of sensors
 		SensorManager sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 		sensors = sensorManager.getSensorList(Sensor.TYPE_ALL);
@@ -75,5 +84,13 @@ public class MainActivity extends Activity implements OnItemClickListener {
 		
 		startActivity(startSensorActivity);
 		
+	}
+
+	@Override
+	public void onClick(View v) {
+		if (v instanceof Button) {
+			Intent startActuatorsActivity = new Intent(this, ActuatorsActivity.class);
+			startActivity(startActuatorsActivity);
+		}
 	}
 }
