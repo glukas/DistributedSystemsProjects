@@ -1,5 +1,6 @@
 package ethz.ch.vs.a1.glukas.sensors;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
@@ -30,10 +31,14 @@ public class MainActivity extends Activity implements OnItemClickListener {
 		
 		//get list of sensors
 		SensorManager sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-		
 		sensors = sensorManager.getSensorList(Sensor.TYPE_ALL);
+		//get the names of the sensors
+		List<String> sensorNames = new ArrayList<String>();
+		for (Sensor sensor : sensors) {
+			sensorNames.add(sensor.getName());
+		}
 		//create ArrayAdapter & bind to list view
-		ArrayAdapter<Sensor> adapter = new ArrayAdapter<Sensor>(this, R.layout.list_row, sensors);
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.list_row, sensorNames);
 		
 		listView = (ListView)findViewById(R.id.listView1);
 		listView.setAdapter(adapter);
