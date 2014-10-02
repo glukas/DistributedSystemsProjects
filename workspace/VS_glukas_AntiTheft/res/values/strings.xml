@@ -3,6 +3,9 @@
 
     <string name="app_name">VS_glukas_AntiTheft</string>
     <string name="action_settings">Settings</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="title">Anti Theft</string>
+    <string name="button_off">Off</string>
+    <string name="button_on">On</string>
+    <string name="timeout">Timeout</string>
 
 </resources>

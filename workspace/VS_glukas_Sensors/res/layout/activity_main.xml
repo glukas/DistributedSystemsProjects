@@ -13,11 +13,19 @@
   
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        android:layout_above="@+id/start_actuators"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
         android:layout_alignParentTop="true" >
 
     </ListView>
+
+    <Button
+        android:id="@+id/start_actuators"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/listView1"
+        android:layout_alignParentBottom="true"
+        android:layout_alignRight="@+id/listView1"
+        android:text="@string/start_actuators_activity_button"/>
 
 </RelativeLayout>
