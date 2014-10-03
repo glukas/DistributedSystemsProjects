@@ -6,6 +6,8 @@ import android.hardware.SensorEventListener;
 
 public abstract class AbstractMovementDetector implements SensorEventListener {
 	protected AbstractAntiTheftService antiTheftService;
+	float[] g = {0f,0f,0f};
+	float alpha = 0.8f;
 	
 	public void setCallbackService(AbstractAntiTheftService service) {
 		antiTheftService = service;
@@ -18,7 +20,18 @@ public abstract class AbstractMovementDetector implements SensorEventListener {
 	@Override
 	 public final void onSensorChanged(SensorEvent event) {
 		float[] values = null;
+		values = event.values;
 		
+		// Filtering out the gravitation in x,y and z
+		// low-pass filter
+		g[0] = (alpha) * g[0] +  (1-alpha) * values[0];
+		g[1] = (alpha) * g[1] +  (1-alpha) * values[1];
+		g[2] = (alpha) * g[2] +  (1-alpha) * values[2];
+		
+		// high-pass filter
+		values[0] = values[0]- g[0];
+		values[1] = values[1]- g[1];
+		values[2] = values[2]- g[2];
 		
 		// Add code to populate the 'values' array with the sensor values
 		
@@ -34,6 +47,7 @@ public abstract class AbstractMovementDetector implements SensorEventListener {
 	 * @return true if the service should start the alarm, false otherwise.
 	 */
 	protected abstract boolean doAlarmLogic(float[] values);
+		
 	
 	@Override
 	public void onAccuracyChanged(Sensor sensor, int accuracy) {
