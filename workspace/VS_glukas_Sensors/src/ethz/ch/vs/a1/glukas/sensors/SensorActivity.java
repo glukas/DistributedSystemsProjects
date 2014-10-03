@@ -47,6 +47,8 @@ public class SensorActivity extends Activity implements SensorEventListener {
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
 		if (id == R.id.action_settings) {
+			//Test if it really unregisters
+			//sensorManager.unregisterListener(this);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -68,7 +70,7 @@ public class SensorActivity extends Activity implements SensorEventListener {
 			i++;
 		}
 		//create adapter + fill list with it
-		SimpleAdapter simpleAdapter = new SimpleAdapter(this,sensorData, R.layout.list_two,new String[] {"item1","item2" }, new int[] {R.id.text1, R.id.text2});
+		simpleAdapter = new SimpleAdapter(this,sensorData, R.layout.list_two,new String[] {"item1","item2" }, new int[] {R.id.text1, R.id.text2});
 		
 		listView = (ListView) findViewById(R.id.listView1);
 		listView.setAdapter(simpleAdapter);

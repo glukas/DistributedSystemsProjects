@@ -1,10 +1,7 @@
 package ch.ethz.inf.vs.a1.glukas.ble;
 
-
-
 import java.util.ArrayList;
 import java.util.List;
-
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -23,65 +20,69 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-public class MainActivity extends Activity implements OnItemClickListener{
+public class MainActivity extends Activity implements OnItemClickListener {
 	public static final String EXTRAS_DEVICE_NAME = "Device Name";
-	public static final String EXTRAS_DEVICE_ADDRESS = "Device Adress";
-
-	private ArrayAdapter<BluetoothDevice> adapter;
+	public static final String EXTRAS_DEVICE_ADDRESS = "Device Address";
 	private List<BluetoothDevice> devices;
 	private ArrayAdapter<String> adapternames;
 	private List<String> devicenames;
 	private BluetoothAdapter mBluetoothAdapter;
 	private ListView DeviceList;
-    private static final int REQUEST_ENABLE_BT = 1;
-    private boolean mScanning;
-    private Handler mHandler; 
-    private Runnable countdown;
-    // Stops scanning after 10 seconds.
-    private static final long SCAN_TIME = 10000;
-    
+	private static final int REQUEST_ENABLE_BT = 1;
+	private boolean mScanning;
+	private Handler mHandler;
+	private Runnable countdown;
+	// Stops scanning after 10 seconds.
+	private static final long SCAN_TIME = 10000;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		mHandler = new Handler();
-			// Checks if Phone has BLe : Yes -> do nothing , No -> Ask User to toggle BLe
-		 if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
-	            Toast.makeText(this, R.string.ble_not_supported, Toast.LENGTH_SHORT).show();
-	            finish();
-	        }
-		 	//Gets the Bluetooth Adapter
-	       final BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
-	       mBluetoothAdapter = bluetoothManager.getAdapter();
+		devicenames = new ArrayList<String>();
+		devices = new ArrayList<BluetoothDevice>();
 
-	        // Checks if also the normal Bluetooth is supported
-	      if (mBluetoothAdapter == null) {
-	            Toast.makeText(this, R.string.error_bluetooth_not_supported, Toast.LENGTH_SHORT).show();
-	            finish();
-	      		}
-	            
-	         
+		// Checks if Phone has BLe : Yes -> do nothing , No -> Ask User to
+		// toggle BLe
+		if (!getPackageManager().hasSystemFeature(
+				PackageManager.FEATURE_BLUETOOTH_LE)) {
+			Toast.makeText(this, R.string.ble_not_supported, Toast.LENGTH_SHORT)
+					.show();
+			finish();
+		}
+		// Gets the Bluetooth Adapter
+		final BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+		mBluetoothAdapter = bluetoothManager.getAdapter();
+
+		// Checks if also the normal Bluetooth is supported
+		if (mBluetoothAdapter == null) {
+			Toast.makeText(this, R.string.error_bluetooth_not_supported,
+					Toast.LENGTH_SHORT).show();
+			finish();
+		}
+
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
-		
-			//Displaying menu differently depending on mScanning
-	        if (!mScanning) {
-	            menu.findItem(R.id.menu_stop).setVisible(false);
-	            menu.findItem(R.id.menu_scan).setVisible(true);
-	            menu.findItem(R.id.menu_refresh).setActionView(null);
-	        } else {
-	            menu.findItem(R.id.menu_stop).setVisible(true);
-	            menu.findItem(R.id.menu_scan).setVisible(false);
-	            menu.findItem(R.id.menu_refresh).setActionView(
-	            R.layout.progress);
-	        }
-	  
+
+		// Displaying menu differently depending on mScanning
+		if (!mScanning) {
+			menu.findItem(R.id.menu_stop).setVisible(false);
+			menu.findItem(R.id.menu_scan).setVisible(true);
+			menu.findItem(R.id.menu_refresh).setActionView(null);
+		} else {
+			menu.findItem(R.id.menu_stop).setVisible(true);
+			menu.findItem(R.id.menu_scan).setVisible(false);
+			menu.findItem(R.id.menu_refresh).setActionView(R.layout.progress);
+		}
+
 		return true;
 	}
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle action bar item clicks here. The action bar will
@@ -91,101 +92,109 @@ public class MainActivity extends Activity implements OnItemClickListener{
 		if (id == R.id.menu_scan) {
 			devices.clear();
 			devicenames.clear();
-			adapternames = new ArrayAdapter<String>(MainActivity.this, R.layout.list_row, devicenames);
-        	DeviceList = (ListView)findViewById(R.id.listView1);
-        	DeviceList.setAdapter(adapter);
+			devicenames = new ArrayList<String>();
+			devices = new ArrayList<BluetoothDevice>();
+			adapternames = new ArrayAdapter<String>(MainActivity.this,
+					R.layout.list_row, devicenames);
+			DeviceList = (ListView) findViewById(R.id.listView1);
+			DeviceList.setAdapter(adapternames);
 			scanLeDevice(true);
-		}
-		else if (id == R.id.menu_stop){
+		} else if (id == R.id.menu_stop) {
 			scanLeDevice(false);
 		}
 		return true;
 	}
+
 	@Override
 	protected void onResume() {
-        super.onResume();
+		super.onResume();
 
-        // Ensures Bluetooth is enabled on the device.  If Bluetooth is not currently enabled,
-        // fire an intent to display a dialog asking the user to grant permission to enable it.
-            if (!mBluetoothAdapter.isEnabled()) {
-                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
-            }
-        // Initializes a new List which will contain device names
-            devicenames = new ArrayList<String>();
-            devices = new ArrayList<BluetoothDevice>();
-    		scanLeDevice(true);
-    }
+		// Ensures Bluetooth is enabled on the device. If Bluetooth is not
+		// currently enabled,
+		// fire an intent to display a dialog asking the user to grant
+		// permission to enable it.
+		if (!mBluetoothAdapter.isEnabled()) {
+			Intent enableBtIntent = new Intent(
+					BluetoothAdapter.ACTION_REQUEST_ENABLE);
+			startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+		}
 
-	
+		// Initializes a new List which will contain device names
+		devicenames = new ArrayList<String>();
+		devices = new ArrayList<BluetoothDevice>();
+		scanLeDevice(true);
+	}
+
 	@Override
-    protected void onPause() {
-        super.onPause();
-        scanLeDevice(false);
-        // Clear all the lists
+	protected void onPause() {
+		super.onPause();
+		scanLeDevice(false);
 		devices.clear();
 		devicenames.clear();
-        adapternames = new ArrayAdapter<String>(MainActivity.this, R.layout.list_row, devicenames);
-    	DeviceList = (ListView)findViewById(R.id.listView1);
-    	DeviceList.setAdapter(adapter);
-    }
-	
-	// Clicking on a device will pass name and adress to DeviceControlActivity and start it
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        BluetoothDevice device = devices.get(position);
-    	final Intent intent = new Intent(this, DeviceControlActivity.class);
-        intent.putExtra(EXTRAS_DEVICE_NAME, device.getName());
-        intent.putExtra(EXTRAS_DEVICE_ADDRESS,device.getAddress());
-        startActivity(intent);
-		
+		devicenames = new ArrayList<String>();
+		devices = new ArrayList<BluetoothDevice>();
+		adapternames = new ArrayAdapter<String>(MainActivity.this,
+		R.layout.list_row, devicenames);
+		DeviceList = (ListView) findViewById(R.id.listView1);
+		DeviceList.setAdapter(adapternames);
 	}
- // Scanning method
- 	private void scanLeDevice(final boolean enable) {
-         if (enable) {
-        	 
-             // Stops scanning after a pre-defined scan period.
-             mHandler.postDelayed(countdown = new Runnable() {
-                 @Override
-                 public void run() {
-                     mScanning = false;
-                     mBluetoothAdapter.stopLeScan(mLeScanCallback);
-                     invalidateOptionsMenu();
-                 }
-             }, SCAN_TIME);
 
-             mScanning = true;
-             mBluetoothAdapter.startLeScan(mLeScanCallback);
-         } else {
-        	 mHandler.removeCallbacks(countdown);
-             mScanning = false;
-             mBluetoothAdapter.stopLeScan(mLeScanCallback);
-         }
-         invalidateOptionsMenu();
-     }
-	
- 	
- 	
-    private BluetoothAdapter.LeScanCallback mLeScanCallback =
-            new BluetoothAdapter.LeScanCallback() {
+	public void onItemClick(AdapterView<?> parent, View view, int position,
+			long id) {
+		BluetoothDevice device = devices.get(position);
+		final Intent intent = new Intent(this, DeviceControlActivity.class);
+		intent.putExtra(EXTRAS_DEVICE_NAME, device.getName());
+		intent.putExtra(EXTRAS_DEVICE_ADDRESS, device.getAddress());
+		startActivity(intent);
 
-        @Override
-        public void onLeScan(final BluetoothDevice device, int rssi, byte[] scanRecord) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                	// If we find a device we will add the name to the list if we didnt already find it before
-                	if (!devicenames.contains(device.getName())){
-                	devices.add(device);
-                	devicenames.add(device.getName());
-                	adapternames = new ArrayAdapter<String>(MainActivity.this, R.layout.list_row, devicenames);
-                	DeviceList = (ListView)findViewById(R.id.listView1);
-                	DeviceList.setAdapter(adapternames);
-                	DeviceList.setOnItemClickListener(MainActivity.this);
-                	}
-                	
-                			}
-            		});
-        		}
-    		};
-	
+	}
+
+	// Scanning method
+	private void scanLeDevice(final boolean enable) {
+		if (enable) {
+
+			// Stops scanning after a pre-defined scan period.
+			mHandler.postDelayed(countdown = new Runnable() {
+				@Override
+				public void run() {
+					mScanning = false;
+					mBluetoothAdapter.stopLeScan(mLeScanCallback);
+					invalidateOptionsMenu();
+				}
+			}, SCAN_TIME);
+
+			mScanning = true;
+			mBluetoothAdapter.startLeScan(mLeScanCallback);
+		} else {
+			mHandler.removeCallbacks(countdown);
+			mScanning = false;
+			mBluetoothAdapter.stopLeScan(mLeScanCallback);
+		}
+		invalidateOptionsMenu();
+	}
+
+	private BluetoothAdapter.LeScanCallback mLeScanCallback = new BluetoothAdapter.LeScanCallback() {
+
+		@Override
+		public void onLeScan(final BluetoothDevice device, int rssi,
+				byte[] scanRecord) {
+			runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					if (!devicenames.contains(device.getName())) {
+						devices.add(device);
+						devicenames.add(device.getName());
+						adapternames = new ArrayAdapter<String>(
+								MainActivity.this, R.layout.list_row,
+								devicenames);
+						DeviceList = (ListView) findViewById(R.id.listView1);
+						DeviceList.setAdapter(adapternames);
+						DeviceList.setOnItemClickListener(MainActivity.this);
+					}
+
+				}
+			});
+		}
+	};
+
 }

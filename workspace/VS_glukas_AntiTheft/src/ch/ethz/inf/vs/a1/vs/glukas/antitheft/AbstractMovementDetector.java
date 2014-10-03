@@ -18,7 +18,8 @@ public abstract class AbstractMovementDetector implements SensorEventListener {
 	@Override
 	 public final void onSensorChanged(SensorEvent event) {
 		float[] values = null;
-
+		
+		
 		// Add code to populate the 'values' array with the sensor values
 		
 		boolean isAlarm = doAlarmLogic(values);

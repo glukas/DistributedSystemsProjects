@@ -1,6 +1,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.example.vs_myown_blesensirion.DeviceControlActivity" >
+    tools:context="ch.ethz.inf.vs.a1.glukas.ble.DeviceControlActivity" >
 
     <item
         android:id="@+id/action_settings"

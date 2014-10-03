@@ -1,9 +1,5 @@
 package ch.ethz.inf.vs.a1.glukas.ble;
 
-import ch.ethz.inf.vs.a1.glukas.ble.R.id;
-import ch.ethz.inf.vs.a1.glukas.ble.R.layout;
-import ch.ethz.inf.vs.a1.glukas.ble.R.menu;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;

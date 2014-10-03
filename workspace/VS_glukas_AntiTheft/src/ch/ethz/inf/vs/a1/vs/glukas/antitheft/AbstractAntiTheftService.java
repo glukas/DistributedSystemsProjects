@@ -27,6 +27,7 @@ public abstract class AbstractAntiTheftService extends Service {
 			    .setContentTitle("Anti Theft")
 			    .setContentText("State");
 		
+		
 		//create the notification with the flag "ongoing" (can't be deleted by user)
 		notifManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 		

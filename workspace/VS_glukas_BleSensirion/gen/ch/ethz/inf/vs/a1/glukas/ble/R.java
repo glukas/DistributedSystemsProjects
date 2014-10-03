@@ -25,13 +25,14 @@ public final class R {
         public static final int ic_launcher=0x7f020000;
     }
     public static final class id {
-        public static final int action_settings=0x7f080003;
+        public static final int action_settings=0x7f080004;
         public static final int address=0x7f080000;
-        public static final int listView1=0x7f080001;
-        public static final int menu_refresh=0x7f080004;
-        public static final int menu_scan=0x7f080005;
-        public static final int menu_stop=0x7f080006;
-        public static final int rowTextView=0x7f080002;
+        public static final int hello_world=0x7f080001;
+        public static final int listView1=0x7f080002;
+        public static final int menu_refresh=0x7f080005;
+        public static final int menu_scan=0x7f080006;
+        public static final int menu_stop=0x7f080007;
+        public static final int rowTextView=0x7f080003;
     }
     public static final class layout {
         public static final int activity_device_control=0x7f030000;
@@ -49,15 +50,12 @@ public final class R {
         public static final int ble_not_supported=0x7f050003;
         public static final int error_bluetooth_not_supported=0x7f050004;
         public static final int hello_world=0x7f050002;
-        public static final int label_state=0x7f050006;
         /**  Menu items 
          */
-        public static final int menu_refresh=0x7f050008;
-        public static final int menu_scan=0x7f050009;
-        public static final int menu_stop=0x7f05000a;
-        public static final int title_activity_device_control=0x7f05000b;
-        public static final int title_devices=0x7f050007;
-        public static final int unknown_device=0x7f050005;
+        public static final int menu_refresh=0x7f050005;
+        public static final int menu_scan=0x7f050006;
+        public static final int menu_stop=0x7f050007;
+        public static final int title_activity_device_control=0x7f050008;
     }
     public static final class style {
         /** 
@@ -69,6 +67,11 @@ public final class R {
             res/values-vXX/styles.xml, while customizations related to
             backward-compatibility can go here.
         
+
+        Base application theme for API 11+. This theme completely replaces
+        AppBaseTheme from res/values/styles.xml on API 11+ devices.
+    
+ API 11 theme customizations can go here. 
 
         Base application theme for API 14+. This theme completely replaces
         AppBaseTheme from BOTH res/values/styles.xml and
