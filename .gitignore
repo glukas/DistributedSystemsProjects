@@ -22,3 +22,6 @@ workspace/.metadata/.plugins/org.eclipse.jdt.core/variablesAndContainers.dat
 workspace/.metadata/.plugins/org.eclipse.jdt.core/variablesAndContainers.dat
 
 workspace/VS_glukas_AntiTheft/bin/VS_glukas_AntiTheft.apk
+
+*.jar
+workspace/VS_glukas_Sensors/bin/resources.ap_

@@ -39,7 +39,7 @@ public class MainActivity extends Activity implements OnSeekBarChangeListener {
         seekBar.setProgress(timeoutToSeekBarProgress(getTimeout()));
         //set text view to show current timeout value
         timeoutValueView = (TextView) findViewById(R.id.timeoutValue);
-        timeoutValueView.setText(String.format("%s : %d",R.string.timeout, getTimeout()));
+        timeoutValueView.setText(textForTimeout(getTimeout()));
     }
 
     @Override
@@ -71,9 +71,12 @@ public class MainActivity extends Activity implements OnSeekBarChangeListener {
     	return preferences.getInt(Settings.TIMEOUT_STR, Settings.TIMEOUT_DEFAULT);
     }
     
-
-	private Object progressToTimeout(int progress) {
+	private int progressToTimeout(int progress) {
 		return progress+Settings.MIN_TIMEOUT;
+	}
+	
+	private String textForTimeout(int timeout) {
+		return String.format("%s : %d", this.getString(R.string.timeout), timeout);
 	}
     
     ////
@@ -83,7 +86,7 @@ public class MainActivity extends Activity implements OnSeekBarChangeListener {
 	@Override
 	public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 		if (timeoutValueView != null) {
-			timeoutValueView.setText(String.format("%d", progressToTimeout(progress)));
+			timeoutValueView.setText(textForTimeout(progressToTimeout(progress)));
 		}
 	}
 
