@@ -20,6 +20,8 @@ public class SensorActivity extends Activity implements SensorEventListener {
 	private ListView listView;
 	private SensorManager sensorManager;
 	private SimpleAdapter simpleAdapter;
+	float[] g = {0f,0f,0f};
+	float alpha = 0.8f;
 	
 	
 
@@ -61,8 +63,24 @@ public class SensorActivity extends Activity implements SensorEventListener {
 		ArrayList<HashMap<String,String>> sensorData = new ArrayList<HashMap<String,String>>();
 		int i = 1;
 		HashMap<String,String> item;
+		
+		// Test for AntiThief Accelerator
+		/*float[] values = null;
+		values = event.values;
+		// low-pass filter
+				g[0] = (alpha) * g[0] +  (1-alpha) * values[0];
+				g[1] = (alpha) * g[1] +  (1-alpha) * values[1];
+				g[2] = (alpha) * g[2] +  (1-alpha) * values[2];
+				
+				// high-pass filter
+				values[0] = values[0]- g[0];
+				values[1] = values[1]- g[1];
+				values[2] = values[2]- g[2];
 
-		for (float data : event.values) {
+				
+				double[] average = {Math.sqrt(Math.pow(values[0] , 2) + Math.pow(values[0] , 2) + Math.pow(values[0] , 2))};*/
+				for (double data : event.values) {
+	
 			item = new HashMap<String,String>();
 			item.put("item1",String.valueOf(i));
 			item.put("item2",String.valueOf(data));
