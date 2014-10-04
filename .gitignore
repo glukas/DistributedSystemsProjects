@@ -25,3 +25,7 @@ workspace/VS_glukas_AntiTheft/bin/VS_glukas_AntiTheft.apk
 
 *.jar
 workspace/VS_glukas_Sensors/bin/resources.ap_
+
+*.apk
+
+*.dex
