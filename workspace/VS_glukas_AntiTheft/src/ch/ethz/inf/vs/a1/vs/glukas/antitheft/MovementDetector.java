@@ -10,13 +10,11 @@ public class MovementDetector extends AbstractMovementDetector implements Sensor
 	Handler mHandler;
 	Runnable detected;
 	private final long UNSIG_MOVE_DURATION = 5000;
-	boolean return_value = false;
-	boolean is_changing = false;
+	private boolean return_value = false;
+	private boolean is_changing = false;
 	
 	@Override
 	protected boolean doAlarmLogic(float[] values) {
-		// TODO Auto-generated method stub
-		
 		
 		double average = Math.sqrt(Math.pow(values[0] , 2) + Math.pow(values[1] , 2) + Math.pow(values[2] , 2));
 		if (average > 1 && !is_changing){
