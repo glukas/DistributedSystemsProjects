@@ -14,18 +14,21 @@ import android.bluetooth.BluetoothProfile;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-public class DeviceControlActivity extends Activity {
+public class DeviceControlActivity extends Activity implements Handler.Callback {
 
 	public static final String EXTRAS_DEVICE_ADDRESS = "ch.ethz.VS.a1.glukas.ble.extras_device_addr";
 	private BluetoothAdapter bluetoothAdapter;
 	private String deviceAddress;
 	private BluetoothDevice device;
 	private GattCallback callback;
+	private Handler updateHandler;
 	
 	private static String RHT_SERVICE_UUID = "0000AA20-0000-1000-8000-00805f9b34fb";
 	private static String RHT_CHARACTERISTIC_UUID = "0000AA21-0000-1000-8000-00805f9b34fb";
@@ -52,6 +55,7 @@ public class DeviceControlActivity extends Activity {
 			throw new RuntimeException("invalid device address " + deviceAddress);
 		}
 		//connecting can take a few seconds and is thus done asynchronously
+		updateHandler = new Handler(this);
 		callback = new GattCallback();
 		device.connectGatt(this, false, callback);
 	}
@@ -68,8 +72,17 @@ public class DeviceControlActivity extends Activity {
 	public void onStop() {
 		super.onStop();
 		// disconnect / close on the next occasion
-		callback.disabled = true;
+		if (callback != null) callback.disabled = true;
 	}
+	
+	//message by the gatt callback to update the display
+	@Override
+	public boolean handleMessage(Message msg) {
+		TextView address = (TextView) findViewById(R.id.address);
+		address.setText(String.format("%d , %d", msg.arg1, msg.arg2));
+		return false;
+	}
+
 	
 	class GattCallback extends BluetoothGattCallback {
 	
@@ -91,6 +104,7 @@ public class DeviceControlActivity extends Activity {
 				
 				if (disabled) {
 					gatt.close();
+					callback = null;
 					return;
 				}
 				
@@ -144,6 +158,7 @@ public class DeviceControlActivity extends Activity {
 		public void onCharacteristicRead (BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
 			if (disabled) {
 				gatt.close();
+				callback = null;
 				
 			} else if (status == BluetoothGatt.GATT_SUCCESS) {
 				
@@ -152,27 +167,32 @@ public class DeviceControlActivity extends Activity {
 				//http://www.sensirion.com/fileadmin/user_upload/customers/sensirion/Dokumente/Humidity/Sensirion_Humidity_SHTC1_Datasheet_V3.pdf
 				
 				byte[] value = characteristic.getValue();
-				String result = "";
+				String result = "0x";
 				for (byte b : value) {
-				//	result += String.format("%02X", b);
+					result += String.format("%02X ", b);
 				}
+				result += "\n";
 				for (int i=0; i<4; i++) {
 					result = result += String.format("%d ",characteristic.getIntValue(BluetoothGattCharacteristic.FORMAT_UINT8, i));
 				}
 				
 				//result += "\n " + Float.intBitsToFloat(Integer.decode("0x"+result.substring(0, 4)));
 				int rawHumid = (characteristic.getIntValue(BluetoothGattCharacteristic.FORMAT_UINT8, 0)<<8)+characteristic.getIntValue(BluetoothGattCharacteristic.FORMAT_UINT8, 1);
-				double humid = 100.0*((float)rawHumid)/((double)(1<<16));
+				double humid = 100.0*((double)rawHumid)/ 65536.0;
 				//double humid = characteristic.getFloatValue(BluetoothGattCharacteristic.FORMAT_SFLOAT, 2);
 				//float humid = (float)rawHumid;
 				result += String.format("\n%f ", humid);
 				
 				int rawT = (characteristic.getIntValue(BluetoothGattCharacteristic.FORMAT_UINT8, 2)<<8)+characteristic.getIntValue(BluetoothGattCharacteristic.FORMAT_UINT8, 3);
-				double t = 100.0*((double)rawT)/((double)(1<<16));
+				double t = 100.0*((double)rawT)/ 65536.0;
 				result += String.format("\n%f ", t);
 				
-				
 				Log.v("READ_TEST READ", result);
+				
+				Message message = new Message();
+				message.arg1 = rawHumid;
+				message.arg2 = rawT;
+				updateHandler.sendMessage(message);
 				
 				gatt.readCharacteristic(characteristic);//polling
 			}
@@ -183,6 +203,8 @@ public class DeviceControlActivity extends Activity {
 		}
 		
 	}
+	
+	
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
