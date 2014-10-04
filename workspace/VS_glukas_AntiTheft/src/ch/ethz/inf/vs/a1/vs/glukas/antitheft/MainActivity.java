@@ -30,13 +30,16 @@ public class MainActivity extends Activity implements OnSeekBarChangeListener {
         
         //Views
         ((Button)findViewById(R.id.toggleButton)).setText(R.string.button_off);
+        
         //get a reference to the settings
         preferences = this.getSharedPreferences(Settings.SETTINGS_FILENAME, MODE_PRIVATE);
+        
         //Set connection to seek bar
         SeekBar seekBar = (SeekBar) findViewById(R.id.timeoutBar);
         seekBar.setOnSeekBarChangeListener(this);
         seekBar.setMax(timeoutToSeekBarProgress(Settings.MAX_TIMEOUT));
         seekBar.setProgress(timeoutToSeekBarProgress(getTimeout()));
+        
         //set text view to show current timeout value
         timeoutValueView = (TextView) findViewById(R.id.timeoutValue);
         timeoutValueView.setText(textForTimeout(getTimeout()));
@@ -83,6 +86,24 @@ public class MainActivity extends Activity implements OnSeekBarChangeListener {
     //OnSeekBarChange interface
     ////
 
+	@Override
+	protected void onResume() {
+		super.onResume();
+		if (iService != null){
+	        this.stopService(iService);
+			//finish();
+		}
+		
+	}	
+	
+	@Override
+	protected void onPause() {
+		super.onResume();
+		finish();
+		
+		
+	}	
+	
 	@Override
 	public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 		if (timeoutValueView != null) {

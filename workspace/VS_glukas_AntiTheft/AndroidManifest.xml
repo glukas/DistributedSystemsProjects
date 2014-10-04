@@ -22,10 +22,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        
         <service
-  			android:name="ch.ethz.inf.vs.a1.vs.glukas.antitheft.AntiTheftServiceImpl"
-  			android:label="Lala">
+  			android:name="ch.ethz.inf.vs.a1.vs.glukas.antitheft.AntiTheftServiceImpl" >
 		</service> 
     </application>
 
