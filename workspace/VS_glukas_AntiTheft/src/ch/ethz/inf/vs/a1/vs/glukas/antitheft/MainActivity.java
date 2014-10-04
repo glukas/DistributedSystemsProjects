@@ -87,6 +87,14 @@ public class MainActivity extends Activity implements OnSeekBarChangeListener {
     ////
 
 	@Override
+	protected void onResume() {
+		super.onResume();
+		if (iService != null)
+	        this.stopService(iService);
+		
+	}	
+	
+	@Override
 	public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 		if (timeoutValueView != null) {
 			timeoutValueView.setText(textForTimeout(progressToTimeout(progress)));

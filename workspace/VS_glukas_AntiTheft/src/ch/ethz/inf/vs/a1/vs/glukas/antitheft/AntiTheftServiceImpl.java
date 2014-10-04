@@ -53,6 +53,7 @@ public class AntiTheftServiceImpl extends AbstractAntiTheftService {
 		MediaPlayer mp = MediaPlayer.create(this, R.raw.sound);
 		mp.setVolume(1.0f, 1.0f);
 		mp.start();
+		//stopSelf();
 	}
 	
 	@Override
@@ -105,6 +106,17 @@ public class AntiTheftServiceImpl extends AbstractAntiTheftService {
 		notifManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 		notif = notifBuilder.build();
 		notifManager.notify(notifId, notif);
+		Intent resultIntent = new Intent(this, MainActivity.class);
+		// Because clicking the notification opens a new ("special") activity, there's
+		// no need to create an artificial back stack.
+		PendingIntent resultPendingIntent =
+		    PendingIntent.getActivity(
+		    this,
+		    0,
+		    resultIntent,
+		    PendingIntent.FLAG_UPDATE_CURRENT
+		);
+		notifBuilder.setContentIntent(resultPendingIntent);
 	}
 		
 	protected void setTextNotification(String s){
