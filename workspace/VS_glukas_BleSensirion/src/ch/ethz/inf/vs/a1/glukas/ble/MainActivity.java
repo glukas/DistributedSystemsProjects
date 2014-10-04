@@ -21,8 +21,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 public class MainActivity extends Activity implements OnItemClickListener {
-	public static final String EXTRAS_DEVICE_NAME = "Device Name";
-	public static final String EXTRAS_DEVICE_ADDRESS = "Device Address";
+
 	private List<BluetoothDevice> devices;
 	private ArrayAdapter<String> adapternames;
 	private List<String> devicenames;
@@ -34,6 +33,8 @@ public class MainActivity extends Activity implements OnItemClickListener {
 	private Runnable countdown;
 	// Stops scanning after 10 seconds.
 	private static final long SCAN_TIME = 10000;
+	
+	private static String DEVICE_NAME_PREFIX = "SHTC1";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -143,10 +144,8 @@ public class MainActivity extends Activity implements OnItemClickListener {
 			long id) {
 		BluetoothDevice device = devices.get(position);
 		final Intent intent = new Intent(this, DeviceControlActivity.class);
-		intent.putExtra(EXTRAS_DEVICE_NAME, device.getName());
-		intent.putExtra(EXTRAS_DEVICE_ADDRESS, device.getAddress());
+		intent.putExtra(DeviceControlActivity.EXTRAS_DEVICE_ADDRESS, device.getAddress());
 		startActivity(intent);
-
 	}
 
 	// Scanning method
@@ -179,14 +178,22 @@ public class MainActivity extends Activity implements OnItemClickListener {
 		public void onLeScan(final BluetoothDevice device, int rssi,
 				byte[] scanRecord) {
 			runOnUiThread(new Runnable() {
+
+				private String formatDevice(BluetoothDevice device) {
+					return String.format("%s (%s)", device.getName(), device.getAddress());
+				}
+				
+				private boolean isDeviceSupported(BluetoothDevice device) {
+					//this seems enough for our purposes
+					return device.getName().startsWith(DEVICE_NAME_PREFIX);
+				}
+
 				@Override
 				public void run() {
-					if (!devicenames.contains(device.getName())) {
+					if (!devicenames.contains(formatDevice(device)) && isDeviceSupported(device)) {
 						devices.add(device);
-						devicenames.add(device.getName());
-						adapternames = new ArrayAdapter<String>(
-								MainActivity.this, R.layout.list_row,
-								devicenames);
+						devicenames.add(formatDevice(device));
+						adapternames = new ArrayAdapter<String>(MainActivity.this, R.layout.list_row, devicenames);
 						DeviceList = (ListView) findViewById(R.id.listView1);
 						DeviceList.setAdapter(adapternames);
 						DeviceList.setOnItemClickListener(MainActivity.this);
