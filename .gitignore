@@ -29,3 +29,5 @@ workspace/VS_glukas_Sensors/bin/resources.ap_
 *.apk
 
 *.dex
+
+*.ap_

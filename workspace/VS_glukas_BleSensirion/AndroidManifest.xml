@@ -23,17 +23,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-<<<<<<< Updated upstream
         <activity
             android:name=".DeviceControlActivity"
             android:label="@string/title_activity_device_control" >
         </activity>
-=======
         
         <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="MainActivity" />
->>>>>>> Stashed changes
     </application>
 
 </manifest>
