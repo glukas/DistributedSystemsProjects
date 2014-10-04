@@ -16,8 +16,11 @@ public class MovementDetector extends AbstractMovementDetector implements Sensor
 	@Override
 	protected boolean doAlarmLogic(float[] values) {
 		// TODO Auto-generated method stub
-		double average = Math.sqrt(Math.pow(values[0] , 2) + Math.pow(values[0] , 2) + Math.pow(values[0] , 2));
+		
+		
+		double average = Math.sqrt(Math.pow(values[0] , 2) + Math.pow(values[1] , 2) + Math.pow(values[2] , 2));
 		if (average > 1 && !is_changing){
+			mHandler = new Handler();
 			is_changing = true;
 			mHandler.postDelayed(detected = new Runnable() {
 				@Override
@@ -28,12 +31,12 @@ public class MovementDetector extends AbstractMovementDetector implements Sensor
 
 			
 		} 
-		if (average <= 1 ){
+		if (average < 0.1 && is_changing){
 			
 			mHandler.removeCallbacks(detected);
 			return_value = false;
 			is_changing = false;
-			
+		
 		}
 		
 		return return_value;

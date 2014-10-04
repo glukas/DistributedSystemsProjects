@@ -5,6 +5,7 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.Service;
 import android.content.SharedPreferences;
+import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.support.v4.app.NotificationCompat;
 
@@ -38,6 +39,10 @@ public abstract class AbstractAntiTheftService extends Service {
 		//Initialize movement detector
 		listener = new MovementDetector();
 		listener.setCallbackService(this);
+		sensorManager.registerListener(listener,
+		    	sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+		        SensorManager.SENSOR_DELAY_NORMAL);
+		  
 		//get a reference to the shared preferences
 		preferences = this.getSharedPreferences(Settings.SETTINGS_FILENAME, 0);
 	}
