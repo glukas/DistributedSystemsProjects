@@ -25,6 +25,7 @@ public class DeviceControlActivity extends Activity {
 	private BluetoothAdapter bluetoothAdapter;
 	private String deviceAddress;
 	private BluetoothDevice device;
+	private GattCallback callback;
 	
 	private static String RHT_SERVICE_UUID = "0000AA20-0000-1000-8000-00805f9b34fb";
 	private static String RHT_CHARACTERISTIC_UUID = "0000AA21-0000-1000-8000-00805f9b34fb";
@@ -50,14 +51,32 @@ public class DeviceControlActivity extends Activity {
 		if (device == null) {
 			throw new RuntimeException("invalid device address " + deviceAddress);
 		}
-		
-		device.connectGatt(this, true, new GattCallback());
+		//connecting can take a few seconds and is thus done asynchronously
+		callback = new GattCallback();
+		device.connectGatt(this, false, callback);
+	}
+	
+	@Override
+	public void onRestart() {
+		super.onRestart();
+		// reconnect
+		callback = new GattCallback();
+		device.connectGatt(this, false, callback);
+	}
+	
+	@Override
+	public void onStop() {
+		super.onStop();
+		// disconnect / close on the next occasion
+		callback.disabled = true;
 	}
 	
 	class GattCallback extends BluetoothGattCallback {
 	
 		private UUID serviceId = UUID.fromString(RHT_SERVICE_UUID);
 		private UUID characteristicId = UUID.fromString(RHT_CHARACTERISTIC_UUID);
+		
+		public boolean disabled = false;
 		
 		@Override
 		public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
@@ -69,7 +88,12 @@ public class DeviceControlActivity extends Activity {
 		@Override
 		public void onServicesDiscovered (BluetoothGatt gatt, int status) {
 			if (status == BluetoothGatt.GATT_SUCCESS) {
-
+				
+				if (disabled) {
+					gatt.close();
+					return;
+				}
+				
 				for (BluetoothGattService service : gatt.getServices()) {
 					if (isServiceSupported(service.getUuid())) {
 
@@ -81,10 +105,14 @@ public class DeviceControlActivity extends Activity {
 						service.addCharacteristic(rht);
 						
 						boolean success = gatt.readCharacteristic(rht);
-
 						if (!success) {
 							Log.e(RHT_SERVICE_UUID, "read failed");
 						}
+						/*success = gatt.setCharacteristicNotification(rht, true);
+						
+						if (!success) {
+							Log.e(RHT_SERVICE_UUID, "notify failed");
+						}*/
 						
 					}
 				}
@@ -98,17 +126,55 @@ public class DeviceControlActivity extends Activity {
 		}
 		
 		@Override
+		public void onCharacteristicChanged (BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
+
+			//TODO (Lukas) proper formatting
+			/*byte[] value = characteristic.getValue();
+			String result = "";
+			for (byte b : value) {
+				result += String.format("%02X", b);
+			}
+			//characteristic.getFloatValue(formatType, offset)
+			Log.v("READ_TEST CHANGED", result);*/
+			//gatt.readCharacteristic(characteristic);
+			
+		}
+		
+		@Override
 		public void onCharacteristicRead (BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
-			if (status == BluetoothGatt.GATT_SUCCESS) {
+			if (disabled) {
+				gatt.close();
+				
+			} else if (status == BluetoothGatt.GATT_SUCCESS) {
+				
 				//TODO (Lukas) proper formatting
+				// I have absolutely no idea how to parse the values. the only thing I found was this datasheet
+				//http://www.sensirion.com/fileadmin/user_upload/customers/sensirion/Dokumente/Humidity/Sensirion_Humidity_SHTC1_Datasheet_V3.pdf
+				
 				byte[] value = characteristic.getValue();
 				String result = "";
 				for (byte b : value) {
-					result += String.format("%02X", b);
+				//	result += String.format("%02X", b);
 				}
-				Log.v("READ_TEST", result);
+				for (int i=0; i<4; i++) {
+					result = result += String.format("%d ",characteristic.getIntValue(BluetoothGattCharacteristic.FORMAT_UINT8, i));
+				}
 				
-				gatt.close();
+				//result += "\n " + Float.intBitsToFloat(Integer.decode("0x"+result.substring(0, 4)));
+				int rawHumid = (characteristic.getIntValue(BluetoothGattCharacteristic.FORMAT_UINT8, 0)<<8)+characteristic.getIntValue(BluetoothGattCharacteristic.FORMAT_UINT8, 1);
+				double humid = 100.0*((float)rawHumid)/((double)(1<<16));
+				//double humid = characteristic.getFloatValue(BluetoothGattCharacteristic.FORMAT_SFLOAT, 2);
+				//float humid = (float)rawHumid;
+				result += String.format("\n%f ", humid);
+				
+				int rawT = (characteristic.getIntValue(BluetoothGattCharacteristic.FORMAT_UINT8, 2)<<8)+characteristic.getIntValue(BluetoothGattCharacteristic.FORMAT_UINT8, 3);
+				double t = 100.0*((double)rawT)/((double)(1<<16));
+				result += String.format("\n%f ", t);
+				
+				
+				Log.v("READ_TEST READ", result);
+				
+				gatt.readCharacteristic(characteristic);//polling
 			}
 		}
 
@@ -136,4 +202,5 @@ public class DeviceControlActivity extends Activity {
 		}
 		return super.onOptionsItemSelected(item);
 	}
+
 }

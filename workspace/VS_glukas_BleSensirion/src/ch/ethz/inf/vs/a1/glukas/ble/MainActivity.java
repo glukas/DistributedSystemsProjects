@@ -185,6 +185,7 @@ public class MainActivity extends Activity implements OnItemClickListener {
 				
 				private boolean isDeviceSupported(BluetoothDevice device) {
 					//this seems enough for our purposes
+					if (device == null || device.getName() == null) return false;
 					return device.getName().startsWith(DEVICE_NAME_PREFIX);
 				}
 
