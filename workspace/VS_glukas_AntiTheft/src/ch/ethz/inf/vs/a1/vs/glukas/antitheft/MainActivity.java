@@ -89,8 +89,18 @@ public class MainActivity extends Activity implements OnSeekBarChangeListener {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		if (iService != null)
+		if (iService != null){
 	        this.stopService(iService);
+			//finish();
+		}
+		
+	}	
+	
+	@Override
+	protected void onPause() {
+		super.onResume();
+		finish();
+		
 		
 	}	
 	
