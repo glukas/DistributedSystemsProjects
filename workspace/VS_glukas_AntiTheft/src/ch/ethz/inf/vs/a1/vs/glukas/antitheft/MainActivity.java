@@ -3,8 +3,6 @@ package ch.ethz.inf.vs.a1.vs.glukas.antitheft;
 import ch.ethz.inf.vs.a1.vs_glukas_antitheft.R;
 import android.os.Bundle;
 import android.app.Activity;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
