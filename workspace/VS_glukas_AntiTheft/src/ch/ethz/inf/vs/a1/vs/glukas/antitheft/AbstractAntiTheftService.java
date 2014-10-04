@@ -37,6 +37,12 @@ public abstract class AbstractAntiTheftService extends Service {
 	 */
 	public abstract void startAlarm();
 	
+	public void destroyOnTap(){
+		if (alarmArmed){
+			this.onDestroy();
+		}
+	}
+	
 	/**
 	 * Increment the status of the progress bar in the notification
 	 * The maximum (timeout) is the timeout specified in the setting (Settings.TIMEOUT_DEFAULT)

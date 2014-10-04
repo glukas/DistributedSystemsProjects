@@ -93,6 +93,9 @@ public class AntiTheftServiceImpl extends AbstractAntiTheftService {
 	protected final String noMoveStr = "No movement detected";
 	protected final String alarmArmedStr = "Alarm is armed. Tap to disable";
 	protected final String ringingStr = "THIEEEF!!!";
+	//be aware that the broadcast filter has to be the same in the manifest file
+	public static final String broadcastFilter = "broadcastIntentFilter";
+	private final int broadcastNumber = 1000;
 	
 	protected void createNotification(){
 		//Create the builder for the notification with all features
@@ -104,7 +107,15 @@ public class AntiTheftServiceImpl extends AbstractAntiTheftService {
 					
 		//create the notification with the flag "ongoing" (can't be deleted by user)
 		notifManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+		
+		//define action on click
+		Intent onClickIntent = new Intent();  
+		onClickIntent.setAction(broadcastFilter);
+		PendingIntent pendingIntentOnClick = PendingIntent.getBroadcast(this, broadcastNumber, onClickIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+		notifBuilder.setContentIntent(pendingIntentOnClick);
+		
 		notif = notifBuilder.build();
+		notif.flags = Notification.FLAG_ONGOING_EVENT;
 		notifManager.notify(notifId, notif);
 		Intent resultIntent = new Intent(this, MainActivity.class);
 		// Because clicking the notification opens a new ("special") activity, there's
@@ -118,7 +129,7 @@ public class AntiTheftServiceImpl extends AbstractAntiTheftService {
 		);
 		notifBuilder.setContentIntent(resultPendingIntent);
 	}
-		
+	
 	protected void setTextNotification(String s){
 		notifBuilder.setContentText(s);
 		notif = notifBuilder.build();
