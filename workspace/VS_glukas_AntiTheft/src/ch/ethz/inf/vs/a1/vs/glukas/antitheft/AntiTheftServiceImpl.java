@@ -40,4 +40,10 @@ public class AntiTheftServiceImpl extends AbstractAntiTheftService {
 	public IBinder onBind(Intent intent) {
 		return null;
 	}
+
+	@Override
+	public void setProgressBar(int toSet) {
+		stateProgressBar = toSet;
+		incrProgressBar(0);	
+	}
 }

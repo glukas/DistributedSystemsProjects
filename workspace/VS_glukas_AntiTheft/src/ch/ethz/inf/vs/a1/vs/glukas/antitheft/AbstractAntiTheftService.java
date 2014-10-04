@@ -5,6 +5,7 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.Service;
 import android.content.SharedPreferences;
+import android.hardware.SensorManager;
 import android.support.v4.app.NotificationCompat;
 
 public abstract class AbstractAntiTheftService extends Service {
@@ -16,9 +17,12 @@ public abstract class AbstractAntiTheftService extends Service {
 	protected Notification notif;
 	protected int stateProgressBar = 0;
 	protected SharedPreferences preferences;
+	protected SensorManager sensorManager;
 	
 	@Override
 	public void onCreate() {
+		//Get the sensor manager
+		sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 		
 		//Create the builder for the notification with all features
 		notifBuilder =
@@ -41,7 +45,8 @@ public abstract class AbstractAntiTheftService extends Service {
 	@Override
 	public void onDestroy(){
 		super.onDestroy();
-		//Destroy the notification
+		//Destroy the notification and the listener
+		sensorManager.unregisterListener(listener);
 		notifManager.cancel(notifId);
 	}
 
@@ -56,6 +61,13 @@ public abstract class AbstractAntiTheftService extends Service {
 	 * @param toIncr, amount of time (in seconds) to add to the progress bar
 	 */
 	public abstract void incrProgressBar(int toIncr);
+	
+	/**
+	 * Set the status of the progress bar in the notification
+	 * The maximum (timeout) is the timeout specified in the setting (Settings.TIMEOUT_DEFAULT)
+	 * @param toSet, amount of time (in seconds) to be set in the progress bar
+	 */
+	public abstract void setProgressBar(int toSet);
 	
 	/**
 	 * Reset the progress bar to zero
