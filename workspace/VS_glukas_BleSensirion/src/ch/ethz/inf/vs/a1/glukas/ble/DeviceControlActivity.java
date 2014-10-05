@@ -89,7 +89,7 @@ public class DeviceControlActivity extends Activity implements Handler.Callback 
 		private UUID serviceId = UUID.fromString(RHT_SERVICE_UUID);
 		private UUID characteristicId = UUID.fromString(RHT_CHARACTERISTIC_UUID);
 		
-		public boolean disabled = true;
+		public boolean disabled = false;
 		
 		@Override
 		public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
@@ -210,10 +210,11 @@ public class DeviceControlActivity extends Activity implements Handler.Callback 
 		//		int Humidity = 100 * (rawHumid>>16);*/*/
 				Message message = new Message();
 				
-				Log.v("READ_TEST READ", characteristic.getIntValue(characteristic.FORMAT_UINT16, 2).toString());
-				Log.v("READ_TEST READ", characteristic.getIntValue(characteristic.FORMAT_UINT16, 0).toString());
+			//	Log.v("READ_TEST READ", characteristic.getIntValue(characteristic.FORMAT_UINT16, 2).toString());
+				//Log.v("READ_TEST READ", characteristic.getIntValue(characteristic.FORMAT_UINT16, 0).toString());
 				message.arg1 = characteristic.getIntValue(characteristic.FORMAT_UINT16, 2);
 				message.arg2 = characteristic.getIntValue(characteristic.FORMAT_UINT16, 0);
+				updateHandler.sendMessage(message);
 				gatt.readCharacteristic(characteristic);//polling
 		        
 		        	        
