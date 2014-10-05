@@ -58,7 +58,7 @@ public class SensorActivity extends Activity implements SensorEventListener {
 	@Override
 	  public void onSensorChanged(SensorEvent event) {
 		ArrayList<HashMap<String,String>> sensorData = new ArrayList<HashMap<String,String>>();
-		int i = 1;
+		int i = 0;
 		HashMap<String,String> item;
 		
 		// Test for AntiThief Accelerator
@@ -76,10 +76,117 @@ public class SensorActivity extends Activity implements SensorEventListener {
 
 				
 				double[] average = {Math.sqrt(Math.pow(values[0] , 2) + Math.pow(values[0] , 2) + Math.pow(values[0] , 2))};*/
-				for (double data : event.values) {
+			// Display for names and units
+		String[] names = {"1st value", "2nd value", "3rd value", "Other value", "Other value", "Other value"};
+		switch (getIntent().getExtras().getInt(MainActivity.EXTRA_SENSOR_TYPE)){
+		case Sensor.TYPE_ACCELEROMETER: {
+		names[0] = "x in m/s\u00B2";
+		names[1] = "y in m/s\u00B2";
+		names[2] = "z in m/s\u00B2";
+		}
+		
+		break;
+		case Sensor.TYPE_AMBIENT_TEMPERATURE :{
+		names[0] = "Temperature in Celsius";	
+			
+		} 
+		break;
+		case Sensor.TYPE_ROTATION_VECTOR:{
+			names[0] = "x";
+			names[1] = "y";
+			names[2] = "z";
+		} 
+		break;
+		case Sensor.TYPE_GRAVITY: {
+			names[0] = "x in m/s\u00B2";
+			names[1] = "y in m/s\u00B2";
+			names[2] = "z in m/s\u00B2";
+		}
+		break;
+		case Sensor.TYPE_GYROSCOPE: {
+			names[0] = "x in rad/s";
+			names[1] = "y in rad/s";
+			names[2] = "z in rad/s";
+		}
+		break;
+		case Sensor.TYPE_GYROSCOPE_UNCALIBRATED: {
+			names[0] = "x_uncalib in rad/s";
+			names[1] = "y_uncalib in rad/s";
+			names[2] = "z_uncalib in rad/s";
+			names[3] = "x_drift in rad/s";
+			names[4] = "y_drift in rad/s";
+			names[5] = "z_drift in rad/s";
+			
+		}
+		break;
+		case Sensor.TYPE_LIGHT:{ 
+			names[0] = "Illumination in lx";
+		} 
+		break;
+		case Sensor.TYPE_ORIENTATION: {
+		names[0] = "x in degrees";
+		names[1] = "y in degrees";
+		names[2] = "z in degrees";
+		}
+		break;
+		case Sensor.TYPE_PRESSURE: {
+		names[0] = "Pressure in hPa";
+		}
+		break;
+		case Sensor.TYPE_MAGNETIC_FIELD: {
+		names[0] = "x in uT";
+		names[1] = "y in uT";
+		names[2] = "z in uT";
+		}
+		break;
+		case Sensor.TYPE_MAGNETIC_FIELD_UNCALIBRATED: {
+			names[0] = "x_uncalib in uT";
+			names[1] = "y_uncalib in uT";
+			names[2] = "z_uncalib in uT";
+			names[3] = "x_bias in uT";
+			names[4] = "y_bias in uT";
+			names[5] = "z_bias in uT";
+			
+		}
+		break;
+		
+		case Sensor.TYPE_PROXIMITY: {
+		names[0] = "Distance in cm";
+		}
+		break;
+		
+		case Sensor.TYPE_RELATIVE_HUMIDITY: {
+		names[0] = "Humidity in %";
+		}
+		break;
+		
+		case Sensor.TYPE_LINEAR_ACCELERATION: {
+		names[0] = "x in m/s\u00B2";
+		names[1] = "y in m/s\u00B2";
+		names[2] = "z in m/s\u00B2";
+		}
+		break;
+		case Sensor.TYPE_STEP_COUNTER: {
+		names[0] = "Step count";
+
+		}
+		break;
+		default: {
+			
+		}
+		break;
+		}
+		
+		
+		
+			for (double data : event.values) {
 	
 			item = new HashMap<String,String>();
-			item.put("item1",String.valueOf(i));
+			
+			if (i < names.length)	
+			item.put("item1",names[i]);
+			else
+				item.put("item1","Other value");	
 			item.put("item2",String.valueOf(data));
 			sensorData.add(item);
 			i++;
