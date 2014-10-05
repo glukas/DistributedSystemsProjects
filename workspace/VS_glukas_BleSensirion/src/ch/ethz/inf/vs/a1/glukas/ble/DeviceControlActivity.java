@@ -79,7 +79,7 @@ public class DeviceControlActivity extends Activity implements Handler.Callback 
 	@Override
 	public boolean handleMessage(Message msg) {
 		TextView address = (TextView) findViewById(R.id.address);
-		address.setText(String.format("%d , %d", msg.arg1, msg.arg2));
+		address.setText(String.format("%d , %d",  msg.arg1, msg.arg2));
 		return false;
 	}
 
@@ -89,7 +89,7 @@ public class DeviceControlActivity extends Activity implements Handler.Callback 
 		private UUID serviceId = UUID.fromString(RHT_SERVICE_UUID);
 		private UUID characteristicId = UUID.fromString(RHT_CHARACTERISTIC_UUID);
 		
-		public boolean disabled = false;
+		public boolean disabled = true;
 		
 		@Override
 		public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
@@ -166,7 +166,13 @@ public class DeviceControlActivity extends Activity implements Handler.Callback 
 				// I have absolutely no idea how to parse the values. the only thing I found was this datasheet
 				//http://www.sensirion.com/fileadmin/user_upload/customers/sensirion/Dokumente/Humidity/Sensirion_Humidity_SHTC1_Datasheet_V3.pdf
 				
-				byte[] value = characteristic.getValue();
+				/*byte[] value = characteristic.getValue();
+				
+		//		byte[] RH = {value[0] , value[1]};
+				
+
+			//	int rawHumid = Byte.parseByte(new String(RH));
+				//int rawT = value[1]<<16;
 				String result = "0x";
 				for (byte b : value) {
 					result += String.format("%02X ", b);
@@ -189,13 +195,29 @@ public class DeviceControlActivity extends Activity implements Handler.Callback 
 				
 				Log.v("READ_TEST READ", result);
 				
-				Message message = new Message();
-				message.arg1 = rawHumid;
-				message.arg2 = rawT;
-				updateHandler.sendMessage(message);
 				
+						final byte[] data = characteristic.getValue();
+		        if (data != null && data.length > 0) {
+		            final StringBuilder stringBuilder = new StringBuilder(data.length);
+		            for(byte byteChar : data)
+		                stringBuilder.append(String.format("%02X ", byteChar));
+		        Log.v("READ_TEST READ", stringBuilder.toString());}
+		      /*  Bundle bundle = new Bundle();
+		        bundle.putString("test", stringBuilder.toString());
+				Message message = new Message();
+				message.setData(bundle);
+				*/
+		//		int Humidity = 100 * (rawHumid>>16);*/*/
+				Message message = new Message();
+				
+				Log.v("READ_TEST READ", characteristic.getIntValue(characteristic.FORMAT_UINT16, 2).toString());
+				Log.v("READ_TEST READ", characteristic.getIntValue(characteristic.FORMAT_UINT16, 0).toString());
+				message.arg1 = characteristic.getIntValue(characteristic.FORMAT_UINT16, 2);
+				message.arg2 = characteristic.getIntValue(characteristic.FORMAT_UINT16, 0);
 				gatt.readCharacteristic(characteristic);//polling
-			}
+		        
+		        	        
+			}   
 		}
 
 		private boolean isServiceSupported(UUID uuid) {
