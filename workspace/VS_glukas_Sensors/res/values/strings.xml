@@ -8,5 +8,11 @@
     <string name="title_activity_sensor">SensorActivity</string>
     <string name="title_activity_actuators">ActuatorsActivity</string>
 	<string name="start_actuators_activity_button">Actuators</string>
+	<string name="buttonPlay">Play</string>
+	<string name="buttonVibrate">Vibrate</string>
+	<string name="buttonRunning">Running</string>
+	<string name="menuBack">Back</string>
+	<string name="menuOnce">Once</string>
+	<string name="menuLooping">Looping</string>
     
 </resources>
