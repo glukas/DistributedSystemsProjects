@@ -22,14 +22,14 @@ import android.widget.Toast;
 
 public class MainActivity extends Activity implements OnItemClickListener {
 
-	private List<BluetoothDevice> devices;
+	private List<BluetoothDevice> devices = new ArrayList<BluetoothDevice>();
 	private ArrayAdapter<String> adapternames;
-	private List<String> devicenames;
+	private List<String> devicenames = new ArrayList<String>();
 	private BluetoothAdapter mBluetoothAdapter;
 	private ListView DeviceList;
 	private static final int REQUEST_ENABLE_BT = 1;
 	private boolean mScanning;
-	private Handler mHandler;
+	private Handler mHandler = new Handler() ;
 	private Runnable countdown;
 	// Stops scanning after 10 seconds.
 	private static final long SCAN_TIME = 10000;
@@ -157,7 +157,7 @@ public class MainActivity extends Activity implements OnItemClickListener {
 				@Override
 				public void run() {
 					mScanning = false;
-					mBluetoothAdapter.stopLeScan(mLeScanCallback);
+					if(mBluetoothAdapter != null) mBluetoothAdapter.stopLeScan(mLeScanCallback);
 					invalidateOptionsMenu();
 				}
 			}, SCAN_TIME);
