@@ -78,8 +78,17 @@ public class DeviceControlActivity extends Activity implements Handler.Callback 
 	//message by the gatt callback to update the display
 	@Override
 	public boolean handleMessage(Message msg) {
-		TextView address = (TextView) findViewById(R.id.address);
-		address.setText(String.format("%d , %d", msg.arg1, msg.arg2));
+		
+		TextView humValue = (TextView) findViewById(R.id.textViewHumValue);
+		int msbH = msg.arg1 / 100;
+		int lsbH = msg.arg1 % 100;
+		humValue.setText(String.valueOf(msbH)+","+String.valueOf(lsbH));
+		
+		TextView tmpValue = (TextView) findViewById(R.id.textViewTmpValue);
+		int msbT = msg.arg2 / 100;
+		int lsbT = msg.arg2 % 100;
+		tmpValue.setText(String.valueOf(msbT)+","+String.valueOf(lsbT));
+		
 		return false;
 	}
 
@@ -162,36 +171,14 @@ public class DeviceControlActivity extends Activity implements Handler.Callback 
 				
 			} else if (status == BluetoothGatt.GATT_SUCCESS) {
 				
-				//TODO (Lukas) proper formatting
-				// I have absolutely no idea how to parse the values. the only thing I found was this datasheet
-				//http://www.sensirion.com/fileadmin/user_upload/customers/sensirion/Dokumente/Humidity/Sensirion_Humidity_SHTC1_Datasheet_V3.pdf
+				//get values
+				int tmp = characteristic.getIntValue(BluetoothGattCharacteristic.FORMAT_UINT16, 0);
+				int humid = characteristic.getIntValue(BluetoothGattCharacteristic.FORMAT_UINT16, 2);
 				
-				byte[] value = characteristic.getValue();
-				String result = "0x";
-				for (byte b : value) {
-					result += String.format("%02X ", b);
-				}
-				result += "\n";
-				for (int i=0; i<4; i++) {
-					result = result += String.format("%d ",characteristic.getIntValue(BluetoothGattCharacteristic.FORMAT_UINT8, i));
-				}
-				
-				//result += "\n " + Float.intBitsToFloat(Integer.decode("0x"+result.substring(0, 4)));
-				int rawHumid = (characteristic.getIntValue(BluetoothGattCharacteristic.FORMAT_UINT8, 0)<<8)+characteristic.getIntValue(BluetoothGattCharacteristic.FORMAT_UINT8, 1);
-				double humid = 100.0*((double)rawHumid)/ 65536.0;
-				//double humid = characteristic.getFloatValue(BluetoothGattCharacteristic.FORMAT_SFLOAT, 2);
-				//float humid = (float)rawHumid;
-				result += String.format("\n%f ", humid);
-				
-				int rawT = (characteristic.getIntValue(BluetoothGattCharacteristic.FORMAT_UINT8, 2)<<8)+characteristic.getIntValue(BluetoothGattCharacteristic.FORMAT_UINT8, 3);
-				double t = 100.0*((double)rawT)/ 65536.0;
-				result += String.format("\n%f ", t);
-				
-				Log.v("READ_TEST READ", result);
-				
+				//send message
 				Message message = new Message();
-				message.arg1 = rawHumid;
-				message.arg2 = rawT;
+				message.arg1 = humid;
+				message.arg2 = tmp;
 				updateHandler.sendMessage(message);
 				
 				gatt.readCharacteristic(characteristic);//polling
