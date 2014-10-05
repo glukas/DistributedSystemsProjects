@@ -56,14 +56,14 @@ public class DeviceControlActivity extends Activity implements Handler.Callback 
 		}
 		//connecting can take a few seconds and is thus done asynchronously
 		updateHandler = new Handler(this);
-		callback = new GattCallback();
-		device.connectGatt(this, false, callback);
+
 	}
 	
 	@Override
-	public void onRestart() {
-		super.onRestart();
-		// reconnect
+	public void onStart() {
+		super.onStart();
+		// (re)connect
+		//connecting can take a few seconds and is thus done asynchronously
 		callback = new GattCallback();
 		device.connectGatt(this, false, callback);
 	}
@@ -93,6 +93,11 @@ public class DeviceControlActivity extends Activity implements Handler.Callback 
 		
 		@Override
 		public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
+			if (disabled) {
+				gatt.close();
+				return;
+			}
+			
 			if (newState == BluetoothProfile.STATE_CONNECTED) {
 				gatt.discoverServices();
 			}
@@ -100,13 +105,12 @@ public class DeviceControlActivity extends Activity implements Handler.Callback 
 		
 		@Override
 		public void onServicesDiscovered (BluetoothGatt gatt, int status) {
+			if (disabled) {
+				gatt.close();
+				return;
+			}
+			
 			if (status == BluetoothGatt.GATT_SUCCESS) {
-				
-				if (disabled) {
-					gatt.close();
-					callback = null;
-					return;
-				}
 				
 				for (BluetoothGattService service : gatt.getServices()) {
 					if (isServiceSupported(service.getUuid())) {
@@ -120,6 +124,7 @@ public class DeviceControlActivity extends Activity implements Handler.Callback 
 						
 						boolean success = gatt.readCharacteristic(rht);
 						if (!success) {
+							gatt.close();
 							Log.e(RHT_SERVICE_UUID, "read failed");
 						}
 						/*success = gatt.setCharacteristicNotification(rht, true);
@@ -132,6 +137,7 @@ public class DeviceControlActivity extends Activity implements Handler.Callback 
 				}
 
 			} else {
+				gatt.close();
 				//TODO maybe retry?
 				Log.e(RHT_SERVICE_UUID, "service discovery failed");
 
@@ -158,7 +164,6 @@ public class DeviceControlActivity extends Activity implements Handler.Callback 
 		public void onCharacteristicRead (BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
 			if (disabled) {
 				gatt.close();
-				callback = null;
 				
 			} else if (status == BluetoothGatt.GATT_SUCCESS) {
 				
