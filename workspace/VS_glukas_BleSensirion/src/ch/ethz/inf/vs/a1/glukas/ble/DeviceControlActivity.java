@@ -180,9 +180,11 @@ public class DeviceControlActivity extends Activity implements Handler.Callback 
 				message.arg1 = humid;
 				message.arg2 = tmp;
 				updateHandler.sendMessage(message);
-				
+
 				gatt.readCharacteristic(characteristic);//polling
-			}
+		        
+		        	        
+			}   
 		}
 
 		private boolean isServiceSupported(UUID uuid) {
