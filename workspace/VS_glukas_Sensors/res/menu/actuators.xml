@@ -2,10 +2,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="ethz.ch.vs.a1.glukas.sensors.ActuatorsActivity" >
 
-    <item
-        android:id="@+id/action_settings"
-        android:orderInCategory="100"
-        android:showAsAction="never"
-        android:title="@string/action_settings"/>
-
+	    <item 
+	        android:id="@+id/menu_looping" 
+	        android:title="@string/menuLooping" 
+	        android:orderInCategory="1" />
+	    
+		<item 
+		    android:id="@+id/menu_once" 
+		    android:title="@string/menuOnce" 
+		    android:orderInCategory="2" />
+		
+		<item 
+		    android:id="@+id/menu_back" 
+		    android:title="@string/menuBack" 
+		    android:orderInCategory="3" />
 </menu>

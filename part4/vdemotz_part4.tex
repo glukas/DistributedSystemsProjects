@@ -1,0 +1,54 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{fancyhdr}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{5pt plus 1pt}
+\setlength{\headheight}{13.6pt}
+\newcommand\question[2]{\vspace{.25in}\hrule\textbf{#1: #2}\vspace{.5em}\hrule\vspace{.10in}}
+
+\renewcommand\part[1]{\vspace{.10in}\textbf{(#1)}}
+
+\pagestyle{fancyplain}
+\lhead{\textbf{\NAME}}
+\rhead{Distributed Systems - Project 1, \today}
+\begin{document}\raggedright
+
+\newcommand\NAME{Lukas, Young, Vincent}  % your name
+
+\question{5}{Service Lifecycle} 
+
+\part{a} 
+
+\textbf{wrong}, a service can be stopped with the method stopService().
+
+\part{b}
+
+\textbf{wrong}, we call "bound service" a service that have at least one activity is bonded to it. Thus, an unbound service doesn't interact with client process.
+
+From android.developper.com :
+
+"A service is "bound" when an application component binds to it by calling bindService()."
+
+\part{c}
+
+\textbf{wrong}, if someone has called startService(), service is only destroy after a call of stopService() or stopSelf() and all clients have called onUnbind().
+
+\part{d}
+
+\textbf{true}, services are always called in a separate thread.
+
+\question{6}{AndroidManifest file}
+
+\part{1}
+
+ \textless uses-permission android:name= "android.permission.WRITE\_SMS"/\textgreater 
+
+\part{2}
+
+ \textless uses-permission android:name="android.permission.ACCESS\_FINE\_LOCATION"/\textgreater 
+
+\part{3}
+
+ \textless uses-permission android:name="android.permission.READ\_PHONE\_STATE" /\textgreater 
+
+\end{document}

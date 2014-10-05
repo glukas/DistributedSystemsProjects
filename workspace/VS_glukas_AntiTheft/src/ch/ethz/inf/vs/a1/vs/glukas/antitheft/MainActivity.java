@@ -19,6 +19,7 @@ public class MainActivity extends Activity implements OnSeekBarChangeListener {
 	Intent iService;
 	SharedPreferences preferences;
 	TextView timeoutValueView;
+	Boolean needed = true;
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,10 +58,12 @@ public class MainActivity extends Activity implements OnSeekBarChangeListener {
     	ToggleButton tb = (ToggleButton) v; 
     	if (tb.isChecked()) {
     		this.startService(iService);
+    		needed = false;
     		((Button)v).setText(R.string.button_on);
     	}
     	else {
     		this.stopService(iService);
+    		needed = true;
     		((Button)v).setText(R.string.button_off);
     	}
     }
@@ -90,7 +93,10 @@ public class MainActivity extends Activity implements OnSeekBarChangeListener {
 	protected void onResume() {
 		super.onResume();
 		if (iService != null){
+			if (!needed)
+			finish();
 	        this.stopService(iService);
+	        
 			//finish();
 		}
 		
@@ -98,8 +104,7 @@ public class MainActivity extends Activity implements OnSeekBarChangeListener {
 	
 	@Override
 	protected void onPause() {
-		super.onResume();
-		finish();
+		super.onPause();
 		
 		
 	}	
