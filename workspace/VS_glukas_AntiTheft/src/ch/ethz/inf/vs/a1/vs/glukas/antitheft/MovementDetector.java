@@ -9,7 +9,7 @@ import android.os.Handler;
 public class MovementDetector extends AbstractMovementDetector implements SensorEventListener {
 	Handler mHandler;
 	Runnable detected;
-	private final long UNSIG_MOVE_DURATION = 5000;
+	private final long UNSIG_MOVE_DURATION = 2000;
 	private boolean return_value = false;
 	private boolean is_changing = false;
 	

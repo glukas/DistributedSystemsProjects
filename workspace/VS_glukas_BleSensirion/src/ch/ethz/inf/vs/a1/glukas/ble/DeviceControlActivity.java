@@ -1,7 +1,6 @@
 package ch.ethz.inf.vs.a1.glukas.ble;
 
 import java.util.UUID;
-
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
