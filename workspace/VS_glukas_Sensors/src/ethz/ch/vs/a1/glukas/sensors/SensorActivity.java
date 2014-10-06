@@ -8,6 +8,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
@@ -60,7 +61,6 @@ public class SensorActivity extends Activity implements SensorEventListener {
 		ArrayList<HashMap<String,String>> sensorData = new ArrayList<HashMap<String,String>>();
 		int i = 0;
 		HashMap<String,String> item;
-		
 		// Test for AntiThief Accelerator
 		/*float[] values = null;
 		values = event.values;
@@ -76,7 +76,8 @@ public class SensorActivity extends Activity implements SensorEventListener {
 
 				
 				double[] average = {Math.sqrt(Math.pow(values[0] , 2) + Math.pow(values[0] , 2) + Math.pow(values[0] , 2))};*/
-			// Display for names and units
+			
+		// Display for names and units
 		String[] names = {"1st value", "2nd value", "3rd value", "Other value", "Other value", "Other value"};
 		switch (getIntent().getExtras().getInt(MainActivity.EXTRA_SENSOR_TYPE)){
 		case Sensor.TYPE_ACCELEROMETER: {
@@ -179,14 +180,14 @@ public class SensorActivity extends Activity implements SensorEventListener {
 		
 		
 		
-			for (double data : event.values) {
-	
+			for (float data : event.values) {
+		//Log.v("Number of values", String.valueOf(event.values.length));
 			item = new HashMap<String,String>();
 			
 			if (i < names.length)	
 			item.put("item1",names[i]);
 			else
-				item.put("item1","Other value");	
+			item.put("item1","Other value");	
 			item.put("item2",String.valueOf(data));
 			sensorData.add(item);
 			i++;
