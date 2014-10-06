@@ -13,11 +13,12 @@ import android.os.IBinder;
 public class AntiTheftServiceImpl extends AbstractAntiTheftService {
 
 	public static final String broadcastMessage = "notificationClick";
-	Receiver broadcastReceiver;
-	AlarmThread armAlarm;
-	protected volatile boolean alarmArmed = false;
-	protected volatile boolean stopAlarm = false;
-	protected NotificationWrapper notif;
+	private Receiver broadcastReceiver;
+	private AlarmThread armAlarm;
+	private volatile boolean alarmArmed = false;
+	private volatile boolean stopAlarm = false;
+	private NotificationWrapper notif;
+	private MediaPlayer mp;
 	
 	private class Receiver extends BroadcastReceiver {
 
@@ -59,6 +60,8 @@ public class AntiTheftServiceImpl extends AbstractAntiTheftService {
 		finishNotification();
 		//unregister broadcast
 		unregisterReceiver(broadcastReceiver);
+		//release Media Player
+		mp.release();
 	}
 	
 	@Override
@@ -78,6 +81,9 @@ public class AntiTheftServiceImpl extends AbstractAntiTheftService {
         iFilter.addCategory(broadcastMessage);
         iFilter.addAction(broadcastMessage);
         registerReceiver(broadcastReceiver, iFilter);
+        
+        //create Media Player
+        mp = MediaPlayer.create(this, R.raw.sound);
 	}
 	
 	@Override
@@ -116,7 +122,6 @@ public class AntiTheftServiceImpl extends AbstractAntiTheftService {
 	
 	protected void ringAlarm() {
 		notif.setNotificationRinging();
-		MediaPlayer mp = MediaPlayer.create(this, R.raw.sound);
 		mp.setVolume(1.0f, 1.0f);
 		mp.start();
 	}
