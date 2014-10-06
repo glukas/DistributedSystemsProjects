@@ -8,28 +8,44 @@ import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
 import ch.ethz.inf.vs.a1.vs_glukas_antitheft.R;
 
+/**
+ * This class is meant to remove all stuff about notification from the service
+ *
+ */
 public class NotificationWrapper {
 	
 	////
-	//Manage Notification
+	//Members
 	////
 	
-	protected int notifId = 001;
-	protected NotificationManager notifManager;
-	protected NotificationCompat.Builder notifBuilder;
-	protected Notification notif;
-	protected int stateProgressBar = 0;
-	protected final String titleStr = "Anti Theft";
-	protected final String noMoveStr = "No movement detected";
-	protected final String alarmArmedStr = "Alarm is armed. Tap to disable";
-	protected final String ringingStr = "THIEEEF!!!";
-	protected Service service;
+	//building members, ids, ...
+	private int notifId = 001;
+	private NotificationManager notifManager;
+	private NotificationCompat.Builder notifBuilder;
+	private Notification notif;
 	
+	//string to display, registered state of progress bar
+	private int stateProgressBar = 0;
+	private final String titleStr = "Anti Theft";
+	private final String noMoveStr = "No movement detected";
+	private final String alarmArmedStr = "Alarm is armed. Tap to disable";
+	private final String ringingStr = "THIEEEF!!!";
+	
+	//the service that uses the notification
+	private Service service;
+	
+	/**
+	 * Destroy the notification
+	 */
 	public void destroyNotification(){
 		notifManager.cancel(notifId);
 	}
 	
-	public NotificationWrapper(Service service){
+	/**
+	 * Create a new notification which can't be cleared and that sends a broadcast on tap
+	 * @param service that wants to manage the notification
+	 */
+	public NotificationWrapper(Service service, String broadcastMessage){
 		this.service = service;
 		
 		//Create the builder for the notification with all features
@@ -44,9 +60,9 @@ public class NotificationWrapper {
 		notif = notifBuilder.build();
 		notif.flags = Notification.FLAG_ONGOING_EVENT;
 
-		//set action onClick
+		//set action onClick (broadcast
 		Intent onClickIntent = new Intent();  
-		onClickIntent.setAction(AntiTheftServiceImpl.broadcastMessage);
+		onClickIntent.setAction(broadcastMessage);
 		PendingIntent pendingIntentOnClick = PendingIntent.getBroadcast(service, 1234, onClickIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 		notifBuilder.setContentIntent(pendingIntentOnClick);
 
@@ -54,38 +70,61 @@ public class NotificationWrapper {
 		notifManager.notify(notifId, notif);
 	}
 	
+	/**
+	 * Set (and create if not already) the value to the progress bar
+	 * @param toSet
+	 */
 	public void setNotificationInProgress(int toSet){
 		setTextNotification(alarmArmedStr);
 		setProgressBar(toSet);
 	}
 	
+	/**
+	 * Increment (and create if not already) the value to the progress bar
+	 * @param toIncr
+	 */
 	public void incrNotificationInProgress(int toIncr){
 		setTextNotification(alarmArmedStr);
 		incrProgressBar(toIncr);
 	}
 	
+	/**
+	 * Set the notification to display some nice message
+	 */
 	public void setNotificationRinging(){
 		destroyProgressBar();
 		setTextNotification(ringingStr);
 	}
 	
+	/**
+	 * Set the notification to display some nice message
+	 */
 	public void setNotificationNoMove(){
 		destroyProgressBar();
 		setTextNotification(noMoveStr);
 	}
 	
+	/**
+	 * Display s on the notification as ContentText
+	 */
 	private void setTextNotification(String s){
 		notifBuilder.setContentText(s);
 		notif = notifBuilder.build();
 		notifManager.notify(notifId, notif);
 	}
 
+	/**
+	 * Destroy the progress bar from notification
+	 */
 	private void destroyProgressBar(){
 		notifBuilder.setProgress(0, 0, false);
 		notif = notifBuilder.build();
 		notifManager.notify(notifId, notif);
 	}
-		
+	
+	/**
+	 * Increment the progress bar by toIncr
+	 */
 	private void incrProgressBar(int toIncr){
 		stateProgressBar += toIncr;
 		notifBuilder.setProgress(((AntiTheftServiceImpl)service).getTimeout(), stateProgressBar, false);
@@ -94,6 +133,9 @@ public class NotificationWrapper {
 		notifManager.notify(notifId, notif);
 	}
 		
+	/**
+	 * Set the progress bar to toSet
+	 */
 	private void setProgressBar(int toSet) {
 		stateProgressBar = toSet;
 		incrProgressBar(0);	

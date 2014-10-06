@@ -70,7 +70,7 @@ public class AntiTheftServiceImpl extends AbstractAntiTheftService {
 		        SensorManager.SENSOR_DELAY_NORMAL);
 		
 		//create a new notification
-		notif = new NotificationWrapper(this);
+		notif = new NotificationWrapper(this, broadcastMessage);
 		
 		//create new broadcast and register it
         broadcastReceiver = new Receiver();
@@ -119,6 +119,7 @@ public class AntiTheftServiceImpl extends AbstractAntiTheftService {
 		MediaPlayer mp = MediaPlayer.create(this, R.raw.sound);
 		mp.setVolume(1.0f, 1.0f);
 		mp.start();
+		mp.release();
 	}
 	
 	@Override

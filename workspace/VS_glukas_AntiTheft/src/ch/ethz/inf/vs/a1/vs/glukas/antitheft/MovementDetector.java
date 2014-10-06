@@ -6,13 +6,17 @@ import android.hardware.SensorEventListener;
 
 public class MovementDetector extends AbstractMovementDetector implements SensorEventListener {
 	
+	//time in ms where we respectively first detected movement and we get new values from sensor
 	private long firstMove = 0;
 	private long actualMove;
+	//arbitrary time defined in assignment
 	private final int UNSIG_MOVE_DURATION = 5000;
 	
 	@Override
 	protected boolean doAlarmLogic(float[] values) {
+		//compute the average of movement. "very scientifically provable"
 		double average = Math.sqrt(Math.pow(values[0] , 2) + Math.pow(values[1] , 2) + Math.pow(values[2] , 2));
+
 		if (average > 1){
 			actualMove = new Date().getTime();
 			if (firstMove == 0){
@@ -23,6 +27,7 @@ public class MovementDetector extends AbstractMovementDetector implements Sensor
 				return true;
 			}
 		} else {
+			//if there's no more consequent move
 			firstMove = 0;
 		}
 		return false;
