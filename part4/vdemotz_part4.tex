@@ -1,6 +1,7 @@
 \documentclass[11pt]{article}
 \usepackage[margin=1in]{geometry}
 \usepackage{fancyhdr}
+\usepackage{listings}
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{5pt plus 1pt}
 \setlength{\headheight}{13.6pt}
@@ -14,6 +15,47 @@
 \begin{document}\raggedright
 
 \newcommand\NAME{Lukas, Young, Vincent}  % your name
+
+\question{1}{Sensor Framework}
+
+\part{A-a}
+
+\begin{small}
+\begin{lstlisting}[frame=single]
+
+SensorManager sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+List<Sensor> sensors = sensorManager.getSensorList(Sensor.TYPE_ALL);
+\end{lstlisting}
+\end{small}
+
+\part{A-b}
+
+\begin{small}
+\begin{lstlisting}[frame=single]
+
+Sensor sensor = ...;
+float maxRange = sensor.getMaximumRange();
+\end{lstlisting}
+\end{small}
+
+\part{A-c}
+
+\begin{small}
+\begin{lstlisting}[frame=single]
+Sensor accSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+registerListener (listener, accSensor, SENSOR_DELAY_FASTEST, handler)
+\end{lstlisting}
+\end{small}
+
+Where sensorManager, accSensor and handler have been defined appropriately.
+
+\part{B}
+
+(Note: I am still unsure about this. The reusing is only a problem if the MainActivity also doesn't copy the accelerometer data. What do you think? )
+
+The SensorEvent objects passed to the SensorEventListener can be resused by the system. This means that the values array may be overwritten by the system to hold data for some other event. It is thus necessary to copy the values in the onSensorChanged method, and pass that copy to the listenerActivity.
+
+As a sidenote, it is unadvisable to block in the onSensorChanged method. The main activity should thus not directly update its display, but rather store the new values invalidate the views.
 
 \question{5}{Service Lifecycle} 
 

@@ -33,3 +33,11 @@ workspace/VS_glukas_Sensors/bin/resources.ap_
 *.ap_
 
 *.class
+
+*.aux
+
+part4/.texpadtmp/vdemotz_part4.log
+
+part4/.texpadtmp/vdemotz_part4.synctex.gz
+
+part4/vdemotz_part4.pdf
