@@ -15,6 +15,9 @@ public class AntiTheftServiceImpl extends AbstractAntiTheftService {
 	public static final String broadcastMessage = "notificationClick";
 	Receiver broadcastReceiver;
 	AlarmThread armAlarm;
+	protected volatile boolean alarmArmed = false;
+	protected volatile boolean stopAlarm = false;
+	protected NotificationWrapper notif;
 	
 	private class Receiver extends BroadcastReceiver {
 
@@ -29,7 +32,9 @@ public class AntiTheftServiceImpl extends AbstractAntiTheftService {
 		stopAlarm = true;
 		//wait for thread to finish
 		try {
-			armAlarm.join();
+			if (armAlarm != null){
+				armAlarm.join();
+			}
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}

@@ -1,12 +1,39 @@
 package ch.ethz.inf.vs.a1.vs.glukas.antitheft;
 
-
+import java.util.Date;
 
 import android.hardware.SensorEventListener;
-import android.os.Handler;
-
 
 public class MovementDetector extends AbstractMovementDetector implements SensorEventListener {
+	
+	private long firstMove = 0;
+	private long actualMove;
+	private final int UNSIG_MOVE_DURATION = 5000;
+	
+	@Override
+	protected boolean doAlarmLogic(float[] values) {
+		double average = Math.sqrt(Math.pow(values[0] , 2) + Math.pow(values[1] , 2) + Math.pow(values[2] , 2));
+		if (average > 1){
+			actualMove = new Date().getTime();
+			if (firstMove == 0){
+				firstMove = actualMove;
+				return false;
+			} else if (actualMove - firstMove >= UNSIG_MOVE_DURATION){
+				firstMove = actualMove;
+				return true;
+			}
+		} else {
+			firstMove = 0;
+		}
+		return false;
+	}
+	
+	
+	
+	
+	
+	
+	/*
 	Handler mHandler;
 	Runnable detected;
 	private final long UNSIG_MOVE_DURATION = 2000;
@@ -39,5 +66,5 @@ public class MovementDetector extends AbstractMovementDetector implements Sensor
 		
 		return return_value;
 	}
-
+*/
 }

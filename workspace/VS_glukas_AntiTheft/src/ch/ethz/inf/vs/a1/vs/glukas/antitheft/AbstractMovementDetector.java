@@ -13,6 +13,8 @@ public abstract class AbstractMovementDetector implements SensorEventListener {
 		antiTheftService = service;
 	}
 	
+	int i = 0;
+	
 	/**
 	 * Takes the sensor values, pass them to doAlarmLogic() to check if the alarm should be fired,
 	 * then calls antiTheftService.startAlarm() if a deliberate movement is detected.
@@ -34,9 +36,10 @@ public abstract class AbstractMovementDetector implements SensorEventListener {
 		values[2] = values[2]- g[2];
 		
 		// Add code to populate the 'values' array with the sensor values
-		
 		boolean isAlarm = doAlarmLogic(values);
 		if (isAlarm) {
+			System.err.println("Call "+i+"the alarm");
+			i++;
 			((AbstractAntiTheftService)antiTheftService).startAlarm();
 		}
 	}

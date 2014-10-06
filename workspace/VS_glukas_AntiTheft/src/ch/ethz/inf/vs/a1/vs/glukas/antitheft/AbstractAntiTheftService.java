@@ -10,9 +10,6 @@ public abstract class AbstractAntiTheftService extends Service {
 	protected AbstractMovementDetector listener;
 	protected SharedPreferences preferences;
 	protected SensorManager sensorManager;
-	protected volatile boolean alarmArmed = false;
-	protected volatile boolean stopAlarm = false;
-	protected NotificationWrapper notif;
 	
 	@Override
 	public void onCreate() {
