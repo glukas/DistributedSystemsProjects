@@ -119,7 +119,6 @@ public class AntiTheftServiceImpl extends AbstractAntiTheftService {
 		MediaPlayer mp = MediaPlayer.create(this, R.raw.sound);
 		mp.setVolume(1.0f, 1.0f);
 		mp.start();
-		mp.release();
 	}
 	
 	@Override

@@ -32,8 +32,4 @@ public abstract class AbstractAntiTheftService extends Service {
 	protected int getTimeout() {
 		return preferences.getInt(Settings.TIMEOUT_STR, Settings.TIMEOUT_DEFAULT);
 	}
-	
-	protected int getSensitivity() {
-		return preferences.getInt(Settings.SENSITIVITY_STR, Settings.SENSITIVITY_DEFAULT);
-	}
 }

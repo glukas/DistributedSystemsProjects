@@ -90,7 +90,7 @@ public class MainActivity extends Activity implements OnSeekBarChangeListener {
 	
 	@SuppressLint("DefaultLocale")
 	private String textForTimeout(int timeout) {
-		return String.format("%s : %d", this.getString(R.string.timeout), timeout);
+		return String.format("%s : %f s", this.getString(R.string.timeout), timeout/100.0);
 	}
 
     ////
