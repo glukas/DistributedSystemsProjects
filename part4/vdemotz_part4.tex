@@ -57,6 +57,15 @@ The SensorEvent objects passed to the SensorEventListener can be resused by the 
 
 As a sidenote, it is unadvisable to block in the onSensorChanged method. The main activity should thus not directly update its display, but rather store the new values invalidate the views.
 
+\question{3}{Resources}
+
+The Android XML Layouts can be defined so that interface elements are layed out relative to each other and the screen border. This is good for small variations in screen size. For vastly different screen sizes and densities different layouts can be defined. The corresponding activity can then instanciate the most appropriate one in its onCreate.
+
+Another way to do it is to instaciate all Views programmatically and make this layout and drawing code work in consideration of the available screen realestate. But often doing things all programmatically is more tedious.
+
+Android XML elements can have an id. An element with id $x$ can be referenced in code by $R.id.x$.
+
+
 \question{5}{Service Lifecycle} 
 
 \part{a} 
