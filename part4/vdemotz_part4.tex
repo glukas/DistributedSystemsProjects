@@ -74,11 +74,17 @@ There are two cases:
 
 Activity A had been destroyed by the system:
 
+- That means Activity A was destroyed before and OnDestroy was called.
+
+(Depending if the system destroys it because it is not needed anymore or because the memory is needed, the System will save the state of the activity.)
+
 -Activity A is created and onCreate() is called
 
 -Activity A is started and onStart() is called
 
 -Activity A is resumed and onResume() is called
+
+
 
 The activity A was only stopped:
 
