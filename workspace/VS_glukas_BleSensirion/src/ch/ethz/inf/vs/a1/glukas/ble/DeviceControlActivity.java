@@ -1,21 +1,14 @@
 package ch.ethz.inf.vs.a1.glukas.ble;
 
-import java.util.UUID;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothGatt;
-import android.bluetooth.BluetoothGattCallback;
-import android.bluetooth.BluetoothGattCharacteristic;
-import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothManager;
-import android.bluetooth.BluetoothProfile;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -75,16 +68,16 @@ public class DeviceControlActivity extends Activity implements Handler.Callback 
 	public boolean handleMessage(Message msg) {
 		
 		TextView humValue = (TextView) findViewById(R.id.textViewHumValue);
-		int msbH = msg.arg1 / 100;
-		int lsbH = msg.arg1 % 100;
-		humValue.setText(String.valueOf(msbH)+","+String.valueOf(lsbH));
+		humValue.setText(parseMessage(msg.arg1)+" %.");
 		
 		TextView tmpValue = (TextView) findViewById(R.id.textViewTmpValue);
-		int msbT = msg.arg2 / 100;
-		int lsbT = msg.arg2 % 100;
-		tmpValue.setText(String.valueOf(msbT)+","+String.valueOf(lsbT));
+		tmpValue.setText(parseMessage(msg.arg2)+" celsius degrees.");
 		
 		return false;
+	}
+	
+	private String parseMessage(int i){
+		return (String.valueOf(i / 100)+","+((i % 100 < 10) ? "0"+ i % 100 : i % 100));
 	}
 
 	@Override
