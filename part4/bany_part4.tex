@@ -1,0 +1,94 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{fancyhdr}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{5pt plus 1pt}
+\setlength{\headheight}{13.6pt}
+\newcommand\question[2]{\vspace{.25in}\hrule\textbf{#1: #2}\vspace{.5em}\hrule\vspace{.10in}}
+
+\renewcommand\part[1]{\vspace{.10in}\textbf{(#1)}}
+
+\pagestyle{fancyplain}
+\lhead{\textbf{\NAME}}
+\rhead{Distributed Systems - Project 1, \today}
+\begin{document}\raggedright
+
+\newcommand\NAME{Lukas, Young, Vincent}  % your name
+
+\question{2}{Activity Lifecycle} 
+ a) An activity A is in the foreground, then the user stars another activity B.
+
+ - Activity B will be created and the method OnCreate() will be called. \newline
+ - Activity B will get started and the method OnStart() gets called.\newline
+ - Activity A will be paused and the OnPause() method of the class Activity will be called.\newline
+ - Activity A is only partially visible.\newline
+ - Activity B will be resumed and the method OnResume() will be called.\newline
+
+b) Activity A is no longer visible.
+
+- Now Activity A is no longer visible.
+- Activity A will get stopped and OnStop() will be called.
+
+c) User navigates back to Activity A.
+
+- Since Activity A got stopped before, it first has to be restarted and the method OnRestart() will be called.\newline
+- Now the method OnStart() will get called.\newline
+- Since A is about to get resumed, Activity B will get paused and OnPause() will get called.\newline
+- Activity B is only partially visible now.\newline
+- After that Activity A gets resumed and OnResume() will get called.\newline
+- Since A got resumed and is covering B, Activity B gets stopped and OnStop() will be called.\newline
+
+\textbf{Note:} It can happen that the System needs the memory used by a paused or stopped Activity elsewhere.\newline
+	The System can then temporarily destroy/kill the Activity and OnDestroy() will be called. \newline
+	To display the Activity again it has to completely recreated, started and restored to its previous state. \newline
+	In that case : OnCreate(), OnStart() and OnResume() will be called. \newline
+
+
+
+\question{4}{Intents} 
+
+\textbf {What are Intents?}
+
+An Intent is a messaging object and an abstract description of an operation to be performed.
+
+\textbf{What are they used for? }
+
+You can use an Intent to request an action from another app component and carrying any necessary data to it.
+There are basic cases:\newline
+1. To start an activity
+	
+It will start the window which is an instance of the Activity. 
+The Activity can then use the data that got carried over and perform its own methods.
+One can use startActivityForResult() to receive a result when the Activity finishes.
+ 
+2. To start a service
+
+This will start a service which will perform its operations with help of the data carried over.
+Compared to the activity it will perform in the background without an user interface.
+
+3. To deliver a broadcast
+
+This will basically send a message which any app can receive.
+
+\textbf {What is the difference between Explicit Intents and Implicit Intents?}
+
+\textbf{Explicit Intents:}\newline
+- For an Explicit Intent you have to specify the component to start by a fully-qualified class name.
+
+- Typically you use an Explicit Intent to start a component in your own app.
+
+- For 1. and 2. from the question before the system will immediately start the app component communicated in the Intent.
+
+\textbf{Implicit Intents:}\newline
+- Compared to the Explicit Intents - An Implicit Intent will will not name a specific app component like an action or service.
+
+- Instead it will declare a general action which is allowed to be handled by an component of    a completely different app. 	
+
+- To find out which components are the appropriate ones the system will check the Intent filters which should be declared in the manifest file.
+If it has a match then the system starts the match. If there are more than one matches the user can pick from the list.
+And if none are found the call will fail and the app will crash if one did not verify before that there is at least one match.\newline
+\textbf{Note:} The intent-Filter does not influence any explicit Intents
+
+
+
+\end{document}
