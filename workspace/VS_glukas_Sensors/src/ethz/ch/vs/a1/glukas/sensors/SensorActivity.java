@@ -28,6 +28,7 @@ public class SensorActivity extends Activity implements SensorEventListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_sensor);
 		sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+		createNames();
 	}
 
 	@Override
@@ -231,7 +232,6 @@ public class SensorActivity extends Activity implements SensorEventListener {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		createNames();
 		// register this class as a listener for events
 		sensorManager.registerListener(this,
 				sensorManager.getDefaultSensor(getIntent().getExtras().getInt(MainActivity.EXTRA_SENSOR_TYPE)),
