@@ -51,20 +51,10 @@ Where sensorManager, accSensor and handler have been defined appropriately.
 
 \part{B}
 
-(Note: I am still unsure about this. The reusing is only a problem if the MainActivity also doesn't copy the accelerometer data. What do you think? )
-
 The SensorEvent objects passed to the SensorEventListener can be resused by the system. This means that the values array may be overwritten by the system to hold data for some other event. It is thus necessary to copy the values in the onSensorChanged method, and pass that copy to the listenerActivity.
 
-As a sidenote, it is unadvisable to block in the onSensorChanged method. The main activity should thus not directly update its display, but rather store the new values invalidate the views.
-
 \question{2}{Activity Lifecycle} 
- a) An activity A is in the foreground, then the user stars another activity B.
-
- - Activity B will be created and the method OnCreate() will be called. \newline
- - Activity B will get started and the method OnStart() gets called.\newline
- - Activity A will be paused and the OnPause() method of the class Activity will be called.\newline
- - Activity A is only partially visible.\newline
- - Activity B will be resumed and the method OnResume() will be called.\newline
+\part{a} An activity A is in the foreground, then the user stars another activity B.
  
  -Activity B is created with onCreate()
  
@@ -73,37 +63,16 @@ As a sidenote, it is unadvisable to block in the onSensorChanged method. The mai
  -Activity A is stopped with onPause()
  
  -Activity B is resumed with onResume()
- 
- If A is not partially visible :
- 
- -Activity A is stopped with onStop()\\
- 
- 
 
-b) Activity A is no longer visible.
+\part{b} Activity A is no longer visible.
 
-- Now Activity A is no longer visible.
+- Activity A will get stopped and onStop() will be called.
 
-- Activity A will get stopped and OnStop() will be called.
+\part{c} User navigates back to Activity A.
 
-c) User navigates back to Activity A.
+There are two cases:
 
-- Since Activity A got stopped before, it first has to be restarted and the method OnRestart() will be called.\newline
-- Now the method OnStart() will get called.\newline
-- Since A is about to get resumed, Activity B will get paused and OnPause() will get called.\newline
-- Activity B is only partially visible now.\newline
-- After that Activity A gets resumed and OnResume() will get called.\newline
-- Since A got resumed and is covering B, Activity B gets stopped and OnStop() will be called.\newline
-
-\textbf{Note:} It can happen that the System needs the memory used by a paused or stopped Activity elsewhere.\newline
-	The System can then temporarily destroy/kill the Activity and OnDestroy() will be called. \newline
-	To display the Activity again it has to completely recreated, started and restored to its previous state. \newline
-	In that case : OnCreate(), OnStart() and OnResume() will be called. \newline
-	
-	
-Three cases:
-
-The app process has been previously killed. So:
+Activity A had been destroyed by the system:
 
 -Activity A is created with onCreate()
 
@@ -111,7 +80,7 @@ The app process has been previously killed. So:
 
 -Activity A is resumed with onResume()
 
-The activity A was stopped. (was not longer visible at some point)
+The activity A was only stopped:
 
 -Activity A is restarted with onRestart()
 
@@ -119,10 +88,7 @@ The activity A was stopped. (was not longer visible at some point)
 
 -Activity A is resumed with onResume()
 
-The activity A was only paused. (still partially visible)
-
--Activity A is resumed with onResume()
-
+In any case B will get paused, and  - once/if it is covered - stopped.
 
 \question{3}{Resources}
 
@@ -182,36 +148,28 @@ And if none are found the call will fail and the app will crash if one did not v
 
 \part{a} 
 
-\textbf{wrong}, a service can be stopped with the method stopService().
+\textbf{false:} A service can be stopped with the method stopService().
 
 \part{b}
 
-\textbf{wrong}, we call "bound service" a service that have at least one activity is bonded to it. Thus, an unbound service doesn't interact with client process.
-
-From android.developper.com :
-
-"A service is "bound" when an application component binds to it by calling bindService()."
+\textbf{false:} Only bound services offer an interface to communicate with multiple processes.
 
 \part{c}
 
-\textbf{wrong}, if someone has called startService(), service is only destroy after a call of stopService() or stopSelf() and all clients have called onUnbind().
+\textbf{true:} From the API Guide: "A bound service runs only as long as another application component is bound to it. Multiple components can bind to the service at once, but when all of them unbind, the service is destroyed."
 
 \part{d}
 
-\textbf{true}, services are always called in a separate thread.
+\textbf{false:} To quote the API Guide "Caution: A service runs in the main thread of its hosting process - the service does not create its own thread and does not run in a separate process (unless you specify otherwise).".
 
 \question{6}{AndroidManifest file}
 
-\part{1}
-
  \textless uses-permission android:name= "android.permission.WRITE\_SMS"/\textgreater 
-
-\part{2}
-
+ 
+ 
  \textless uses-permission android:name="android.permission.ACCESS\_FINE\_LOCATION"/\textgreater 
-
-\part{3}
-
+ 
+ 
  \textless uses-permission android:name="android.permission.READ\_PHONE\_STATE" /\textgreater 
 
 \end{document}
