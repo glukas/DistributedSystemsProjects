@@ -23,7 +23,7 @@
             </intent-filter>
         </activity>
         <service
-  			android:name="ch.ethz.inf.vs.a1.vs.glukas.antitheft.AntiTheftServiceImpl" >
+  			android:name="ch.ethz.inf.vs.android.nethz.antitheft.LocationService" >
 		</service> 
     </application>
 

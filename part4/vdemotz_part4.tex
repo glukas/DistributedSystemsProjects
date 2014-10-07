@@ -84,8 +84,6 @@ Activity A had been destroyed by the system:
 
 -Activity A is resumed and onResume() is called
 
-
-
 The activity A was only stopped:
 
 -Activity A is restarted and onRestart() is called
@@ -177,5 +175,11 @@ And if none are found the call will fail and the app will crash if one did not v
  
  
  \textless uses-permission android:name="android.permission.READ\_PHONE\_STATE" /\textgreater 
+ 
+ \textless service\textgreater 
+ 
+	 \textless action android:name="ch.ethz.inf.vs.android.nethz.antitheft.LocationService"/\textgreater	
+	 
+ \textless /service\textgreater 
 
 \end{document}
