@@ -1,30 +1,67 @@
 package ch.ethz.inf.vs.a1.vs.glukas.antitheft;
 
 import ch.ethz.inf.vs.a1.vs_glukas_antitheft.R;
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.media.MediaPlayer;
 import android.os.IBinder;
-import android.support.v4.app.NotificationCompat;
 
 public class AntiTheftServiceImpl extends AbstractAntiTheftService {
 
-	@Override
-	public void onDestroy(){
-		super.onDestroy();
-		//Destroy the notification, the listener and the alarm
-		alarmArmed = false;
+	public static final String broadcastMessage = "notificationClick";
+	private Receiver broadcastReceiver;
+	private AlarmThread armAlarm;
+	private volatile boolean alarmArmed = false;
+	private volatile boolean stopAlarm = false;
+	private NotificationWrapper notif;
+	private MediaPlayer mp;
+	
+	private class Receiver extends BroadcastReceiver {
+
+		@Override
+		public void onReceive(Context c, Intent i) {
+			finishAlarm();
+			notif.setNotificationNoMove();
+		}
+	}
+	
+	private void finishAlarm(){
+		stopAlarm = true;
+		//wait for thread to finish
 		try {
-			armAlarm.join();
+			if (armAlarm != null){
+				armAlarm.join();
+			}
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+		stopAlarm = false;
+		alarmArmed = false;
+	}
+	
+	private void finishNotification(){
+		notif.destroyNotification();
+		notif = null;
+	}
+    
+	
+	@Override
+	public void onDestroy(){
+		super.onDestroy();
+		//Stop armed alarm
+		finishAlarm();
+		//unregister listener of sensor
 		sensorManager.unregisterListener(listener);
-		notifManager.cancel(notifId);
+		//destroy notification
+		finishNotification();
+		//unregister broadcast
+		unregisterReceiver(broadcastReceiver);
+		//release Media Player
+		mp.release();
 	}
 	
 	@Override
@@ -34,37 +71,36 @@ public class AntiTheftServiceImpl extends AbstractAntiTheftService {
 		sensorManager.registerListener(listener,
 		    	sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
 		        SensorManager.SENSOR_DELAY_NORMAL);
-		createNotification();
+		
+		//create a new notification
+		notif = new NotificationWrapper(this, broadcastMessage);
+		
+		//create new broadcast and register it
+        broadcastReceiver = new Receiver();
+        IntentFilter iFilter = new IntentFilter();
+        iFilter.addCategory(broadcastMessage);
+        iFilter.addAction(broadcastMessage);
+        registerReceiver(broadcastReceiver, iFilter);
+        
+        //create Media Player
+        mp = MediaPlayer.create(this, R.raw.sound);
 	}
 	
 	@Override
 	public void startAlarm() {
-		//multiple calls of startAlarm raise only one counting to zero
 		if (alarmArmed){
 			return;
 		}
 		alarmArmed = true;
+		armAlarm = new AlarmThread();
 		armAlarm.start();
 	}
 	
-	protected void ringAlarm() {
-		destroyProgressBar();
-		setTextNotification(ringingStr);
-		MediaPlayer mp = MediaPlayer.create(this, R.raw.sound);
-		mp.setVolume(1.0f, 1.0f);
-		mp.start();
-		//stopSelf();
-	}
-	
-	@Override
-	public IBinder onBind(Intent intent) {
-		return null;
-	}
-	
-	private Thread armAlarm = new Thread(){
+	public class AlarmThread extends Thread{
+
 		@Override
 		public void run(){
-			createProgressBar();
+			notif.setNotificationInProgress(0);
 			int timeout = getTimeout();
 			int stepSleep = timeout / 10;
 			int stepIncr = timeout / 100;
@@ -74,86 +110,24 @@ public class AntiTheftServiceImpl extends AbstractAntiTheftService {
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
-				incrProgressBar(stepIncr);
+				notif.incrNotificationInProgress(stepIncr);
 				//To not use stop() deprecated method, boolean used to abort thread prematurely
-				if(!alarmArmed){
+				if(stopAlarm){
 					return;
 				}
 			}
-			destroyProgressBar();
 			ringAlarm();
 		}
-	};
-	
-	////
-	//Manage Notification
-	////
-	
-	protected final String titleStr = "Anti Theft";
-	protected final String noMoveStr = "No movement detected";
-	protected final String alarmArmedStr = "Alarm is armed. Tap to disable";
-	protected final String ringingStr = "THIEEEF!!!";
-	
-	protected void createNotification(){
-		//Create the builder for the notification with all features
-				notifBuilder =
-					    new NotificationCompat.Builder(this)
-					    .setSmallIcon(R.drawable.ic_launcher)
-					    .setContentTitle(titleStr)
-					    .setContentText(noMoveStr);
-					
-		//create the notification with the flag "ongoing" (can't be deleted by user)
-		notifManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-		
-		notif = notifBuilder.build();
-		notif.flags = Notification.FLAG_ONGOING_EVENT;
-		notifManager.notify(notifId, notif);
-		Intent resultIntent = new Intent(this, MainActivity.class);
-		// Because clicking the notification opens a new ("special") activity, there's
-		// no need to create an artificial back stack.
-		PendingIntent resultPendingIntent =
-		    PendingIntent.getActivity(
-		    this,
-		    0,
-		    resultIntent,
-		    PendingIntent.FLAG_UPDATE_CURRENT
-		);
-		notifBuilder.setContentIntent(resultPendingIntent);
 	}
 	
-	protected void setTextNotification(String s){
-		notifBuilder.setContentText(s);
-		notif = notifBuilder.build();
-		notifManager.notify(notifId, notif);
+	protected void ringAlarm() {
+		notif.setNotificationRinging();
+		mp.setVolume(1.0f, 1.0f);
+		mp.start();
 	}
-		
-	protected void createProgressBar(){
-		setTextNotification(alarmArmedStr);
-		resetProgressBar();
-	}
-		
-	protected void destroyProgressBar(){
-		notifBuilder.setProgress(0, 0, false);
-		notif = notifBuilder.build();
-		notifManager.notify(notifId, notif);
-	}
-		
-	protected void incrProgressBar(int toIncr){
-		stateProgressBar += toIncr;
-		notifBuilder.setProgress(getTimeout(), stateProgressBar, false);
-		notif = notifBuilder.build();
-		notif.flags = Notification.FLAG_ONGOING_EVENT;
-		notifManager.notify(notifId, notif);
-	}
-		
-	protected void resetProgressBar(){
-		stateProgressBar = 0;
-		incrProgressBar(0);
-	}
-		
+	
 	@Override
-	protected void setProgressBar(int toSet) {
-		stateProgressBar = toSet;
-		incrProgressBar(0);	
+	public IBinder onBind(Intent intent) {
+		return null;
 	}
 }

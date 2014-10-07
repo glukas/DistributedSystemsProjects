@@ -2,6 +2,7 @@ package ch.ethz.inf.vs.a1.vs.glukas.antitheft;
 
 import ch.ethz.inf.vs.a1.vs_glukas_antitheft.R;
 import android.os.Bundle;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -19,7 +20,11 @@ public class MainActivity extends Activity implements OnSeekBarChangeListener {
 	Intent iService;
 	SharedPreferences preferences;
 	TextView timeoutValueView;
-	Boolean needed = true;
+	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+	}
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,15 +63,17 @@ public class MainActivity extends Activity implements OnSeekBarChangeListener {
     	ToggleButton tb = (ToggleButton) v; 
     	if (tb.isChecked()) {
     		this.startService(iService);
-    		needed = false;
     		((Button)v).setText(R.string.button_on);
     	}
     	else {
     		this.stopService(iService);
-    		needed = true;
     		((Button)v).setText(R.string.button_off);
     	}
     }
+    
+    ////
+    //Timeout
+    ////
     
     private int timeoutToSeekBarProgress(int timeout) {
     	return timeout-Settings.MIN_TIMEOUT;
@@ -81,10 +88,11 @@ public class MainActivity extends Activity implements OnSeekBarChangeListener {
 		return progress+Settings.MIN_TIMEOUT;
 	}
 	
+	@SuppressLint("DefaultLocale")
 	private String textForTimeout(int timeout) {
-		return String.format("%s : %d", this.getString(R.string.timeout), timeout);
+		return String.format("%s : %f s", this.getString(R.string.timeout), timeout/100.0);
 	}
-    
+
     ////
     //OnSeekBarChange interface
     ////
@@ -92,21 +100,11 @@ public class MainActivity extends Activity implements OnSeekBarChangeListener {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		if (iService != null){
-			if (!needed)
-			finish();
-	        this.stopService(iService);
-	        
-			//finish();
-		}
-		
 	}	
 	
 	@Override
 	protected void onPause() {
 		super.onPause();
-		
-		
 	}	
 	
 	@Override
