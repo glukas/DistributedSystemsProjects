@@ -18,7 +18,7 @@ public class SensorActivity extends Activity implements SensorEventListener {
 	private ListView listView;
 	private SensorManager sensorManager;
 	private SimpleAdapter simpleAdapter;
-	float[] g = {0f,0f,0f};
+	float[] g = { 0f, 0f, 0f };
 	float alpha = 0.8f;
 	private String[] names;
 	private static final String UNSUPPORTED_SENSOR = "Unsupported Sensor";
@@ -26,7 +26,7 @@ public class SensorActivity extends Activity implements SensorEventListener {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_sensor);	
+		setContentView(R.layout.activity_sensor);
 		sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 		createNames();
 	}
@@ -45,15 +45,15 @@ public class SensorActivity extends Activity implements SensorEventListener {
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
 		if (id == R.id.action_settings) {
-			//Test if it really unregisters
-			//sensorManager.unregisterListener(this);
+			// Test if it really unregisters
+			// sensorManager.unregisterListener(this);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}
 
-	private void createNames(){
-		switch (getIntent().getExtras().getInt(MainActivity.EXTRA_SENSOR_TYPE)){
+	private void createNames() {
+		switch (getIntent().getExtras().getInt(MainActivity.EXTRA_SENSOR_TYPE)) {
 
 		case Sensor.TYPE_ACCELEROMETER: {
 			names = new String[3];
@@ -63,20 +63,26 @@ public class SensorActivity extends Activity implements SensorEventListener {
 			break;
 		}
 
-		case Sensor.TYPE_AMBIENT_TEMPERATURE :{
+		case Sensor.TYPE_AMBIENT_TEMPERATURE: {
 			names = new String[1];
-			names[0] = "Temperature in Celsius";	
+			names[0] = "Temperature in Celsius";
 			break;
-		} 
+		}
 
-		case Sensor.TYPE_ROTATION_VECTOR:{
+		case Sensor.TYPE_ROTATION_VECTOR: {
 			names = new String[3];
 			names[0] = "x";
 			names[1] = "y";
 			names[2] = "z";
 			break;
-		} 
-
+		}
+		case Sensor.TYPE_GAME_ROTATION_VECTOR: {
+			names = new String[3];
+			names[0] = "x";
+			names[1] = "y";
+			names[2] = "z";
+			break;
+		}
 		case Sensor.TYPE_GRAVITY: {
 			names = new String[3];
 			names[0] = "x in m/s\u00B2";
@@ -104,11 +110,11 @@ public class SensorActivity extends Activity implements SensorEventListener {
 			break;
 		}
 
-		case Sensor.TYPE_LIGHT:{ 
+		case Sensor.TYPE_LIGHT: {
 			names = new String[1];
 			names[0] = "Illumination in lx";
 			break;
-		} 
+		}
 
 		case Sensor.TYPE_ORIENTATION: {
 			names = new String[3];
@@ -142,13 +148,11 @@ public class SensorActivity extends Activity implements SensorEventListener {
 			names[5] = "z_bias in uT";
 			break;
 		}
-
 		case Sensor.TYPE_PROXIMITY: {
 			names = new String[1];
 			names[0] = "Distance in cm";
 			break;
 		}
-
 		case Sensor.TYPE_RELATIVE_HUMIDITY: {
 			names = new String[1];
 			names[0] = "Humidity in %";
@@ -168,9 +172,13 @@ public class SensorActivity extends Activity implements SensorEventListener {
 			names[0] = "Step count";
 			break;
 		}
-
+		case Sensor.TYPE_STEP_DETECTOR: {
+			names = new String[1];
+			names[0] = "1 for Step registered";
+			break;
+		}
 		default: {
-			//nice fallback to prevent exceptions for unknown sensors
+			// nice fallback to prevent exceptions for unknown sensors
 			names = new String[1];
 			names[0] = UNSUPPORTED_SENSOR;
 			break;
@@ -179,43 +187,42 @@ public class SensorActivity extends Activity implements SensorEventListener {
 	}
 
 	// One of the methods of SensorEventListener we have to implement
-	// If measured values change this method gets executed 
+	// If measured values change this method gets executed
 	@Override
 	public void onSensorChanged(SensorEvent event) {
-		ArrayList<HashMap<String,String>> sensorData = new ArrayList<HashMap<String,String>>();
-		HashMap<String,String> item;
+		ArrayList<HashMap<String, String>> sensorData = new ArrayList<HashMap<String, String>>();
+		HashMap<String, String> item;
 		float[] valuesCopied = Arrays.copyOf(event.values, event.values.length);
-
 
 		for (int k = 0; k < names.length; k++) {
 
-			item = new HashMap<String,String>();
+			item = new HashMap<String, String>();
 
-			if (k < names.length)	
-				item.put("item1",names[k]);
+			if (k < names.length)
+				item.put("item1", names[k]);
 			else
-				item.put("item1","Other value");
+				item.put("item1", "Other value");
 
 			if (!names[0].equals(UNSUPPORTED_SENSOR)) {
-				item.put("item2",String.valueOf(valuesCopied[k]));
+				item.put("item2", String.valueOf(valuesCopied[k]));
 			} else {
 				item.put("item2", "");
 			}
 			sensorData.add(item);
 		}
-		//create adapter + fill list with it
-		simpleAdapter = new SimpleAdapter(this,sensorData, R.layout.list_two,new String[] {"item1","item2" }, new int[] {R.id.text1, R.id.text2});
+		// create adapter + fill list with it
+		simpleAdapter = new SimpleAdapter(this, sensorData, R.layout.list_two,
+				new String[] { "item1", "item2" }, new int[] { R.id.text1,
+						R.id.text2 });
 
 		listView = (ListView) findViewById(R.id.listView1);
 		listView.setAdapter(simpleAdapter);
 
 	}
 
-
-
-	////
-	//Life cycle management
-	////
+	// //
+	// Life cycle management
+	// //
 
 	@Override
 	public void onAccuracyChanged(Sensor sensor, int accuracy) {
@@ -226,7 +233,7 @@ public class SensorActivity extends Activity implements SensorEventListener {
 		super.onResume();
 		// register this class as a listener for events
 		sensorManager.registerListener(this,
-				sensorManager.getDefaultSensor(getIntent().getExtras().getInt(MainActivity.EXTRA_SENSOR_TYPE)),
+				sensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE), // getIntent().getExtras().getInt(MainActivity.EXTRA_SENSOR_TYPE)
 				SensorManager.SENSOR_DELAY_NORMAL);
 	}
 
