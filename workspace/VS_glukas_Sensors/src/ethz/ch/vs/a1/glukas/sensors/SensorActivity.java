@@ -28,7 +28,6 @@ public class SensorActivity extends Activity implements SensorEventListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_sensor);
 		sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-		createNames();
 	}
 
 	@Override
@@ -198,10 +197,11 @@ public class SensorActivity extends Activity implements SensorEventListener {
 
 			item = new HashMap<String, String>();
 
-			if (k < names.length)
+			if (k < names.length) {
 				item.put("item1", names[k]);
-			else
+			} else {
 				item.put("item1", "Other value");
+			}
 
 			if (!names[0].equals(UNSUPPORTED_SENSOR)) {
 				item.put("item2", String.valueOf(valuesCopied[k]));
@@ -231,9 +231,10 @@ public class SensorActivity extends Activity implements SensorEventListener {
 	@Override
 	protected void onResume() {
 		super.onResume();
+		createNames();
 		// register this class as a listener for events
 		sensorManager.registerListener(this,
-				sensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE), // getIntent().getExtras().getInt(MainActivity.EXTRA_SENSOR_TYPE)
+				sensorManager.getDefaultSensor(getIntent().getExtras().getInt(MainActivity.EXTRA_SENSOR_TYPE)),
 				SensorManager.SENSOR_DELAY_NORMAL);
 	}
 
