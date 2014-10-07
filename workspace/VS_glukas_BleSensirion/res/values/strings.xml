@@ -7,8 +7,8 @@
     <string name="unknown">unknown</string>
     <string name="ble_not_supported">BLe not supported!</string>
     <string name="error_bluetooth_not_supported">Bluetooth not supported!</string>
-    <string name="temperature">Temperature :</string>
-    <string name="humidity">Humidity :</string>
+    <string name="temperature">Temperature:&#160;</string>
+    <string name="humidity">Humidity:&#160;</string>
     
     <!-- Menu items -->
     <string name="menu_refresh"></string>
