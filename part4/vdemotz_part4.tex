@@ -56,17 +56,17 @@ The SensorEvent objects passed to the SensorEventListener can be resused by the 
 \question{2}{Activity Lifecycle} 
 \part{a} An activity A is in the foreground, then the user stars another activity B.
  
- -Activity B is created with onCreate()
+ -Activity B is created and onCreate() is called
  
- -Activity B is started with onStart()
+ -Activity B is started and onStart() is called
  
- -Activity A is stopped with onPause()
+ -Activity A is paused and onPause() is called
  
- -Activity B is resumed with onResume()
+ -Activity B is resumed and onResume() is called
 
 \part{b} Activity A is no longer visible.
 
-- Activity A will get stopped and onStop() will be called.
+- Activity A is stopped and onStop() is called.
 
 \part{c} User navigates back to Activity A.
 
@@ -74,19 +74,19 @@ There are two cases:
 
 Activity A had been destroyed by the system:
 
--Activity A is created with onCreate()
+-Activity A is created and onCreate() is called
 
--Activity A is started with onStart()
+-Activity A is started and onStart() is called
 
--Activity A is resumed with onResume()
+-Activity A is resumed and onResume() is called
 
 The activity A was only stopped:
 
--Activity A is restarted with onRestart()
+-Activity A is restarted and onRestart() is called
 
--Activity A is started with onStart()
+-Activity A is started and onStart() is called
 
--Activity A is resumed with onResume()
+-Activity A is resumed and onResume() is called.
 
 In any case B will get paused, and  - once/if it is covered - stopped.
 
