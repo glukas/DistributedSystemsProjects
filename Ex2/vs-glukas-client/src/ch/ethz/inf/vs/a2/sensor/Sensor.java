@@ -10,17 +10,8 @@ public interface Sensor {
 	
 	/**
 	 * Invoke a call for a new temperature measurement. 
-	 * 
-	 * @throws NullPointerException If name has not been set yet
 	 */
-	public void getTemperature() throws NullPointerException;
-	
-	
-	/**
-	 * Set name of this sensor.
-	 * @param name Name of this sensor
-	 */
-	public void setName(String name);
+	public void getTemperature();
 
 	/**
 	 * Register a SensorListener to this sensor.

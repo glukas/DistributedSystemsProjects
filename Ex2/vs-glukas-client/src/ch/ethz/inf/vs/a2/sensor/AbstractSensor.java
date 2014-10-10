@@ -17,13 +17,7 @@ import ch.ethz.inf.vs.a2.http.Requester;
  *
  */
 public abstract class AbstractSensor implements Sensor, ResponseParser {
-	protected String name = null;
 	protected List<SensorListener> listeners = new ArrayList<SensorListener>();
-
-	@Override
-	public void setName(String name) {
-		this.name = name;
-	}
 
 	@Override
 	public void registerListener(SensorListener listener) {
