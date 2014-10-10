@@ -15,8 +15,8 @@ public abstract class SensorFactory {
 		case SOAP:
 			// return Sensor implementation using a SOAPObject
 		default:
-			return null;
-			
+			throw new RuntimeException("TODO: Not yet implemented exception");
+			//return null;
 		}
 	}
 	

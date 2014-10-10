@@ -69,5 +69,6 @@ public class MainActivity extends Activity implements OnClickListener {
 	private void startTemperatureActivityWithSensor(Type type) {
 		Intent intent = new Intent(this, TemperatureActivity.class);
 		intent.putExtra(TemperatureActivity.SENSOR_TYPE_EXTRA, type.name());
+		startActivity(intent);
 	}
 }

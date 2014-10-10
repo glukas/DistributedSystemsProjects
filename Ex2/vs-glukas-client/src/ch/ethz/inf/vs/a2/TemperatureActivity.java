@@ -21,7 +21,8 @@ public class TemperatureActivity extends Activity implements SensorListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_temperature);
-		SensorFactory.Type type = Type.valueOf(this.getIntent().getStringExtra(SENSOR_TYPE_EXTRA));
+		String typeString = this.getIntent().getStringExtra(SENSOR_TYPE_EXTRA);
+		SensorFactory.Type type = Type.valueOf(typeString);
 		sensor = SensorFactory.getInstance(type);
 		text = (TextView)this.findViewById(R.id.temperatureText);
 		text.setText(R.string.temperatureLoadingText);
