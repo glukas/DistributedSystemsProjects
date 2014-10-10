@@ -16,6 +16,7 @@ public abstract class SensorFactory {
 			// return Sensor implementation using a SOAPObject
 		default:
 			return null;
+			
 		}
 	}
 	

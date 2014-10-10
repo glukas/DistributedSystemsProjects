@@ -3,7 +3,11 @@
 
     <string name="app_name">VS glukas Client</string>
     <string name="title_activity_main">MainActivity</string>
-    <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-
+    <string name="rawHttpButton">Raw HTTP</string>
+    <string name="libHttpButton">Lib HTTP</string>
+    <string name="jsonButton">JSON</string>
+    <string name="title_activity_temperature">TemperatureActivity</string>
+    <string name="hello_world">Hello world!</string>
+	<string name="temperatureMainText">The Temperature is:</string>
 </resources>

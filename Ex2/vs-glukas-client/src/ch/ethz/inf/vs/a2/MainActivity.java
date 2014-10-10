@@ -1,16 +1,29 @@
 package ch.ethz.inf.vs.a2;
 
+import ch.ethz.inf.vs.a2.sensor.SensorFactory;
+import ch.ethz.inf.vs.a2.sensor.SensorFactory.Type;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnClickListener;
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements OnClickListener {
 
+	////
+	//ACTIVITY
+	////
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		
+		this.findViewById(R.id.button1).setOnClickListener(this);
+		this.findViewById(R.id.button2).setOnClickListener(this);
+		this.findViewById(R.id.button3).setOnClickListener(this);
 	}
 
 	@Override
@@ -30,5 +43,31 @@ public class MainActivity extends Activity {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+	
+	////
+	//On Click Listener
+	////
+
+	@Override
+	public void onClick(View v) {
+		switch(v.getId()) {
+		case R.id.button1 :
+			startTemperatureActivityWithSensor(SensorFactory.Type.RAW_HTTP);
+			break;
+		case R.id.button2 :
+			startTemperatureActivityWithSensor(SensorFactory.Type.HTML);
+			break;
+		case R.id.button3 :
+			startTemperatureActivityWithSensor(SensorFactory.Type.JSON);
+			break;
+		default :
+		throw new RuntimeException("unkown view clicked");
+		}
+	}
+
+	private void startTemperatureActivityWithSensor(Type type) {
+		Intent intent = new Intent(this, TemperatureActivity.class);
+		intent.putExtra(TemperatureActivity.SENSOR_TYPE_EXTRA, type.name());
 	}
 }
