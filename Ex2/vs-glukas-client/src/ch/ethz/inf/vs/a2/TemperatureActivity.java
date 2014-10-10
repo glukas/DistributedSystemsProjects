@@ -3,15 +3,19 @@ package ch.ethz.inf.vs.a2;
 import ch.ethz.inf.vs.a2.sensor.Sensor;
 import ch.ethz.inf.vs.a2.sensor.SensorFactory;
 import ch.ethz.inf.vs.a2.sensor.SensorFactory.Type;
+import ch.ethz.inf.vs.a2.sensor.SensorListener;
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
-public class TemperatureActivity extends Activity {
+public class TemperatureActivity extends Activity implements SensorListener {
 
 	public static final String SENSOR_TYPE_EXTRA = "ch.ethz.inf.vs.a2.senor_type";
 	private Sensor sensor;
+	TextView text;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -19,6 +23,22 @@ public class TemperatureActivity extends Activity {
 		setContentView(R.layout.activity_temperature);
 		SensorFactory.Type type = Type.valueOf(this.getIntent().getStringExtra(SENSOR_TYPE_EXTRA));
 		sensor = SensorFactory.getInstance(type);
+		text = (TextView)this.findViewById(R.id.temperatureText);
+		text.setText(R.string.temperatureLoadingText);
+	}
+	
+	@Override
+	public void onResume() {
+		super.onResume();
+		sensor.registerListener(this);
+		//TODO there could be an issue here.
+		//	   if the user switches quickly between paused and stopped state, many requests will be generated
+		sensor.getTemperature();
+	}
+	
+	public void onStop() {
+		super.onStop();
+		sensor.unregisterListener(this);
 	}
 
 	@Override
@@ -38,5 +58,20 @@ public class TemperatureActivity extends Activity {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+	
+	////
+	//SENSOR LISTENER
+	////
+
+	@Override
+	public void onReceiveDouble(double value) {
+		text.setText(String.format(this.getString(R.string.temperatureMainText), value));
+	}
+
+	@Override
+	public void onReceiveString(String message) {
+		//only occurs in error cases
+		Log.e(this.getPackageName(), message);
 	}
 }

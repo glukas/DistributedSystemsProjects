@@ -3,7 +3,7 @@ package ch.ethz.inf.vs.a2.http;
 /**
  * Classes that implement this interface should take an object that represents an HTTP request, execute this request and return its response.
  * The request should either be taken during construction or by a setter method.
- * A Requester must be ready to execute a new request after it has returned from exectueRequest.
+ * A Requester must be ready to execute a new request at any time. It free to choose the order in which pending requests are handled.
  * 
  * @author Leyna Sadamori
  *

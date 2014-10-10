@@ -9,5 +9,6 @@
     <string name="jsonButton">JSON</string>
     <string name="title_activity_temperature">TemperatureActivity</string>
     <string name="hello_world">Hello world!</string>
-	<string name="temperatureMainText">The Temperature is:</string>
+	<string name="temperatureMainText">The temperature is: %.2f °</string>
+	<string name="temperatureLoadingText">Retrieving temperature... </string>
 </resources>

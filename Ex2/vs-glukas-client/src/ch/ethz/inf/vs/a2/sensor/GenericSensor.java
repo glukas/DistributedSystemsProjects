@@ -21,7 +21,6 @@ public class GenericSensor extends AbstractSensor {
 
 	/**
 	 * Must be called on the UI thread.
-	 * Should not be called again before the first listener has received a response.
 	 */
 	@Override
 	public void getTemperature() throws NullPointerException {
