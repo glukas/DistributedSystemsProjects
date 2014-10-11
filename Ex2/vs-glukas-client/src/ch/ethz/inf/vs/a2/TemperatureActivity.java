@@ -29,20 +29,20 @@ public class TemperatureActivity extends Activity implements SensorListener {
 		sensor = SensorFactory.getInstance(type);
 		text = (TextView)this.findViewById(R.id.temperatureText);
 		text.setText(R.string.temperatureLoadingText);
-	}
-	
-	@Override
-	public void onResume() {
-		super.onResume();
+		//we need to get the temperature only once
 		sensor.registerListener(this);
 		//TODO there could be an issue here.
 		//	   if the user switches quickly between paused and stopped state, many requests will be generated
 		sensor.getTemperature();
 	}
 	
+	@Override
+	public void onResume() {
+		super.onResume();
+	}
+	
 	public void onStop() {
 		super.onStop();
-		sensor.unregisterListener(this);
 	}
 
 	@Override
@@ -71,11 +71,13 @@ public class TemperatureActivity extends Activity implements SensorListener {
 	@Override
 	public void onReceiveDouble(double value) {
 		text.setText(String.format(this.getString(R.string.temperatureMainText), value));
+		sensor.unregisterListener(this);
 	}
 
 	@Override
 	public void onReceiveString(String message) {
 		//only occurs in error cases
 		Log.e(this.getPackageName(), message);
+		sensor.unregisterListener(this);
 	}
 }
