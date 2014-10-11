@@ -13,6 +13,9 @@ import android.widget.TextView;
 
 public class TemperatureActivity extends Activity implements SensorListener {
 
+	public static final String HOST_TEMPERATURE = "vslab.inf.ethz.ch";
+	public static final int PORT_TEMPERATURE = 8081;
+	public static final String PATH_TEMPERATURE = "sunspots/Spot1";
 	public static final String SENSOR_TYPE_EXTRA = "ch.ethz.inf.vs.a2.senor_type";
 	private Sensor sensor;
 	TextView text;
