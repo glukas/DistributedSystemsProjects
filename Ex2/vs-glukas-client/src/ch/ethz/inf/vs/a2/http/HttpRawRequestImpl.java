@@ -2,18 +2,19 @@ package ch.ethz.inf.vs.a2.http;
 
 public class HttpRawRequestImpl implements HttpRawRequest {
 
+	private final String newLine = "\r"+"\n";
+	private final String connectionHdr = "Connection: close"+newLine;
+	private final String acceptHdr = "Accept: text/html"+newLine;
+	
 	@Override
 	public String generateRequest(String host, String path) {
-		String firstLine = "GET "+path+" HTTP/1.1";
-		String secondLine = "Host: "+host;
-		return firstLine +"\n" + secondLine + "\n";
+		String getHdr = "GET "+path+" HTTP/1.1"+newLine;
+		String hostHdr = "Host: "+host+newLine;
+		return getHdr+hostHdr+connectionHdr+acceptHdr+newLine;
 	}
 
 	@Override
 	public String generateRequest(String host, int port, String path) {
-		String firstLine = "GET "+path+" HTTP/1.1";
-		String secondLine = "Host: "+host;
-		return firstLine +"\n" + secondLine + "\n";
+		return generateRequest(host+":"+port, path);
 	}
-
 }
