@@ -39,6 +39,8 @@ public class HttpSocketImpl implements HttpSocket{
 
 	@Override
 	public String execute(String request) {
+		
+		//create new socket if arguments have changed
 		if (changed){
 			try {
 				socket = new Socket(host, port);
@@ -50,20 +52,24 @@ public class HttpSocketImpl implements HttpSocket{
 			} 
 			changed = false;
 		}
-		System.err.println("Hi there, request : "+request);
+		
+		//print request
 		printWriter.println(request);
 		printWriter.flush();
 		String reply = "";
-		System.err.println("Requested, now try to get reply ");
+		
+		//retrieve reply
 		try {
-			BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			String line;
-
-			while((line = br.readLine()) != null) reply += line;
-			br.close();
+			while((line = bufferedReader.readLine()) != null){
+				reply += line;
+			}
+			bufferedReader.close();
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
+		} 
+		
 		return reply;
 	}
 

@@ -2,7 +2,8 @@ package ch.ethz.inf.vs.a2.sensor;
 
 import ch.ethz.inf.vs.a2.http.HttpRawRequest;
 import ch.ethz.inf.vs.a2.http.HttpRawRequestFactory;
-import ch.ethz.inf.vs.a2.http.HttpSocketImpl;
+import ch.ethz.inf.vs.a2.http.HttpSocketFactory;
+import ch.ethz.inf.vs.a2.http.HttpSocket;
 import ch.ethz.inf.vs.a2.http.RequesterImpl;
 
 public class RawHttpSensor extends AbstractSensor {
@@ -21,28 +22,26 @@ public class RawHttpSensor extends AbstractSensor {
 	
 	@Override
 	public void getTemperature() {
-		HttpSocketImpl hsi = new HttpSocketImpl();
+		HttpSocket hsi = HttpSocketFactory.getInstance();
+		//hard coded host, port and request... Bad!
 		hsi.setHost("vslab.inf.ethz.ch");
 		hsi.setPort(8081);
-		System.err.println("There");
 		requester.addRequest(hsi, rawRequest.generateRequest("vslab.inf.ethz.ch", 8081, "sunspots/Spot1"));
-		System.err.println("over");
-		Thread t = new Thread(){
-			@Override
-			public void run(){
-				reply = asyncWorker.doInBackground(requester);
-			}
-		};
-		t.start();
-		System.err.println("There over");
-		try {
-			t.join();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			System.err.println("Thread failed");
-			e.printStackTrace();
+
+		//execute the request (requester works async), then you get something to parse
+		String reply = requester.executeRequest();
+		System.err.println(reply);
+		
+		//if you try with the asyncWorker, it crashes:
+		/*
+		//launch worker in background
+		reply = asyncWorker.doInBackground(requester);
+		//busy wait
+		while(reply == null){
+			
 		}
 		System.err.println(reply);
+		*/
 	}
 
 	@Override
