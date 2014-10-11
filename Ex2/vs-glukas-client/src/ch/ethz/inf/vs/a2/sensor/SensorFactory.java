@@ -6,6 +6,7 @@ public abstract class SensorFactory {
 		switch (type) {
 		case RAW_HTTP:
 			// return Sensor implementation using a raw HTTP request
+			return new RawHttpSensor();
 		case HTML:
 			// return Sensor implementation using text/html representation
 		case JSON:
