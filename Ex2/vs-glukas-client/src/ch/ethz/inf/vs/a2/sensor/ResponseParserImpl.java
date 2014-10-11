@@ -16,6 +16,11 @@ public class ResponseParserImpl implements ResponseParser{
 	public double parseResponse(String response) {
 		
 		index = response.indexOf("getterValue");
+		// In case we get the wrong page
+		if (index == -1)
+			return 0;
+		
+		
 		index = index + 13;
 		response.getChars(index, (index + 5), result , 0);
 		StringBuilder sb = new StringBuilder();
