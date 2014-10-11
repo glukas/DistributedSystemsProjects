@@ -14,7 +14,7 @@ public class GenericSensor extends AbstractSensor {
 	 * @throws IllegalArgumentException if requester or parser is null
 	 */
 	protected GenericSensor(Requester requester, ResponseParser parser) {
-		if (requester == null || parser == null) throw new IllegalArgumentException();
+		//if (requester == null || parser == null) throw new IllegalArgumentException();
 		this.parser = parser;
 		this.requester = requester;
 	}
