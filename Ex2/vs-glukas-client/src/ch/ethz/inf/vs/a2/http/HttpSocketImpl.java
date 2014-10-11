@@ -47,13 +47,14 @@ public class HttpSocketImpl implements HttpSocket{
 				e.printStackTrace();
 			} catch (IOException e) {
 				e.printStackTrace();
-			}
+			} 
 			changed = false;
 		}
+		System.err.println("Hi there, request : "+request);
 		printWriter.println(request);
 		printWriter.flush();
 		String reply = "";
-		
+		System.err.println("Requested, now try to get reply ");
 		try {
 			BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			String line;

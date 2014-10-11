@@ -30,7 +30,7 @@ public abstract class AbstractSensor implements Sensor, ResponseParser {
 	}
 
 	/**
-	 * AsyncTask to execute the request in a seperate thread. This AsyncTask
+	 * AsyncTask to execute the request in a separate thread. This AsyncTask
 	 * makes use of the Requester interface to support different implementations
 	 * of making a request. The response will be parsed according to the
 	 * implementation of the ResponseParser interface. Finally, all listeners
