@@ -1,12 +1,17 @@
 package ch.ethz.inf.vs.a2.sensor;
 
+import ch.ethz.inf.vs.a2.TemperatureActivity;
+import ch.ethz.inf.vs.a2.http.HttpRawRequestFactory;
 import ch.ethz.inf.vs.a2.http.Requester;
+import ch.ethz.inf.vs.a2.http.RequesterSocketImpl;
 
 public class JSONSensor extends GenericSensor {
 
 	protected JSONSensor() {
-		//TODO use appropriate modification of Requester (almost the same as http requester / only different header) instead of null
-		super(null, new JSONSensorResponseParser());
+		super(new RequesterSocketImpl(HttpRawRequestFactory.getJsonInstance().generateRequest(	
+				TemperatureActivity.HOST_TEMPERATURE,
+				TemperatureActivity.PORT_TEMPERATURE, 
+				TemperatureActivity.PATH_TEMPERATURE)), new JSONSensorResponseParser());
 	}
 	
 }

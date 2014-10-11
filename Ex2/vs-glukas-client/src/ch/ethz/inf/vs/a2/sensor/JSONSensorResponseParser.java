@@ -5,20 +5,17 @@ import java.util.Iterator;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.util.Log;
+
 public class JSONSensorResponseParser implements ResponseParser {
 
 	@Override
 	public double parseResponse(String response) {
-		
+		Log.v("JSON parsed Response", response);
 		try {
-			JSONObject parsedResponse = new JSONObject(response);
-			@SuppressWarnings("unchecked")
-			Iterator<String> keys = parsedResponse.keys();
-			String key = keys.next();
-			return parsedResponse.getDouble(key);
-			
+			JSONObject parsedResponse = new JSONObject(response.substring(response.indexOf("{")));
+			return parsedResponse.getDouble("value");
 		} catch (Exception e) {
-			e.printStackTrace();
 			return Double.NaN;
 		}
 	}

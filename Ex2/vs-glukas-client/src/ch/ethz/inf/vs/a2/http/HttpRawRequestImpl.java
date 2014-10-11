@@ -2,9 +2,20 @@ package ch.ethz.inf.vs.a2.http;
 
 public class HttpRawRequestImpl implements HttpRawRequest {
 
-	private final String newLine = "\r"+"\n";
+	private static final String newLine = "\r"+"\n";
 	private final String connectionHdr = "Connection: close"+newLine;
-	private final String acceptHdr = "Accept: text/html"+newLine;
+	private final String acceptHdr;
+	
+	private static final String acceptHdrFormat = "Accept: %s"+newLine;
+	
+	HttpRawRequestImpl() {
+		acceptHdr = String.format(acceptHdrFormat, "text/html");
+	}
+	
+	HttpRawRequestImpl(String type) {
+		acceptHdr = String.format(acceptHdrFormat, type);
+	}
+	
 	
 	@Override
 	public String generateRequest(String host, String path) {
