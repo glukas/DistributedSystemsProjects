@@ -1,8 +1,5 @@
 package ch.ethz.inf.vs.a2.sensor;
 
-import java.util.Iterator;
-
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.util.Log;

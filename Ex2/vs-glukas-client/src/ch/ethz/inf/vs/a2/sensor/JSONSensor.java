@@ -2,7 +2,6 @@ package ch.ethz.inf.vs.a2.sensor;
 
 import ch.ethz.inf.vs.a2.TemperatureActivity;
 import ch.ethz.inf.vs.a2.http.HttpRawRequestFactory;
-import ch.ethz.inf.vs.a2.http.Requester;
 import ch.ethz.inf.vs.a2.http.RequesterSocketImpl;
 
 public class JSONSensor extends GenericSensor {
