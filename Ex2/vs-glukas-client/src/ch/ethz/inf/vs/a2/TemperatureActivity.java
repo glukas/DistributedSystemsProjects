@@ -31,8 +31,6 @@ public class TemperatureActivity extends Activity implements SensorListener {
 		text.setText(R.string.temperatureLoadingText);
 		//we need to get the temperature only once
 		sensor.registerListener(this);
-		//TODO there could be an issue here.
-		//	   if the user switches quickly between paused and stopped state, many requests will be generated
 		sensor.getTemperature();
 	}
 	
