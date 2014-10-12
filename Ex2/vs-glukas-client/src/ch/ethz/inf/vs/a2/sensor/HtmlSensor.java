@@ -6,7 +6,7 @@ import ch.ethz.inf.vs.a2.http.RequesterHttpImpl;
 public class HtmlSensor extends GenericSensor{
 
 	protected HtmlSensor() {
-		super(new RequesterHttpImpl("http://vslab.inf.ethz.ch:8081/sunspots/") , null);
+		super(new RequesterHttpImpl("http://vslab.inf.ethz.ch:8081/sunspots/Spot1/sensors/temperature") , new ResponseParserImpl());
 
 	}
 
