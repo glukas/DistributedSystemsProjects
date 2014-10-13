@@ -2,11 +2,11 @@ package ch.ethz.inf.vs.a2.http;
 
 import org.apache.http.client.methods.HttpPost;
 
-public class ManualSoapRequest {
+public class XmlRequest {
 
 	private HttpPost request;
 	
-	public ManualSoapRequest(){
+	public XmlRequest(){
 		request = null;
 	}
 	

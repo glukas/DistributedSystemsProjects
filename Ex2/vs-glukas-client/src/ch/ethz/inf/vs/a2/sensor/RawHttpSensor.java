@@ -16,9 +16,7 @@ public class RawHttpSensor extends GenericSensor {
 
 	@Override
 	public double parseResponse(String response) {
-		//Log.v("RAW HTTP SENSOR", response);
 		return super.parseResponse(response);
-		//return 0;
 	}
 
 }
