@@ -24,6 +24,8 @@ public class MainActivity extends Activity implements OnClickListener {
 		this.findViewById(R.id.button1).setOnClickListener(this);
 		this.findViewById(R.id.button2).setOnClickListener(this);
 		this.findViewById(R.id.button3).setOnClickListener(this);
+		this.findViewById(R.id.button4).setOnClickListener(this);
+		this.findViewById(R.id.button5).setOnClickListener(this);
 	}
 
 	@Override
@@ -60,6 +62,12 @@ public class MainActivity extends Activity implements OnClickListener {
 			break;
 		case R.id.button3 :
 			startTemperatureActivityWithSensor(SensorFactory.Type.JSON);
+			break;
+		case R.id.button4 :
+			startTemperatureActivityWithSensor(SensorFactory.Type.XML);
+			break;
+		case R.id.button5 :
+			startTemperatureActivityWithSensor(SensorFactory.Type.SOAP);
 			break;
 		default :
 		throw new RuntimeException("unkown view clicked");

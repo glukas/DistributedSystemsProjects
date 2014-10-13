@@ -8,13 +8,14 @@ public abstract class SensorFactory {
 			// return Sensor implementation using a raw HTTP request
 			return new RawHttpSensor();
 		case HTML:
-			return new HtmlSensor();
 			// return Sensor implementation using text/html representation
+			return new HtmlSensor();
 		case JSON:
 			// return Sensor implementation using application/json representation
 			return new JSONSensor();
 		case XML:
 			// return Sensor implementation using application/xml representation
+			return new XmlSensor();
 		case SOAP:
 			// return Sensor implementation using a SOAPObject
 		default:

@@ -12,20 +12,13 @@ public class RawHttpSensor extends GenericSensor {
 				TemperatureActivity.HOST_TEMPERATURE,
 				TemperatureActivity.PORT_TEMPERATURE, 
 				TemperatureActivity.PATH_TEMPERATURE)), new ResponseParserImpl());
-		
-		/*super(new RequesterImpl(HttpRawRequestFactory.getInstance().generateRequest(	
-				TemperatureActivity.HOST_TEMPERATURE,
-				TemperatureActivity.PORT_TEMPERATURE, 
-				TemperatureActivity.PATH_TEMPERATURE)), new ResponseParser());
-		*/
-		
 	}
 
-	/*@Override
+	@Override
 	public double parseResponse(String response) {
 		//Log.v("RAW HTTP SENSOR", response);
-		//super.parseResponse(response);
-		return 0;
-	}*/
+		return super.parseResponse(response);
+		//return 0;
+	}
 
 }
