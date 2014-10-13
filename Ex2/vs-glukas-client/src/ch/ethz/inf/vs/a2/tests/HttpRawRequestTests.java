@@ -142,7 +142,7 @@ public class HttpRawRequestTests {
 			if (matcher.group(1).equals("Accept")) {
 				found = true;
 				String accept = matcher.group(2);
-				Assert.assertTrue("\"" + accept + "\" does not match expected value \"close\".", accept.equals("text/html"));
+				Assert.assertTrue("\"" + accept + "\" does not match expected value \"text/html\".", accept.equals("text/html"));
 				break;
 			}
 		}

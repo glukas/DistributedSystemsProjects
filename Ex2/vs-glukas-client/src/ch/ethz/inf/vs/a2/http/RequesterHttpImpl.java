@@ -10,6 +10,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 
+
 public class RequesterHttpImpl implements Requester{
 
 	protected String request;
@@ -29,6 +30,7 @@ public class RequesterHttpImpl implements Requester{
 		HttpClient client = new DefaultHttpClient();
 		HttpGet request = new  HttpGet(this.request);
 		HttpResponse response;
+		
 		try {
 			response = client.execute(request);
 			responseCode = response.getStatusLine().getStatusCode();
@@ -40,7 +42,9 @@ public class RequesterHttpImpl implements Requester{
 		        {
 		         result = EntityUtils.toString(entity);             
 		               }
+		        response.getEntity().consumeContent();
 			}
+			
 		} catch (ClientProtocolException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -48,9 +52,6 @@ public class RequesterHttpImpl implements Requester{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		
-		
 		// TODO Auto-generated method stub
 		return result;
 	}

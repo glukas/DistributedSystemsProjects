@@ -18,7 +18,7 @@ public class ResponseParserImpl implements ResponseParser{
 		index = response.indexOf("getterValue");
 		// In case we get the wrong page
 		if (index == -1)
-			return 1.33;
+			return Double.NaN;
 		
 		
 		index = index + 13;
