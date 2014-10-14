@@ -23,7 +23,7 @@ public class SOAPResponseParser implements ResponseParser {
 		response.getChars(index, (index + 5), result , 0);
 		StringBuilder sb = new StringBuilder();
 		for (char c : result){
-			if (c != '<')
+			if (c != ';')
 			sb.append(c);
 			else 
 			break;
