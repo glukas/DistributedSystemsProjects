@@ -39,6 +39,7 @@ public class TemperatureActivity extends Activity implements SensorListener {
 		super.onResume();
 	}
 	
+	@Override
 	public void onStop() {
 		super.onStop();
 	}

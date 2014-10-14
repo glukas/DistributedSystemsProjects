@@ -1,6 +1,6 @@
 package ch.ethz.inf.vs.a2.sensor;
 
-public class ResponseParserImpl implements ResponseParser{
+public class SOAPResponseParser implements ResponseParser {
 	int index;
 	char[] result = {'a','b','.','c','d'};
 	double value = 1.23;
@@ -13,13 +13,13 @@ public class ResponseParserImpl implements ResponseParser{
 	@Override
 	public double parseResponse(String response) {
 		
-		index = response.indexOf("getterValue");
+		index = response.indexOf("temperature=");
 		// In case we get the wrong page
 		if (index == -1)
 			return Double.NaN;
 		
 		
-		index = index + 13;
+		index = index + 12;
 		response.getChars(index, (index + 5), result , 0);
 		StringBuilder sb = new StringBuilder();
 		for (char c : result){

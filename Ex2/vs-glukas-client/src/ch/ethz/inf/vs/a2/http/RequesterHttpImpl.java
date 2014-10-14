@@ -28,11 +28,16 @@ public class RequesterHttpImpl implements Requester{
 	public String executeRequest() throws NullPointerException{
 		
 		HttpClient client = new DefaultHttpClient();
-		HttpGet request = new  HttpGet(this.request);
+		HttpGet getrequest = new  HttpGet(this.request);
+		// Adding Headers
+		getrequest.setHeader("Connection", "close");
+		getrequest.addHeader("Accept", "text/html");
+		
+		
 		HttpResponse response;
 		
 		try {
-			response = client.execute(request);
+			response = client.execute(getrequest);
 			responseCode = response.getStatusLine().getStatusCode();
 			if(responseCode == 200)
 			{

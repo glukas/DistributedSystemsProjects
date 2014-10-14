@@ -17,6 +17,7 @@ public abstract class SensorFactory {
 			// return Sensor implementation using application/xml representation
 			return new XmlSensor();
 		case SOAP:
+			return new SoapSensor();
 			// return Sensor implementation using a SOAPObject
 		default:
 			throw new RuntimeException("TODO: Not yet implemented exception");
