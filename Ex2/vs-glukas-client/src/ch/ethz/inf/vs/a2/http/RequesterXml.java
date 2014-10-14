@@ -2,33 +2,27 @@ package ch.ethz.inf.vs.a2.http;
 
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 
 
-public class RequesterXml implements Requester{
+public class RequesterXml extends RequesterHttpImpl {
 
-	private XmlRequest request;
-	private HttpClient client;
-	
-	public RequesterXml(XmlRequest requestArg) {
-		this.request = requestArg;
-		client = new DefaultHttpClient();
-	}
-	
-	@Override
-	public String executeRequest() throws NullPointerException {
+	public RequesterXml(String requestXML, String url) {
+		HttpPost request = new HttpPost(url);
+		request.setHeader("Content-Type", "text/xml");
 		try {
-			HttpResponse response = client.execute(request.getRequest());
-		} catch (ClientProtocolException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
+			request.setEntity(new StringEntity(requestXML));
+		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
-		//String returnValue = makeSomethingClever(response);
-		return null;
+		this.request = request;
 	}
-
 }
