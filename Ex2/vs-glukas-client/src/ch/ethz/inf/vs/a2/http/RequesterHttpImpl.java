@@ -30,18 +30,19 @@ public class RequesterHttpImpl implements Requester {
 
 	public RequesterHttpImpl(String request) {
 		this.request = new HttpGet(request);
-
+		this.request.addHeader("Accept", "text/html");
+		setConnectionClose();
+	}
+	
+	protected void setConnectionClose() {
+		this.request.setHeader("Connection", "close");
 	}
 
 	@Override
 	public String executeRequest() throws NullPointerException {
 
 		HttpClient client = new DefaultHttpClient();
-
-		// Adding Headers
-		this.request.setHeader("Connection", "close");
-		this.request.addHeader("Accept", "text/html");
-
+		
 		HttpResponse response;
 
 		try {

@@ -24,5 +24,6 @@ public class RequesterXml extends RequesterHttpImpl {
 			e.printStackTrace();
 		}
 		this.request = request;
+		setConnectionClose();
 	}
 }
