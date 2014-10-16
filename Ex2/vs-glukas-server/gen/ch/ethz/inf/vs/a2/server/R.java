@@ -37,8 +37,10 @@ public final class R {
     public static final class string {
         public static final int action_settings=0x7f050002;
         public static final int app_name=0x7f050000;
+        public static final int app_path=0x7f050005;
         public static final int button_off=0x7f050003;
         public static final int button_on=0x7f050004;
+        public static final int protocol_name=0x7f050006;
         public static final int title_activity_main=0x7f050001;
     }
     public static final class style {

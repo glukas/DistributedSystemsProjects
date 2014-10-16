@@ -5,17 +5,19 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 
+import android.util.Log;
+
 public class ClientHandle<T> {
 
 	public enum Status {//Constants for the http status (200 OK, ...) 
 		OK;//TODO
 	}
 	
-	public final T request;//You can use this to formulate a response
+	public final ParsedRequest request;//You can use this to formulate a response
 
 	private final Socket socket;//don't use this directly. Use postResponse.
 	
-	public ClientHandle(T parsedRequest, Socket socket) {
+	public ClientHandle(ParsedRequest parsedRequest, Socket socket) {
 		this.socket = socket;
 		request = parsedRequest;
 	}
@@ -33,17 +35,17 @@ public class ClientHandle<T> {
 			writeHeader(out, status);
 			out.write(responseBody);
 			writeFooter(out);
+			out.flush();
 			out.close();
 			socket.close();
 		}
 	}
 
-	private void writeHeader(BufferedWriter out, Status status) {
+	private void writeHeader(BufferedWriter out, Status status) throws IOException {
 		//TODO
 	}
 	
-	private void writeFooter(BufferedWriter out) {
+	private void writeFooter(BufferedWriter out) throws IOException {
 		//TODO
-	}
-	
+	}	
 }

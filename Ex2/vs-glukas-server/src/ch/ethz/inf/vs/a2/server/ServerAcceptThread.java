@@ -10,8 +10,8 @@ public class ServerAcceptThread<T> extends Thread {
 
 
 	public final int port;
-	private final RequestParser<T> parser;
-	private final ParsedRequestConsumer<T> consumer;
+	private final RequestParser<ParsedRequest> parser;
+	private final ParsedRequestConsumer<ParsedRequest> consumer;
 	private volatile boolean alive = true;
 	
 	public void terminateGracefully() {
@@ -27,7 +27,7 @@ public class ServerAcceptThread<T> extends Thread {
 	 * @param consumer
 	 * @param parser
 	 */
-	public ServerAcceptThread(int port, ParsedRequestConsumer<T> consumer, RequestParser<T> parser) {
+	public ServerAcceptThread(int port, ParsedRequestConsumer<ParsedRequest> consumer, RequestParser<ParsedRequest> parser) {
 		this.port = port;
 		this.consumer = consumer;
 		this.parser = parser;

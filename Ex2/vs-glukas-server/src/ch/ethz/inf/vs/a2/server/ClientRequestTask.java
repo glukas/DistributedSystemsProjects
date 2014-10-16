@@ -3,22 +3,21 @@ package ch.ethz.inf.vs.a2.server;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.ServerSocket;
 import java.net.Socket;
 
 import android.os.AsyncTask;
 import android.util.Log;
 
-public class ClientRequestTask<T> extends AsyncTask<Socket, Void, ClientHandle<T>> {
+public class ClientRequestTask<T> extends AsyncTask<Socket, Void, ClientHandle<ParsedRequest>> {
 	
-	private RequestParser<T> parser;
-	private final ParsedRequestConsumer<T> consumer;
+	private RequestParser<ParsedRequest> parser;
+	private final ParsedRequestConsumer<ParsedRequest> consumer;
 	
 	/**
 	 * @param consumer is always called on the UI thread
 	 * @param parser is called from a background thread
 	 */
-	public ClientRequestTask(ParsedRequestConsumer<T> consumer, RequestParser<T> parser) {
+	public ClientRequestTask(ParsedRequestConsumer<ParsedRequest> consumer, RequestParser<ParsedRequest> parser) {
 		this.consumer = consumer;
 		this.parser = parser;
 	}
@@ -29,7 +28,7 @@ public class ClientRequestTask<T> extends AsyncTask<Socket, Void, ClientHandle<T
 	 * Never call directly - use execute
 	 */
 	@Override
-	protected ClientHandle<T> doInBackground(Socket ... socket) {
+	protected ClientHandle<ParsedRequest> doInBackground(Socket ... socket) {
 		try {
 			// wait for request
 			Socket clientSocket = socket[0];
@@ -40,12 +39,13 @@ public class ClientRequestTask<T> extends AsyncTask<Socket, Void, ClientHandle<T
 			String requestLine;
 			while( (requestLine = in.readLine()) != null) {
 				request.append(requestLine);
+				break;
 			}
 			// call the request parser on the request string
-			T requestParsed = parser.parse(request.toString());
+			ParsedRequest requestParsed = parser.parse(request.toString());
 			
 			// create & return the Request Handle
-			return new ClientHandle<T>(requestParsed, clientSocket);
+			return new ClientHandle<ParsedRequest>(requestParsed, clientSocket);
 			
 		} catch (IOException e) {
 			
@@ -60,7 +60,7 @@ public class ClientRequestTask<T> extends AsyncTask<Socket, Void, ClientHandle<T
 	 * This is always called on the UI thread
 	 */
 	@Override
-	protected void onPostExecute(ClientHandle<T> requestHandle) {
+	protected void onPostExecute(ClientHandle<ParsedRequest> requestHandle) {
 		consumer.consume(requestHandle);
 	}
 	

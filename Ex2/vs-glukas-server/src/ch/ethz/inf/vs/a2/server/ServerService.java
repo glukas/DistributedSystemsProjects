@@ -2,19 +2,21 @@ package ch.ethz.inf.vs.a2.server;
 
 import android.app.Service;
 import android.content.Intent;
+import android.hardware.SensorManager;
 import android.os.IBinder;
-import android.util.Log;
+import android.os.Vibrator;
 
 public class ServerService extends Service{
 
 	ServerAcceptThread<Void> serverThread;
+	SensorManager sManager;
 	
 	@Override
 	public void onCreate() {
-		Log.v(this.getPackageName(), "Server Service Created");
-		//TODO (Vincent) implement & use proper parser & consumer
-		serverThread = new ServerAcceptThread<Void>(8081, null, null);
-		//serverThread.start();
+		serverThread = new ServerAcceptThread<Void>(8081, 
+													Factory.getConsumer(this), 
+													Factory.getParser(this));
+		serverThread.start();
 	}
 	
 	@Override
@@ -26,6 +28,12 @@ public class ServerService extends Service{
 	@Override
 	public IBinder onBind(Intent intent) {
 		return null;
+	}
+	
+	public boolean vibrate(long[] pattern){
+		Vibrator vib = (Vibrator) getSystemService(VIBRATOR_SERVICE); 
+		vib.vibrate(pattern, -1);
+		return true;
 	}
 
 }

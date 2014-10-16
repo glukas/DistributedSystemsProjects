@@ -8,4 +8,7 @@
     <string name="button_off">Off</string>
     <string name="button_on">On</string>
     
+    <string name="app_path">/DistributedSystemsProjects/</string>
+    <string name="protocol_name">HTTP/1.1</string>
+    
 </resources>
