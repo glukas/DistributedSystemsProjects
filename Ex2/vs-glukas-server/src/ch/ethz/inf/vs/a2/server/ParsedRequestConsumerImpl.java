@@ -70,7 +70,20 @@ public class ParsedRequestConsumerImpl implements ParsedRequestConsumer<ParsedRe
 	}
 	
 	public String parseValues(float[] values){
-		return "";
+		
+		String valuesStr = "";
+		
+		for (int i = 0; i < request.getSensorType().getNumberValues(); i++){
+			valuesStr += String.format("%.2f",values[i]);
+			if ((i + 1) < request.getSensorType().getNumberValues()){
+				valuesStr += ", ";
+			}
+		}
+		
+		String ret =  "The values for the sensor \\'"+request.getSensorType().getRequestName() +"\\'"+ 
+				" are : "+valuesStr;
+		Log.v("Parsed values", ret);
+		return ret;
 	}
 
 
@@ -81,7 +94,7 @@ public class ParsedRequestConsumerImpl implements ParsedRequestConsumer<ParsedRe
 
 	@Override
 	public void onSensorChanged(SensorEvent event) {
-		//TODO get the values and parse them before post the reply
+
 		float[] valuesCopied = Arrays.copyOf(event.values, event.values.length);
 		try {
 			client.postResponse(parseValues(valuesCopied), Status.OK);
