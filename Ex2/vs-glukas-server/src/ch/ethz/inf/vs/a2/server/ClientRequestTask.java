@@ -39,6 +39,8 @@ public class ClientRequestTask<T> extends AsyncTask<Socket, Void, ClientHandle<P
 			String requestLine;
 			while( (requestLine = in.readLine()) != null) {
 				request.append(requestLine);
+				//TODO understand why this loop doesn't finish. Note that we don't need more than one line 
+				//for this particular project.
 				break;
 			}
 			// call the request parser on the request string

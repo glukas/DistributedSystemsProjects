@@ -20,6 +20,9 @@ public class ParsedRequestConsumerImpl implements ParsedRequestConsumer<ParsedRe
 	private ClientHandle<ParsedRequest> client;
 	
 	private final String noSuchSensor = "Sorry, no such sensor on that device";
+	private final String invalidRequest = "Invalid request";
+	private final String vibrateDone = "Vibrate... Done!";
+	private final String requestEmpty = "This request is quite empty, isn't it?";
 	private final long[] patternVibrate = new long[]{0, 100, 100, 100, 200, 100, 200};
 	
 	public ParsedRequestConsumerImpl(ServerService service){
@@ -38,15 +41,18 @@ public class ParsedRequestConsumerImpl implements ParsedRequestConsumer<ParsedRe
 		
 		try {
 			
-			//if the request is null (not valid or empty) post an empty reply
-			//TODO differentiate between invalid and empty request (normally already done)
+			//if the request is null (not valid) post an empty reply
 			if (request == null){
-				requestHandle.postResponse("", Status.OK);
-			}
-			
-			if (request.getSensorType().getSensor() == null){
+				requestHandle.postResponse(invalidRequest, Status.OK);
+				return;
+			} else if (request.getSensorType().equals(SensorType.EMPTY)){
+				requestHandle.postResponse(requestEmpty, Status.OK);
+				return;
+			} else if (request.getSensorType().getSensor() == null || 
+					request.getSensorType().equals(SensorType.UNSUPPORTED)){
 				requestHandle.postResponse(noSuchSensor, Status.OK);
-			}
+				return;
+			} 
 		
 			//differentiate the request if it's vibration / sensor read
 			if (request.getSensorType().equals(SensorType.VIBRATOR)){
@@ -56,7 +62,7 @@ public class ParsedRequestConsumerImpl implements ParsedRequestConsumer<ParsedRe
 					vibrate(request.getArgs());
 				}
 				//vibrate launched, reply done
-				requestHandle.postResponse("", Status.OK);
+				requestHandle.postResponse(vibrateDone, Status.OK);
 			} else {
 				//register the listener for this particular sensor
 				sensorManager.registerListener(this, request.getSensorType().getSensor(), SensorManager.SENSOR_DELAY_NORMAL);
@@ -88,7 +94,6 @@ public class ParsedRequestConsumerImpl implements ParsedRequestConsumer<ParsedRe
 		
 		String ret =  "The values for the sensor '"+request.getSensorType().getRequestName() +"'"+ 
 				" are : "+valuesStr;
-		Log.v("Parsed values", ret);
 		return ret;
 	}
 

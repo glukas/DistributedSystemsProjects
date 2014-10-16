@@ -29,13 +29,17 @@ public class RequestParserImpl implements RequestParser<ParsedRequest>{
 		
 		//extract body of request
 		request = request.substring(1+methodName.length()+path.length());
-		request = request.split(" "+protocolName)[0];
+
+		request = request.split(" "+protocolName).length > 0 ? request.split(" "+protocolName)[0] : null;
+		if (request == null){
+			return new ParsedRequest(SensorType.EMPTY, null);
+		}
 		String[] requestBody = request.split(separator);
 		
 		//determine type of sensor targeted
 		SensorType sensorType = SensorType.getTypeFromName((requestBody[0]));
 		if (sensorType.equals(SensorType.UNSUPPORTED)){
-			return null;
+			return new ParsedRequest(SensorType.UNSUPPORTED, null);
 		}
 		
 		//extract arguments if any
@@ -87,7 +91,8 @@ public class RequestParserImpl implements RequestParser<ParsedRequest>{
 		STEP_COUNTER("stepCounter", Sensor.TYPE_STEP_COUNTER, 1),
 		STEP_DETECTOR("stepDetector", Sensor.TYPE_STEP_DETECTOR, 1),
 		VIBRATOR("vibrator", -1, 0),
-		UNSUPPORTED("unsupported", -1, 0);
+		UNSUPPORTED("unsupported", -1, 0),
+		EMPTY("",-1, 0);
 		
 		private final String name;
 		private final Sensor sensor;
