@@ -43,6 +43,7 @@ public class ClientHandle<T> {
 	}
 
 	private void writeHeader(BufferedWriter out, Status status) throws IOException {
+		//TODO this schematic answer header works, but... Well...
 		out.write("HTTP/1.0 200 OK"); 
 		out.newLine();
 		out.write("Date:");
@@ -57,6 +58,7 @@ public class ClientHandle<T> {
 	}
 	
 	private void writeFooter(BufferedWriter out) throws IOException {
+		//TODO this schematic answer footer works, but... Well...
 		out.write("</body>");
 		out.newLine();
 		out.write("</html>");
