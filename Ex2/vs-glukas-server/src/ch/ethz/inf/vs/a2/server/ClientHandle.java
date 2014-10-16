@@ -34,6 +34,7 @@ public class ClientHandle<T> {
 			BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 			writeHeader(out, status);
 			out.write(responseBody);
+			out.newLine();
 			writeFooter(out);
 			out.flush();
 			out.close();
@@ -42,10 +43,23 @@ public class ClientHandle<T> {
 	}
 
 	private void writeHeader(BufferedWriter out, Status status) throws IOException {
-		//TODO
+		out.write("HTTP/1.0 200 OK"); 
+		out.newLine();
+		out.write("Date:");
+		out.newLine();
+		out.write("Content-Type: text/html");
+		out.newLine();
+		out.newLine();
+		out.write("<html>");
+		out.newLine();
+		out.write("<body>");
+		out.newLine();
 	}
 	
 	private void writeFooter(BufferedWriter out) throws IOException {
-		//TODO
+		out.write("</body>");
+		out.newLine();
+		out.write("</html>");
+		out.newLine();
 	}	
 }

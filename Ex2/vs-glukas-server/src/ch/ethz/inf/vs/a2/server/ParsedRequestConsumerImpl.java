@@ -19,6 +19,7 @@ public class ParsedRequestConsumerImpl implements ParsedRequestConsumer<ParsedRe
 	private ParsedRequest request;
 	private ClientHandle<ParsedRequest> client;
 	
+	private final String noSuchSensor = "Sorry, no such sensor on that device";
 	private final long[] patternVibrate = new long[]{0, 100, 100, 100, 200, 100, 200};
 	
 	public ParsedRequestConsumerImpl(ServerService service){
@@ -33,12 +34,18 @@ public class ParsedRequestConsumerImpl implements ParsedRequestConsumer<ParsedRe
 		client = requestHandle;
 		request = requestHandle.request;
 		
+		//TODO define status with Lukas
+		
 		try {
 			
 			//if the request is null (not valid or empty) post an empty reply
 			//TODO differentiate between invalid and empty request (normally already done)
 			if (request == null){
 				requestHandle.postResponse("", Status.OK);
+			}
+			
+			if (request.getSensorType().getSensor() == null){
+				requestHandle.postResponse(noSuchSensor, Status.OK);
 			}
 		
 			//differentiate the request if it's vibration / sensor read
@@ -52,7 +59,6 @@ public class ParsedRequestConsumerImpl implements ParsedRequestConsumer<ParsedRe
 				requestHandle.postResponse("", Status.OK);
 			} else {
 				//register the listener for this particular sensor
-				//TODO ensure existence of this sensor on the device
 				sensorManager.registerListener(this, request.getSensorType().getSensor(), SensorManager.SENSOR_DELAY_NORMAL);
 			}
 		} catch (IOException e) {
@@ -80,7 +86,7 @@ public class ParsedRequestConsumerImpl implements ParsedRequestConsumer<ParsedRe
 			}
 		}
 		
-		String ret =  "The values for the sensor \\'"+request.getSensorType().getRequestName() +"\\'"+ 
+		String ret =  "The values for the sensor '"+request.getSensorType().getRequestName() +"'"+ 
 				" are : "+valuesStr;
 		Log.v("Parsed values", ret);
 		return ret;
