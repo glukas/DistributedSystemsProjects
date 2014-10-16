@@ -1,6 +1,8 @@
 package ch.ethz.inf.vs.a2.server;
 
 import java.io.IOException;
+import java.util.Arrays;
+
 import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -66,6 +68,10 @@ public class ParsedRequestConsumerImpl implements ParsedRequestConsumer<ParsedRe
 		service.vibrate(pattern);
 		return true;
 	}
+	
+	public String parseValues(float[] values){
+		return "";
+	}
 
 
 	@Override
@@ -76,8 +82,9 @@ public class ParsedRequestConsumerImpl implements ParsedRequestConsumer<ParsedRe
 	@Override
 	public void onSensorChanged(SensorEvent event) {
 		//TODO get the values and parse them before post the reply
+		float[] valuesCopied = Arrays.copyOf(event.values, event.values.length);
 		try {
-			client.postResponse("", Status.OK);
+			client.postResponse(parseValues(valuesCopied), Status.OK);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
