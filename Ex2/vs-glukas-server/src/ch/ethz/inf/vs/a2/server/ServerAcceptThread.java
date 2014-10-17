@@ -51,6 +51,8 @@ public class ServerAcceptThread<T> extends Thread {
 				Socket clientSocket = serverSocket.accept();
 				Log.d(this.getClass().toString(), "ACCEPT CLIENT");
 				ClientRequestTask<T> worker = new ClientRequestTask<T>(consumer, parser);
+				//TODO this should only be called from the main thread
+				//we probably need to use a thread pool executor
 				worker.execute(clientSocket);
 			}
 			serverSocket.close();
