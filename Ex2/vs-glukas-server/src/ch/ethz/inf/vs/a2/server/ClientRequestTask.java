@@ -35,16 +35,16 @@ public class ClientRequestTask<T> extends AsyncTask<Socket, Void, ClientHandle<P
 			
 			//get the text from the client
 			BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-			StringBuilder request = new StringBuilder();
-			String requestLine;
+			String request = "";
+			String requestLine = null;
 			while( (requestLine = in.readLine()) != null) {
-				request.append(requestLine);
+				request += requestLine;
 				//TODO understand why this loop doesn't finish. Note that we don't need more than one line 
 				//for this particular project.
-				break;
+				if (requestLine.equals("")) break;//HTTP ends the request header with an empty line, here we only need the header
 			}
 			// call the request parser on the request string
-			ParsedRequest requestParsed = parser.parse(request.toString());
+			ParsedRequest requestParsed = parser.parse(request);
 			
 			// create & return the Request Handle
 			return new ClientHandle<ParsedRequest>(requestParsed, clientSocket);

@@ -7,11 +7,11 @@ import android.util.Log;
 
 public class RequestParserImpl implements RequestParser<ParsedRequest>{
 	
-	private final String path = "/DistributedSystemsProjects/";
-	private final String protocolName = "HTTP/1.1";
-	private final String methodName = "GET";
-	private final String separator = "\\?";
-	private final String separatorArgs = "\\.";
+	private static final String path = "/DistributedSystemsProjects/";
+	private static final String protocolName = "HTTP/1.1";
+	private static final String methodName = "GET";
+	private static final String separator = "\\?";
+	private static final String separatorArgs = "\\.";
 	
 	private static SensorManager sensorManager;
 	
@@ -20,7 +20,7 @@ public class RequestParserImpl implements RequestParser<ParsedRequest>{
 	}
 	
 	@Override
-	public synchronized ParsedRequest parse(String request) {
+	public ParsedRequest parse(String request) {
 		
 		//check if the request begins with good format
 		if (!(request.startsWith(methodName + " " + path))){

@@ -10,7 +10,14 @@ import android.util.Log;
 public class ClientHandle<T> {
 
 	public enum Status {//Constants for the http status (200 OK, ...) 
-		OK;//TODO
+		OK("200 OK"),
+		NOT_FOUND("404 NOT FOUND");//TODO
+		
+		Status(String name) {
+			this.name = name;
+		}
+		
+		String name;
 	}
 	
 	public final ParsedRequest request;//You can use this to formulate a response
@@ -44,7 +51,7 @@ public class ClientHandle<T> {
 
 	private void writeHeader(BufferedWriter out, Status status) throws IOException {
 		//TODO this schematic answer header works, but... Well...
-		out.write("HTTP/1.0 200 OK"); 
+		out.write("HTTP/1.0 "+status.name); 
 		out.newLine();
 		out.write("Date:");
 		out.newLine();

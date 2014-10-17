@@ -3,6 +3,7 @@ package ch.ethz.inf.vs.a2.server;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 
 import android.util.Log;
 
@@ -13,10 +14,14 @@ public class ServerAcceptThread<T> extends Thread {
 	private final RequestParser<ParsedRequest> parser;
 	private final ParsedRequestConsumer<ParsedRequest> consumer;
 	private volatile boolean alive = true;
+	ServerSocket serverSocket = null;
 	
 	public void terminateGracefully() {
 		alive = false;
-		//TODO maybe have to stop the socket
+		try {
+			serverSocket.close();
+		} catch (IOException e) {
+		}
 	}
 	
 	/**
@@ -34,7 +39,8 @@ public class ServerAcceptThread<T> extends Thread {
 	}
 	
 	public void run() {
-		ServerSocket serverSocket = null;
+		Log.d(this.getClass().toString(), "SERVER THREAD STARTED");
+		
 		try {
 			serverSocket = new ServerSocket(port);
 			
@@ -43,14 +49,18 @@ public class ServerAcceptThread<T> extends Thread {
 			//to have multiple threads waiting for clients
 			while (alive) {
 				Socket clientSocket = serverSocket.accept();
+				Log.d(this.getClass().toString(), "ACCEPT CLIENT");
 				ClientRequestTask<T> worker = new ClientRequestTask<T>(consumer, parser);
 				worker.execute(clientSocket);
 			}
 			serverSocket.close();
 			
+		} catch (SocketException e) {
+			Log.v(this.getClass().toString(),e.getLocalizedMessage());
 		} catch (IOException e) {
 			
 			Log.e(this.getClass().toString(),e.getLocalizedMessage());
 		}
+		Log.d(this.getClass().toString(), "SERVER THREAD EXITING");
 	}
 }

@@ -43,14 +43,14 @@ public class ParsedRequestConsumerImpl implements ParsedRequestConsumer<ParsedRe
 			
 			//if the request is null (not valid) post an empty reply
 			if (request == null){
-				requestHandle.postResponse(invalidRequest, Status.OK);
+				requestHandle.postResponse(invalidRequest, Status.NOT_FOUND);
 				return;
 			} else if (request.getSensorType().equals(SensorType.EMPTY)){
-				requestHandle.postResponse(requestEmpty, Status.OK);
+				requestHandle.postResponse(requestEmpty, Status.NOT_FOUND);
 				return;
 			} else if (request.getSensorType().getSensor() == null || 
 					request.getSensorType().equals(SensorType.UNSUPPORTED)){
-				requestHandle.postResponse(noSuchSensor, Status.OK);
+				requestHandle.postResponse(noSuchSensor, Status.NOT_FOUND);
 				return;
 			} 
 		
