@@ -8,12 +8,12 @@ import android.os.Vibrator;
 
 public class ServerService extends Service{
 
-	ServerAcceptThread<Void> serverThread;
+	ServerAcceptThread<ParsedRequest> serverThread;
 	SensorManager sManager;
 	
 	@Override
 	public void onCreate() {
-		serverThread = new ServerAcceptThread<Void>(8081, 
+		serverThread = new ServerAcceptThread<ParsedRequest>(8081, 
 													Factory.getConsumer(this), 
 													Factory.getParser(this));
 		serverThread.start();

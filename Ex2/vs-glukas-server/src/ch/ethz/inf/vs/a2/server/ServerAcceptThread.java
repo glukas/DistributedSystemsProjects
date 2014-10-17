@@ -13,8 +13,8 @@ public class ServerAcceptThread<T> extends Thread {
 
 
 	public final int port;
-	private final RequestParser<ParsedRequest> parser;
-	private final ParsedRequestConsumer<ParsedRequest> consumer;
+	private final RequestParser<T> parser;
+	private final ParsedRequestConsumer<T> consumer;
 	private volatile boolean alive = true;
 	ServerSocket serverSocket = null;
 	ExecutorService threadPool;
@@ -35,7 +35,7 @@ public class ServerAcceptThread<T> extends Thread {
 	 * @param consumer
 	 * @param parser
 	 */
-	public ServerAcceptThread(int port, ParsedRequestConsumer<ParsedRequest> consumer, RequestParser<ParsedRequest> parser) {
+	public ServerAcceptThread(int port, ParsedRequestConsumer<T> consumer, RequestParser<T> parser) {
 		this.port = port;
 		this.consumer = consumer;
 		this.parser = parser;
@@ -55,7 +55,7 @@ public class ServerAcceptThread<T> extends Thread {
 				Socket clientSocket = serverSocket.accept();
 				Log.d(this.getClass().toString(), "ACCEPT CLIENT");
 				
-				ClientRequestRunnable task = new ClientRequestRunnable(consumer, parser, clientSocket);
+				ClientRequestRunnable<T> task = new ClientRequestRunnable<T>(consumer, parser, clientSocket);
 				threadPool.execute(task);
 			}
 			serverSocket.close();

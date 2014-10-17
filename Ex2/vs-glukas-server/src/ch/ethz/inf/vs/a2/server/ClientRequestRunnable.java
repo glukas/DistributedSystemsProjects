@@ -7,17 +7,17 @@ import java.net.Socket;
 
 import android.util.Log;
 
-public class ClientRequestRunnable implements Runnable {
+public class ClientRequestRunnable<T> implements Runnable {
 
-	private final RequestParser<ParsedRequest> parser;
-	private final ParsedRequestConsumer<ParsedRequest> consumer;
+	private final RequestParser<T> parser;
+	private final ParsedRequestConsumer<T> consumer;
 	private final Socket clientSocket;
 	
 	/**
 	 * @param consumer is always called on the UI thread
 	 * @param parser is called from a background thread
 	 */
-	public ClientRequestRunnable(ParsedRequestConsumer<ParsedRequest> consumer, RequestParser<ParsedRequest> parser, Socket socket) {
+	public ClientRequestRunnable(ParsedRequestConsumer<T> consumer, RequestParser<T> parser, Socket socket) {
 		this.consumer = consumer;
 		this.parser = parser;
 		this.clientSocket = socket;
@@ -38,10 +38,10 @@ public class ClientRequestRunnable implements Runnable {
 				}
 			}
 			// call the request parser on the request string
-			ParsedRequest requestParsed = parser.parse(request);
+			T requestParsed = parser.parse(request);
 			
 			// create the Request Handle
-			ClientHandle<ParsedRequest> handle = new ClientHandle<ParsedRequest>(requestParsed, clientSocket);
+			ClientHandle<T> handle = new ClientHandle<T>(requestParsed, clientSocket);
 			
 			//process the result
 			consumer.consume(handle);

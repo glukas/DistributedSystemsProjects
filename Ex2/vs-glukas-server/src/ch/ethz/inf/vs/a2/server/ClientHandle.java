@@ -22,13 +22,13 @@ public class ClientHandle<T> {
 		String name;
 	}
 	
-	public final ParsedRequest request;//You can use this to formulate a response
+	public final T request;//You can use this to formulate a response
 
 	private final Socket socket;//don't use this directly. Use postResponse.
 	
-	public ClientHandle(ParsedRequest parsedRequest, Socket socket) {
+	public ClientHandle(T requestParsed, Socket socket) {
 		this.socket = socket;
-		request = parsedRequest;
+		request = requestParsed;
 	}
 	
 	/**
