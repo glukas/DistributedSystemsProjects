@@ -22,7 +22,7 @@ public class ServerAcceptThread<T> extends Thread {
 	public void terminateGracefully() {
 		alive = false;
 		try {
-			serverSocket.close();
+			if (serverSocket!= null) serverSocket.close();
 		} catch (IOException e) {
 		}
 	}
