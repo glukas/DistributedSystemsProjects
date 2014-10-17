@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import android.util.Log;
 
@@ -15,6 +17,7 @@ public class ServerAcceptThread<T> extends Thread {
 	private final ParsedRequestConsumer<ParsedRequest> consumer;
 	private volatile boolean alive = true;
 	ServerSocket serverSocket = null;
+	ExecutorService threadPool;
 	
 	public void terminateGracefully() {
 		alive = false;
@@ -36,6 +39,7 @@ public class ServerAcceptThread<T> extends Thread {
 		this.port = port;
 		this.consumer = consumer;
 		this.parser = parser;
+		this.threadPool = Executors.newCachedThreadPool();
 	}
 	
 	public void run() {
@@ -50,10 +54,9 @@ public class ServerAcceptThread<T> extends Thread {
 			while (alive) {
 				Socket clientSocket = serverSocket.accept();
 				Log.d(this.getClass().toString(), "ACCEPT CLIENT");
-				ClientRequestTask<T> worker = new ClientRequestTask<T>(consumer, parser);
-				//TODO this should only be called from the main thread
-				//we probably need to use a thread pool executor
-				worker.execute(clientSocket);
+				
+				ClientRequestRunnable task = new ClientRequestRunnable(consumer, parser, clientSocket);
+				threadPool.execute(task);
 			}
 			serverSocket.close();
 			

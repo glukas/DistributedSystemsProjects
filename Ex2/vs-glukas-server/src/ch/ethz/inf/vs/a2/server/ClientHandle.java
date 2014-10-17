@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 
+import org.apache.http.protocol.HTTP;
+
 import android.util.Log;
 
 public class ClientHandle<T> {
@@ -33,8 +35,8 @@ public class ClientHandle<T> {
 	 * Posts the response to the client  (the sender of the request)
 	 * Executed on the callers thread.
 	 * DO NOT CALL THIS METHOD ON THE UI THREAD.
-	 * The body need to be a valid http body
-	 * @param responseBody the body of the http message to be sent. The content type is text/html
+	 * The response should be the body of a valid html message;
+	 * @param responseBody the body of the html message to be sent. The content type is text/html
 	 */
 	public void postResponse(String responseBody, Status status) throws IOException {
 		if (!socket.isClosed()) {
@@ -43,8 +45,7 @@ public class ClientHandle<T> {
 			out.write(responseBody);
 			out.newLine();
 			writeFooter(out);
-			out.flush();
-			out.close();
+			out.close();//flush & close
 			socket.close();
 		}
 	}
