@@ -4,6 +4,9 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 public class ClientHandle<T> {
 
@@ -17,6 +20,8 @@ public class ClientHandle<T> {
 		
 		String name;
 	}
+
+	public static final String PATTERN_RFC1123 = "EEE, dd MMM yyyy HH:mm:ss zzz";
 	
 	public final T request;//You can use this to formulate a response
 
@@ -49,7 +54,8 @@ public class ClientHandle<T> {
 	private void writeHeader(BufferedWriter out, Status status) throws IOException {
 		out.write("HTTP/1.0 "+status.name); 
 		out.newLine();
-		out.write("Date:");
+		SimpleDateFormat format = new SimpleDateFormat(PATTERN_RFC1123, Locale.US);
+		out.write("Date: " + format.format(new Date()));
 		out.newLine();
 		out.write("Content-Type: text/html");
 		out.newLine();
