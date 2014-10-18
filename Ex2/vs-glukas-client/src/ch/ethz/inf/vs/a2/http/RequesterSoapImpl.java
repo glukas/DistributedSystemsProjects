@@ -3,14 +3,10 @@ package ch.ethz.inf.vs.a2.http;
 import java.io.IOException;
 
 import org.ksoap2.SoapEnvelope;
-import org.ksoap2.SoapFault;
-import org.ksoap2.serialization.PropertyInfo;
 import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
 import org.xmlpull.v1.XmlPullParserException;
-
-import android.util.Log;
 
 public class RequesterSoapImpl implements Requester{
 	String response;
