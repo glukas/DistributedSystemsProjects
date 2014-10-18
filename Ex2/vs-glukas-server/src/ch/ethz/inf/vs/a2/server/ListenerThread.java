@@ -9,7 +9,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 
-public class ListenerThread extends Thread implements SensorEventListener {
+public class ListenerThread implements Runnable, SensorEventListener {
 
 	//management fields
 	private ServerService service;
@@ -36,7 +36,7 @@ public class ListenerThread extends Thread implements SensorEventListener {
 		this.client = client;
 		this.request = client.request;
 		this.sensorManager = (SensorManager) service.getSystemService(Context.SENSOR_SERVICE);
-
+		
 		this.noSuchSensor = service.getResources().getString(R.string.no_such_sensor);
 		this.emptyRequest = service.getResources().getString(R.string.empty_request);
 		this.wrongRequest = service.getResources().getString(R.string.wrong_request);
@@ -81,7 +81,7 @@ public class ListenerThread extends Thread implements SensorEventListener {
 	}
 	
 	private void postResponse(String s, Status status){
-		Thread t = new PostResponseThread(client, s, status);
+		Runnable t = new PostResponseThread(client, s, status);
 		threadPool.execute(t);
 	}
 	

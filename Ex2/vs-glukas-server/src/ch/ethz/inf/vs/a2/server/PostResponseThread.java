@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import ch.ethz.inf.vs.a2.server.ClientHandle.Status;
 
-public class PostResponseThread extends Thread{
+public class PostResponseThread implements Runnable {
 	
 	private ClientHandle<ParsedRequest> client;
 	private String reply;

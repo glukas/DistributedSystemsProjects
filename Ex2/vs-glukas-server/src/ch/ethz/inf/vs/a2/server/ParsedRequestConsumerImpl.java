@@ -15,7 +15,7 @@ public class ParsedRequestConsumerImpl implements ParsedRequestConsumer<ParsedRe
 	
 	@Override
 	public void consume(ClientHandle<ParsedRequest> requestHandle) {
-		Thread t = new ListenerThread(service, requestHandle, threadPool);
+		Runnable t = new ListenerThread(service, requestHandle, threadPool);
 		threadPool.execute(t);
 	}
 }
