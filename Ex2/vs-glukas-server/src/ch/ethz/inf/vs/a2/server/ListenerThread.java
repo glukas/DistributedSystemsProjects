@@ -2,6 +2,7 @@ package ch.ethz.inf.vs.a2.server;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.concurrent.ExecutorService;
 
 import ch.ethz.inf.vs.a2.server.ClientHandle.Status;
 import android.content.Context;
@@ -17,6 +18,7 @@ public class ListenerThread extends Thread implements SensorEventListener {
 	private SensorManager sensorManager;
 	private ParsedRequest request;
 	private ClientHandle<ParsedRequest> client;
+	private ExecutorService threadPool;
 	
 	//return strings, default vibrate pattern
 	private final String noSuchSensor;
@@ -30,11 +32,13 @@ public class ListenerThread extends Thread implements SensorEventListener {
 	 * @param service the service bounds to
 	 * @param client the client which made a request
 	 */
-	public ListenerThread(ServerService service, ClientHandle<ParsedRequest> client){
+	public ListenerThread(ServerService service, ClientHandle<ParsedRequest> client, ExecutorService threadPool){
+		this.threadPool = threadPool;
 		this.service = service;
 		this.client = client;
 		this.request = client.request;
 		this.sensorManager = (SensorManager) service.getSystemService(Context.SENSOR_SERVICE);
+
 		this.noSuchSensor = service.getResources().getString(R.string.no_such_sensor);
 		this.emptyRequest = service.getResources().getString(R.string.empty_request);
 		this.wrongRequest = service.getResources().getString(R.string.wrong_request);
@@ -78,14 +82,9 @@ public class ListenerThread extends Thread implements SensorEventListener {
 		postResponse(vibrateDone, Status.OK);
 	}
 	
-	
-	//don't use directly the client.postResponse(args), use this method
 	private void postResponse(String s, Status status){
-		try {
-			client.postResponse(s, status);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		Thread t = new PostResponseThread(client, s, status);
+		threadPool.execute(t);
 	}
 	
 	private void vibrate(){
@@ -104,11 +103,7 @@ public class ListenerThread extends Thread implements SensorEventListener {
 	@Override
 	public void onSensorChanged(SensorEvent event) {
 		float[] valuesCopied = Arrays.copyOf(event.values, event.values.length);
-		try {
-			client.postResponse(parseValues(valuesCopied), Status.OK);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		postResponse(parseValues(valuesCopied), Status.OK);
 		sensorManager.unregisterListener(this);
 	}
 	
