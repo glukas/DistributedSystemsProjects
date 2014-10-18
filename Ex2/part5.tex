@@ -1,0 +1,142 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{fancyhdr}
+\usepackage{listings}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{5pt plus 1pt}
+\setlength{\headheight}{13.6pt}
+\newcommand\question[2]{\vspace{.25in}\hrule\textbf{#1: #2}\vspace{.5em}\hrule\vspace{.10in}}
+
+\renewcommand\part[1]{\vspace{.10in}\textbf{(#1)}}
+
+\pagestyle{fancyplain}
+\lhead{\textbf{\NAME}}
+\rhead{Distributed Systems - Project 1, \today}
+\begin{document}\raggedright
+
+\newcommand\NAME{Lukas, Young, Vincent}  % your name
+
+\question{1}{HTTP Protocol Version 1.1}
+
+\part{a}
+
+The Request-Line is the start line that begins all HTTP messages.
+
+It consists of : METHOD SP Request-URI SP HTTP-version CRLF
+
+Where:
+
+\begin{itemize}
+
+	\item METHOD is the type of action. ("OPTIONS", "GET", "HEAD", ...)
+
+	\item SP is the separation character
+
+	\item Request-URI is the Uniform Resource Identifier
+
+	\item HTTP-version is the version of HTTP the client is using. (HTTP/1.1)
+
+	\item CRLF is the carry return line ending character.
+	
+\end{itemize}
+
+\part{b}
+
+\begin{small}
+\begin{lstlisting}[frame=single]
+GET / HTTP/1.1
+Host: 192.168.1.1
+Port: 8080
+Connection: close
+Accept: text/html
+\end{lstlisting}
+\end{small}
+
+\part{c}
+
+\begin{itemize}
+
+	\item Client-Server
+
+	\item Stateless
+	
+\end{itemize}
+
+
+
+\question{2}{Network I/O}
+
+\part{a}
+
+
+\begin{itemize}
+
+	\item \textbf{java.net.ServerSocket} The ServerSocket class is used by the server to listen on a particular part and to get requests from clients.
+	
+\begin{small}
+\begin{lstlisting}[frame=single]
+ServerSocket serverSocket = new ServerSocket(port);
+while(true) {
+	Socket connectionSocket = serverSocket.accept();
+	(read with BufferedReader, and write back to connectionSocket)
+}
+\end{lstlisting}
+\end{small}
+
+	\item \textbf{java.net.Socket} The Socket class is used by the server (above) to handle requests and also by the client to send requests and to receive the reply from the server.
+
+\begin{small}
+\begin{lstlisting}[frame=single]
+Socket clientSocket = new Socket("localhost", port);
+(write in socket with BufferedReader and read reply)
+\end{lstlisting}
+\end{small}
+
+\part{b}
+
+A method that shows a blocking behavior is a method that does not terminate until some conditions are met. For example, the read method of InputStream are blocking, because they wait until input data is available, end of file is detected, or an exception is thrown.
+
+All read() methods from InputStream are blocking methods. 
+
+\begin{small}
+\begin{lstlisting}[frame=single]
+This method blocks until input data is available, end of file is detected, 
+or an exception is thrown.
+\end{lstlisting}
+\end{small}
+
+The write methods of OutputStream are non-blocking.
+
+\question{3}{Representational State Transfer}
+
+\part{a}
+
+\textbf{Correct}, REST is an alternative to other distributed-computing specifications
+
+\part{b}
+
+\textbf{Incorrect}, stateless means that the server doesn't store any client context between requests.
+
+\part{c}
+
+\textbf{Correct}
+
+\part{d}
+
+\textbf{Incorrect}, one can also use plain XML.
+	
+\end{itemize}
+
+
+
+
+
+
+
+
+
+
+
+
+
+\end{document}
