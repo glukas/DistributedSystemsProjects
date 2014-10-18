@@ -1,9 +1,7 @@
 package ch.ethz.inf.vs.a2.server;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.concurrent.ExecutorService;
-
 import ch.ethz.inf.vs.a2.server.ClientHandle.Status;
 import android.content.Context;
 import android.hardware.Sensor;

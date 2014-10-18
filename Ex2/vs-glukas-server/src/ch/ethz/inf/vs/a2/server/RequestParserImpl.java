@@ -3,6 +3,14 @@ package ch.ethz.inf.vs.a2.server;
 import android.content.Context;
 import android.hardware.SensorManager;
 
+/*
+ * Parse the requests 
+ * The requests format is :
+ * 192.168.43.1:8081/DistributedSystemsProjects/SENSOR_NAME?ARG1.ARG2...
+ * Where : 
+ *   -SENSOR_NAME is a name listed in SensorType
+ *   -ARGn , is an Integer. (Any number of arguments is allowed)
+ */
 public class RequestParserImpl implements RequestParser<ParsedRequest>{
 	
 	private final String path;
