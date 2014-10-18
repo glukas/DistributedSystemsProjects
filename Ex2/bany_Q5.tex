@@ -1,0 +1,95 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{fancyhdr}
+\usepackage{listings}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{5pt plus 1pt}
+\setlength{\headheight}{13.6pt}
+\newcommand\question[2]{\vspace{.25in}\hrule\textbf{#1: #2}\vspace{.5em}\hrule\vspace{.10in}}
+
+\renewcommand\part[1]{\vspace{.10in}\textbf{(#1)}}
+
+\pagestyle{fancyplain}
+\lhead{\textbf{\NAME}}
+\rhead{Distributed Systems - Project 2, \today}
+\begin{document}\raggedright
+
+\newcommand\NAME{Lukas, Young, Vincent}  % your name
+
+\question{4}{WS-* services} 
+\part{a}  
+\textbf{Which document holds information about the definition of the SunSPOTWebservice?}\newline
+The WSDL document located at: \newline
+http://vslab.inf.ethz.ch:8080/SunSPOTWebServices/SunSPOTWebservice?WSDL \newline
+holds the information about the SunSPOTWebservice. \newline
+
+\textbf{How can this document be retrieved?}\newline
+You can retrieve the document by accessing: \newline
+http://vslab.inf.ethz.ch:8080/SunSPOTWebServices/SunSPOTWebservice?WSDL .
+
+
+\part{b} 
+\textbf{Where can the type definition of the elements getSpot and getSpotResponse be found?}\newline
+You can find the type definitions of the elements getSpot and getSpotResponse by accessing:\newline http://vslab.inf.ethz.ch:8080/SunSPOTWebServices/SunSPOTWebservice?xsd=1 .
+
+\textbf{Give the element definitions for both getSpot and getSpotResponse.}\newline
+
+getSpot: 
+\begin{small}
+\begin{lstlisting}[frame=single]
+<xs:complexType name="getSpot">
+<xs:sequence>
+<xs:element name="id" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+\end{lstlisting}
+\end{small}
+
+getSpotResponse:
+\begin{small}
+\begin{lstlisting}[frame=single]
+<xs:complexType name="getSpotResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:sunSpot" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+\end{lstlisting}
+\end{small}
+
+
+\part{c} \textbf{Imagine, the SunSPOTWebService would be implemented using SMTP as transport protocol. Where in the WSDL file would you declare the transport protocol? }\newline
+We would declare it in the line which contains : \newline
+\textless soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/\textgreater \newline
+right now. \newline
+Instead we would write: \newline
+\textless soap:binding transport="http://webservices.vslecture.vs.inf.ethz.ch/smtp" style="document"/\textgreater \newline
+
+\textbf{How does this affect the soap:address in the service definition?}\newline
+We would have to change: \newline
+\textless soap:address location="http://vslab.inf.ethz.ch:8080/SunSPOTWebServices/SunSPOTWebservice"/\textgreater\newline
+ to \textless soap:address location="mailto:suscribe@webservices.vslecture.vs.inf.ethz.ch"/\textgreater
+
+
+
+
+\question{5}{Android Emulator Networking} 
+
+\part{a} \textbf{What IP address is assigned to an emulated device?}\newline
+The IP address assigned to an emulated device is: 10.0.2.15\newline
+
+\textbf{Why is it the same address even if multiple emulated instances run on the same development machine?}\newline
+The reason for this is because the emulated instance will have its own router and behind each own router the instances will have their own IP address of 10.0.2.15. That means that all the emulated instances are isolated from each other by the router.
+
+\part{b} \textbf{To whom does a call on an emulated instance to 127.0.0.1 refer?}\newline
+It refers to the emulator's own loopback interface.
+
+
+\part{c} \textbf{By which IP address can the development machine be reached from an emulated device?}\newline
+The developement machine can be reached by the IP address: 10.0.2.2
+
+\part{d} \textbf{How can the development machine connect to a port on the emulated device?}\newline
+You can connect to the console port of a specific emulator instance first with the command: \newline
+telnet localhost \textless consoleport\textgreater . (\textless consoleport\textgreater could for example be 5554) 
+
+
+\end{document}
