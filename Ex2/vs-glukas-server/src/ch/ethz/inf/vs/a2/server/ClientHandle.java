@@ -5,10 +5,6 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 
-import org.apache.http.protocol.HTTP;
-
-import android.util.Log;
-
 public class ClientHandle<T> {
 
 	public enum Status {//Constants for the http status (200 OK, ...) 
@@ -51,7 +47,6 @@ public class ClientHandle<T> {
 	}
 
 	private void writeHeader(BufferedWriter out, Status status) throws IOException {
-		//TODO this schematic answer header works, but... Well...
 		out.write("HTTP/1.0 "+status.name); 
 		out.newLine();
 		out.write("Date:");
@@ -66,7 +61,6 @@ public class ClientHandle<T> {
 	}
 	
 	private void writeFooter(BufferedWriter out) throws IOException {
-		//TODO this schematic answer footer works, but... Well...
 		out.write("</body>");
 		out.newLine();
 		out.write("</html>");

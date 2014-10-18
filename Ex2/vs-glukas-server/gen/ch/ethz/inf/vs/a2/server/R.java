@@ -40,8 +40,16 @@ public final class R {
         public static final int app_path=0x7f050005;
         public static final int button_off=0x7f050003;
         public static final int button_on=0x7f050004;
+        public static final int empty_request=0x7f05000d;
+        public static final int method_name=0x7f050007;
+        public static final int no_such_sensor=0x7f05000a;
         public static final int protocol_name=0x7f050006;
+        public static final int request_args_separator=0x7f050009;
+        public static final int request_separator=0x7f050008;
         public static final int title_activity_main=0x7f050001;
+        public static final int valid_sensor_request=0x7f05000e;
+        public static final int vibrate=0x7f05000c;
+        public static final int wrong_request=0x7f05000b;
     }
     public static final class style {
         /** 

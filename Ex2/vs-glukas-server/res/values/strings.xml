@@ -10,5 +10,14 @@
     
     <string name="app_path">/DistributedSystemsProjects/</string>
     <string name="protocol_name">HTTP/1.1</string>
+    <string name="method_name">GET</string>
+    <string name="request_separator">\\?</string>
+    <string name="request_args_separator">\\.</string>
+    
+    <string name="no_such_sensor">Sorry, no such sensor on that device</string>
+    <string name="wrong_request">Invalid request</string>
+    <string name="vibrate">Vibrate.. Done!</string>
+    <string name="empty_request">This request is quite empty, isn\'t it?</string>
+    <string name="valid_sensor_request">The values for the sensor \'%s\' are : </string>
     
 </resources>

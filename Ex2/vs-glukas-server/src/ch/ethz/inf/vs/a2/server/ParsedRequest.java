@@ -1,6 +1,5 @@
 package ch.ethz.inf.vs.a2.server;
 
-import ch.ethz.inf.vs.a2.server.RequestParserImpl.SensorType;
 
 public class ParsedRequest {
 	
