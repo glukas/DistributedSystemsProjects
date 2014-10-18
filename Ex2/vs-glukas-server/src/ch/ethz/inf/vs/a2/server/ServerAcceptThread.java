@@ -17,7 +17,7 @@ public class ServerAcceptThread<T> extends Thread {
 	private final ParsedRequestConsumer<T> consumer;
 	private volatile boolean alive = true;
 	ServerSocket serverSocket = null;
-	ExecutorService threadPool;
+	ExecutorService threadPool = null;
 	
 	public void terminateGracefully() {
 		alive = false;
@@ -29,8 +29,8 @@ public class ServerAcceptThread<T> extends Thread {
 	
 	/**
 	 * THREADING:
-	 * PARSER MUST BE THREAD SAFE
-	 * CONSUMER IS ALWAYS CALLED ON THE UI THREAD
+	 * PARSER & CONSUMER MUST BE THREAD SAFE.
+	 * They will be invoked on some other background thread, possibly by multiple threads at the same time.
 	 * @param port
 	 * @param consumer
 	 * @param parser
@@ -66,6 +66,11 @@ public class ServerAcceptThread<T> extends Thread {
 			
 			Log.e(this.getClass().toString(),e.getLocalizedMessage());
 		}
+		
+		if (threadPool != null) {
+			threadPool.shutdown();
+		}
+		
 		Log.d(this.getClass().toString(), "SERVER THREAD EXITING");
 	}
 }
