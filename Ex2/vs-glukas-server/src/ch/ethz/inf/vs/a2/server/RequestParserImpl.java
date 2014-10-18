@@ -6,7 +6,7 @@ import android.hardware.SensorManager;
 /*
  * Parse the requests 
  * The requests format is :
- * 192.168.43.1:8081/DistributedSystemsProjects/SENSOR_NAME?ARG1.ARG2...
+ * GET /DistributedSystemsProjects/SENSOR_NAME?ARG1.ARG2... HTTP/1.1
  * Where : 
  *   -SENSOR_NAME is a name listed in SensorType
  *   -ARGn , is an Integer. (Any number of arguments is allowed)
