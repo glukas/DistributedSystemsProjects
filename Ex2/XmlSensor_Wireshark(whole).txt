@@ -1,0 +1,346 @@
+No.     Time           Source                Destination           Protocol Length Info
+     40 5.669949000    213.144.149.121       129.132.75.132        HTTP/XML 312    POST /SunSPOTWebServices/SunSPOTWebservice HTTP/1.1 
+
+Frame 40: 312 bytes on wire (2496 bits), 312 bytes captured (2496 bits) on interface 0
+    Interface id: 0 (\Device\NPF_{986218A2-EF64-4A81-971E-8C3542CD6AB7})
+    Encapsulation type: Ethernet (1)
+    Arrival Time: Oct 19, 2014 12:40:11.476101000 Mitteleuropäische Sommerzeit
+    [Time shift for this packet: 0.000000000 seconds]
+    Epoch Time: 1413715211.476101000 seconds
+    [Time delta from previous captured frame: 0.000032000 seconds]
+    [Time delta from previous displayed frame: 1.312668000 seconds]
+    [Time since reference or first frame: 5.669949000 seconds]
+    Frame Number: 40
+    Frame Length: 312 bytes (2496 bits)
+    Capture Length: 312 bytes (2496 bits)
+    [Frame is marked: True]
+    [Frame is ignored: False]
+    [Protocols in frame: eth:ethertype:ip:tcp:http:xml]
+    [Number of per-protocol-data: 1]
+    [Hypertext Transfer Protocol, key 0]
+    [Coloring Rule Name: HTTP]
+    [Coloring Rule String: http || tcp.port == 80 || http2]
+Ethernet II, Src: SamsungE_0e:5e:95 (e8:03:9a:0e:5e:95), Dst: BrocadeC_a6:f8:00 (00:24:38:a6:f8:00)
+    Destination: BrocadeC_a6:f8:00 (00:24:38:a6:f8:00)
+        Address: BrocadeC_a6:f8:00 (00:24:38:a6:f8:00)
+        .... ..0. .... .... .... .... = LG bit: Globally unique address (factory default)
+        .... ...0 .... .... .... .... = IG bit: Individual address (unicast)
+    Source: SamsungE_0e:5e:95 (e8:03:9a:0e:5e:95)
+        Address: SamsungE_0e:5e:95 (e8:03:9a:0e:5e:95)
+        .... ..0. .... .... .... .... = LG bit: Globally unique address (factory default)
+        .... ...0 .... .... .... .... = IG bit: Individual address (unicast)
+    Type: IP (0x0800)
+Internet Protocol Version 4, Src: 213.144.149.121 (213.144.149.121), Dst: 129.132.75.132 (129.132.75.132)
+    Version: 4
+    Header Length: 20 bytes
+    Differentiated Services Field: 0x00 (DSCP 0x00: Default; ECN: 0x00: Not-ECT (Not ECN-Capable Transport))
+        0000 00.. = Differentiated Services Codepoint: Default (0x00)
+        .... ..00 = Explicit Congestion Notification: Not-ECT (Not ECN-Capable Transport) (0x00)
+    Total Length: 298
+    Identification: 0x37b2 (14258)
+    Flags: 0x02 (Don't Fragment)
+        0... .... = Reserved bit: Not set
+        .1.. .... = Don't fragment: Set
+        ..0. .... = More fragments: Not set
+    Fragment offset: 0
+    Time to live: 128
+    Protocol: TCP (6)
+    Header checksum: 0x0000 [validation disabled]
+        [Good: False]
+        [Bad: False]
+    Source: 213.144.149.121 (213.144.149.121)
+    Destination: 129.132.75.132 (129.132.75.132)
+    [Source GeoIP: Unknown]
+    [Destination GeoIP: Unknown]
+Transmission Control Protocol, Src Port: 60036 (60036), Dst Port: 8080 (8080), Seq: 204, Ack: 1, Len: 258
+    Source Port: 60036 (60036)
+    Destination Port: 8080 (8080)
+    [Stream index: 5]
+    [TCP Segment Len: 258]
+    Sequence number: 204    (relative sequence number)
+    [Next sequence number: 462    (relative sequence number)]
+    Acknowledgment number: 1    (relative ack number)
+    Header Length: 20 bytes
+    .... 0000 0001 1000 = Flags: 0x018 (PSH, ACK)
+        000. .... .... = Reserved: Not set
+        ...0 .... .... = Nonce: Not set
+        .... 0... .... = Congestion Window Reduced (CWR): Not set
+        .... .0.. .... = ECN-Echo: Not set
+        .... ..0. .... = Urgent: Not set
+        .... ...1 .... = Acknowledgment: Set
+        .... .... 1... = Push: Set
+        .... .... .0.. = Reset: Not set
+        .... .... ..0. = Syn: Not set
+        .... .... ...0 = Fin: Not set
+    Window size value: 16425
+    [Calculated window size: 65700]
+    [Window size scaling factor: 4]
+    Checksum: 0x392f [validation disabled]
+        [Good Checksum: False]
+        [Bad Checksum: False]
+    Urgent pointer: 0
+    [SEQ/ACK analysis]
+        [iRTT: 0.004797000 seconds]
+        [Bytes in flight: 258]
+    TCP segment data (258 bytes)
+[2 Reassembled TCP Segments (461 bytes): #38(203), #40(258)]
+    [Frame: 38, payload: 0-202 (203 bytes)]
+    [Frame: 40, payload: 203-460 (258 bytes)]
+    [Segment count: 2]
+    [Reassembled TCP length: 461]
+    [Reassembled TCP Data: 504f5354202f53756e53504f545765625365727669636573...]
+Hypertext Transfer Protocol
+    POST /SunSPOTWebServices/SunSPOTWebservice HTTP/1.1\r\n
+        [Expert Info (Chat/Sequence): POST /SunSPOTWebServices/SunSPOTWebservice HTTP/1.1\r\n]
+            [POST /SunSPOTWebServices/SunSPOTWebservice HTTP/1.1\r\n]
+            [Severity level: Chat]
+            [Group: Sequence]
+        Request Method: POST
+        Request URI: /SunSPOTWebServices/SunSPOTWebservice
+        Request Version: HTTP/1.1
+    Content-Type: text/xml\r\n
+    Connection: close\r\n
+    Content-Length: 258\r\n
+        [Content length: 258]
+    Host: vslab.inf.ethz.ch:8080\r\n
+    User-Agent: Apache-HttpClient/UNAVAILABLE (java 1.4)\r\n
+    \r\n
+    [Full request URI: http://vslab.inf.ethz.ch:8080/SunSPOTWebServices/SunSPOTWebservice]
+    [HTTP request 1/1]
+    [Response in frame: 44]
+eXtensible Markup Language
+    <?xml
+        version="1.0"
+        encoding="UTF-8"
+        ?>
+    <S:Envelope
+        xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+        <S:Header/>
+        <S:Body>
+            <ns2:getSpot
+                xmlns:ns2="http://webservices.vslecture.vs.inf.ethz.ch/">
+                <id>
+                    Spot3
+                    </id>
+                </ns2:getSpot>
+            </S:Body>
+        </S:Envelope>
+
+No.     Time           Source                Destination           Protocol Length Info
+     44 5.789922000    129.132.75.132        213.144.149.121       HTTP/XML 60     HTTP/1.1 200 OK 
+
+Frame 44: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface 0
+    Interface id: 0 (\Device\NPF_{986218A2-EF64-4A81-971E-8C3542CD6AB7})
+    Encapsulation type: Ethernet (1)
+    Arrival Time: Oct 19, 2014 12:40:11.596074000 Mitteleuropäische Sommerzeit
+    [Time shift for this packet: 0.000000000 seconds]
+    Epoch Time: 1413715211.596074000 seconds
+    [Time delta from previous captured frame: 0.000001000 seconds]
+    [Time delta from previous displayed frame: 0.119973000 seconds]
+    [Time since reference or first frame: 5.789922000 seconds]
+    Frame Number: 44
+    Frame Length: 60 bytes (480 bits)
+    Capture Length: 60 bytes (480 bits)
+    [Frame is marked: True]
+    [Frame is ignored: False]
+    [Protocols in frame: eth:ethertype:ip:tcp:http:data:data:data:xml]
+    [Number of per-protocol-data: 1]
+    [Hypertext Transfer Protocol, key 0]
+    [Coloring Rule Name: HTTP]
+    [Coloring Rule String: http || tcp.port == 80 || http2]
+Ethernet II, Src: BrocadeC_a6:f8:00 (00:24:38:a6:f8:00), Dst: SamsungE_0e:5e:95 (e8:03:9a:0e:5e:95)
+    Destination: SamsungE_0e:5e:95 (e8:03:9a:0e:5e:95)
+        Address: SamsungE_0e:5e:95 (e8:03:9a:0e:5e:95)
+        .... ..0. .... .... .... .... = LG bit: Globally unique address (factory default)
+        .... ...0 .... .... .... .... = IG bit: Individual address (unicast)
+    Source: BrocadeC_a6:f8:00 (00:24:38:a6:f8:00)
+        Address: BrocadeC_a6:f8:00 (00:24:38:a6:f8:00)
+        .... ..0. .... .... .... .... = LG bit: Globally unique address (factory default)
+        .... ...0 .... .... .... .... = IG bit: Individual address (unicast)
+    Type: IP (0x0800)
+    Padding: 00
+Internet Protocol Version 4, Src: 129.132.75.132 (129.132.75.132), Dst: 213.144.149.121 (213.144.149.121)
+    Version: 4
+    Header Length: 20 bytes
+    Differentiated Services Field: 0x00 (DSCP 0x00: Default; ECN: 0x00: Not-ECT (Not ECN-Capable Transport))
+        0000 00.. = Differentiated Services Codepoint: Default (0x00)
+        .... ..00 = Explicit Congestion Notification: Not-ECT (Not ECN-Capable Transport) (0x00)
+    Total Length: 45
+    Identification: 0xeaf1 (60145)
+    Flags: 0x02 (Don't Fragment)
+        0... .... = Reserved bit: Not set
+        .1.. .... = Don't fragment: Set
+        ..0. .... = More fragments: Not set
+    Fragment offset: 0
+    Time to live: 54
+    Protocol: TCP (6)
+    Header checksum: 0x21c7 [validation disabled]
+        [Good: False]
+        [Bad: False]
+    Source: 129.132.75.132 (129.132.75.132)
+    Destination: 213.144.149.121 (213.144.149.121)
+    [Source GeoIP: Unknown]
+    [Destination GeoIP: Unknown]
+Transmission Control Protocol, Src Port: 8080 (8080), Dst Port: 60036 (60036), Seq: 819, Ack: 462, Len: 5
+    Source Port: 8080 (8080)
+    Destination Port: 60036 (60036)
+    [Stream index: 5]
+    [TCP Segment Len: 5]
+    Sequence number: 819    (relative sequence number)
+    [Next sequence number: 824    (relative sequence number)]
+    Acknowledgment number: 462    (relative ack number)
+    Header Length: 20 bytes
+    .... 0000 0001 1000 = Flags: 0x018 (PSH, ACK)
+        000. .... .... = Reserved: Not set
+        ...0 .... .... = Nonce: Not set
+        .... 0... .... = Congestion Window Reduced (CWR): Not set
+        .... .0.. .... = ECN-Echo: Not set
+        .... ..0. .... = Urgent: Not set
+        .... ...1 .... = Acknowledgment: Set
+        .... .... 1... = Push: Set
+        .... .... .0.. = Reset: Not set
+        .... .... ..0. = Syn: Not set
+        .... .... ...0 = Fin: Not set
+    Window size value: 245
+    [Calculated window size: 31360]
+    [Window size scaling factor: 128]
+    Checksum: 0x7518 [validation disabled]
+        [Good Checksum: False]
+        [Bad Checksum: False]
+    Urgent pointer: 0
+    [SEQ/ACK analysis]
+        [iRTT: 0.004797000 seconds]
+        [Bytes in flight: 823]
+    TCP segment data (5 bytes)
+[3 Reassembled TCP Segments (823 bytes): #42(421), #43(397), #44(5)]
+    [Frame: 42, payload: 0-420 (421 bytes)]
+    [Frame: 43, payload: 421-817 (397 bytes)]
+    [Frame: 44, payload: 818-822 (5 bytes)]
+    [Segment count: 3]
+    [Reassembled TCP length: 823]
+    [Reassembled TCP Data: 485454502f312e3120323030204f4b0d0a582d506f776572...]
+Hypertext Transfer Protocol
+    HTTP/1.1 200 OK\r\n
+        [Expert Info (Chat/Sequence): HTTP/1.1 200 OK\r\n]
+            [HTTP/1.1 200 OK\r\n]
+            [Severity level: Chat]
+            [Group: Sequence]
+        Request Version: HTTP/1.1
+        Status Code: 200
+        Response Phrase: OK
+    X-Powered-By: Servlet/3.0 JSP/2.2 (GlassFish Server Open Source Edition 3.1.2.2 Java/Oracle Corporation/1.7)\r\n
+    Server: GlassFish Server Open Source Edition 3.1.2.2\r\n
+    Content-Type: text/xml;charset=utf-8\r\n
+    Transfer-Encoding: chunked\r\n
+    Date: Sun, 19 Oct 2014 10:40:14 GMT\r\n
+    Connection: close\r\n
+    \r\n
+    [HTTP response 1/1]
+    [Time since request: 0.119973000 seconds]
+    [Request in frame: 40]
+    HTTP chunked response
+        Data chunk (110 octets)
+            Chunk size: 110 octets
+            Data (110 bytes)
+
+0000  3c 3f 78 6d 6c 20 76 65 72 73 69 6f 6e 3d 27 31   <?xml version='1
+0010  2e 30 27 20 65 6e 63 6f 64 69 6e 67 3d 27 55 54   .0' encoding='UT
+0020  46 2d 38 27 3f 3e 3c 53 3a 45 6e 76 65 6c 6f 70   F-8'?><S:Envelop
+0030  65 20 78 6d 6c 6e 73 3a 53 3d 22 68 74 74 70 3a   e xmlns:S="http:
+0040  2f 2f 73 63 68 65 6d 61 73 2e 78 6d 6c 73 6f 61   //schemas.xmlsoa
+0050  70 2e 6f 72 67 2f 73 6f 61 70 2f 65 6e 76 65 6c   p.org/soap/envel
+0060  6f 70 65 2f 22 3e 3c 53 3a 42 6f 64 79 3e         ope/"><S:Body>
+                Data: 3c3f786d6c2076657273696f6e3d27312e302720656e636f...
+                [Length: 110]
+            Chunk boundary
+        Data chunk (390 octets)
+            Chunk size: 390 octets
+            Data (390 bytes)
+
+0000  3c 6e 73 32 3a 67 65 74 53 70 6f 74 52 65 73 70   <ns2:getSpotResp
+0010  6f 6e 73 65 20 78 6d 6c 6e 73 3a 6e 73 32 3d 22   onse xmlns:ns2="
+0020  68 74 74 70 3a 2f 2f 77 65 62 73 65 72 76 69 63   http://webservic
+0030  65 73 2e 76 73 6c 65 63 74 75 72 65 2e 76 73 2e   es.vslecture.vs.
+0040  69 6e 66 2e 65 74 68 7a 2e 63 68 2f 22 3e 3c 72   inf.ethz.ch/"><r
+0050  65 74 75 72 6e 3e 3c 61 63 63 65 6c 65 72 61 74   eturn><accelerat
+0060  69 6f 6e 3e 3c 78 3e 30 2e 30 3c 2f 78 3e 3c 79   ion><x>0.0</x><y
+0070  3e 30 2e 30 3c 2f 79 3e 3c 7a 3e 30 2e 30 3c 2f   >0.0</y><z>0.0</
+0080  7a 3e 3c 2f 61 63 63 65 6c 65 72 61 74 69 6f 6e   z></acceleration
+0090  3e 3c 6c 69 67 68 74 3e 35 35 35 3c 2f 6c 69 67   ><light>555</lig
+00a0  68 74 3e 3c 6e 61 6d 65 3e 53 70 6f 74 33 3c 2f   ht><name>Spot3</
+00b0  6e 61 6d 65 3e 3c 73 77 69 74 63 68 31 3e 3c 76   name><switch1><v
+00c0  61 6c 75 65 3e 66 61 6c 73 65 3c 2f 76 61 6c 75   alue>false</valu
+00d0  65 3e 3c 2f 73 77 69 74 63 68 31 3e 3c 73 77 69   e></switch1><swi
+00e0  74 63 68 32 3e 3c 76 61 6c 75 65 3e 66 61 6c 73   tch2><value>fals
+00f0  65 3c 2f 76 61 6c 75 65 3e 3c 2f 73 77 69 74 63   e</value></switc
+0100  68 32 3e 3c 74 65 6d 70 65 72 61 74 75 72 65 3e   h2><temperature>
+0110  32 30 2e 39 3c 2f 74 65 6d 70 65 72 61 74 75 72   20.9</temperatur
+0120  65 3e 3c 74 69 6c 74 3e 3c 78 3e 30 2e 30 31 3c   e><tilt><x>0.01<
+0130  2f 78 3e 3c 79 3e 2d 30 2e 30 33 3c 2f 79 3e 3c   /x><y>-0.03</y><
+0140  7a 3e 31 2e 35 33 3c 2f 7a 3e 3c 2f 74 69 6c 74   z>1.53</z></tilt
+0150  3e 3c 2f 72 65 74 75 72 6e 3e 3c 2f 6e 73 32 3a   ></return></ns2:
+0160  67 65 74 53 70 6f 74 52 65 73 70 6f 6e 73 65 3e   getSpotResponse>
+0170  3c 2f 53 3a 42 6f 64 79 3e 3c 2f 53 3a 45 6e 76   </S:Body></S:Env
+0180  65 6c 6f 70 65 3e                                 elope>
+                Data: 3c6e73323a67657453706f74526573706f6e736520786d6c...
+                [Length: 390]
+            Chunk boundary
+        End of chunked encoding
+            Chunk size: 0 octets
+            Chunk boundary
+eXtensible Markup Language
+    <?xml
+        version='1.0'
+        encoding='UTF-8'
+        ?>
+    <S:Envelope
+        xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+        <S:Body>
+            <ns2:getSpotResponse
+                xmlns:ns2="http://webservices.vslecture.vs.inf.ethz.ch/">
+                <return>
+                    <acceleration>
+                        <x>
+                            0.0
+                            </x>
+                        <y>
+                            0.0
+                            </y>
+                        <z>
+                            0.0
+                            </z>
+                        </acceleration>
+                    <light>
+                        555
+                        </light>
+                    <name>
+                        Spot3
+                        </name>
+                    <switch1>
+                        <value>
+                            false
+                            </value>
+                        </switch1>
+                    <switch2>
+                        <value>
+                            false
+                            </value>
+                        </switch2>
+                    <temperature>
+                        20.9
+                        </temperature>
+                    <tilt>
+                        <x>
+                            0.01
+                            </x>
+                        <y>
+                            -0.03
+                            </y>
+                        <z>
+                            1.53
+                            </z>
+                        </tilt>
+                    </return>
+                </ns2:getSpotResponse>
+            </S:Body>
+        </S:Envelope>

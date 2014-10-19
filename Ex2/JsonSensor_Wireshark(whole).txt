@@ -1,0 +1,232 @@
+No.     Time           Source                Destination           Protocol Length Info
+    239 5.618390000    213.144.149.121       129.132.75.132        HTTP     181    GET sunspots/Spot1/sensors/temperature HTTP/1.1 
+
+Frame 239: 181 bytes on wire (1448 bits), 181 bytes captured (1448 bits) on interface 0
+    Interface id: 0 (\Device\NPF_{986218A2-EF64-4A81-971E-8C3542CD6AB7})
+    Encapsulation type: Ethernet (1)
+    Arrival Time: Oct 19, 2014 12:36:19.136385000 Mitteleuropäische Sommerzeit
+    [Time shift for this packet: 0.000000000 seconds]
+    Epoch Time: 1413714979.136385000 seconds
+    [Time delta from previous captured frame: 0.050850000 seconds]
+    [Time delta from previous displayed frame: 2.018184000 seconds]
+    [Time since reference or first frame: 5.618390000 seconds]
+    Frame Number: 239
+    Frame Length: 181 bytes (1448 bits)
+    Capture Length: 181 bytes (1448 bits)
+    [Frame is marked: True]
+    [Frame is ignored: False]
+    [Protocols in frame: eth:ethertype:ip:tcp:http]
+    [Number of per-protocol-data: 1]
+    [Hypertext Transfer Protocol, key 0]
+    [Coloring Rule Name: HTTP]
+    [Coloring Rule String: http || tcp.port == 80 || http2]
+Ethernet II, Src: SamsungE_0e:5e:95 (e8:03:9a:0e:5e:95), Dst: BrocadeC_a6:f8:00 (00:24:38:a6:f8:00)
+    Destination: BrocadeC_a6:f8:00 (00:24:38:a6:f8:00)
+        Address: BrocadeC_a6:f8:00 (00:24:38:a6:f8:00)
+        .... ..0. .... .... .... .... = LG bit: Globally unique address (factory default)
+        .... ...0 .... .... .... .... = IG bit: Individual address (unicast)
+    Source: SamsungE_0e:5e:95 (e8:03:9a:0e:5e:95)
+        Address: SamsungE_0e:5e:95 (e8:03:9a:0e:5e:95)
+        .... ..0. .... .... .... .... = LG bit: Globally unique address (factory default)
+        .... ...0 .... .... .... .... = IG bit: Individual address (unicast)
+    Type: IP (0x0800)
+Internet Protocol Version 4, Src: 213.144.149.121 (213.144.149.121), Dst: 129.132.75.132 (129.132.75.132)
+    Version: 4
+    Header Length: 20 bytes
+    Differentiated Services Field: 0x00 (DSCP 0x00: Default; ECN: 0x00: Not-ECT (Not ECN-Capable Transport))
+        0000 00.. = Differentiated Services Codepoint: Default (0x00)
+        .... ..00 = Explicit Congestion Notification: Not-ECT (Not ECN-Capable Transport) (0x00)
+    Total Length: 167
+    Identification: 0x3705 (14085)
+    Flags: 0x02 (Don't Fragment)
+        0... .... = Reserved bit: Not set
+        .1.. .... = Don't fragment: Set
+        ..0. .... = More fragments: Not set
+    Fragment offset: 0
+    Time to live: 128
+    Protocol: TCP (6)
+    Header checksum: 0x0000 [validation disabled]
+        [Good: False]
+        [Bad: False]
+    Source: 213.144.149.121 (213.144.149.121)
+    Destination: 129.132.75.132 (129.132.75.132)
+    [Source GeoIP: Unknown]
+    [Destination GeoIP: Unknown]
+Transmission Control Protocol, Src Port: 60032 (60032), Dst Port: 8081 (8081), Seq: 1, Ack: 1, Len: 127
+    Source Port: 60032 (60032)
+    Destination Port: 8081 (8081)
+    [Stream index: 1]
+    [TCP Segment Len: 127]
+    Sequence number: 1    (relative sequence number)
+    [Next sequence number: 128    (relative sequence number)]
+    Acknowledgment number: 1    (relative ack number)
+    Header Length: 20 bytes
+    .... 0000 0001 1000 = Flags: 0x018 (PSH, ACK)
+        000. .... .... = Reserved: Not set
+        ...0 .... .... = Nonce: Not set
+        .... 0... .... = Congestion Window Reduced (CWR): Not set
+        .... .0.. .... = ECN-Echo: Not set
+        .... ..0. .... = Urgent: Not set
+        .... ...1 .... = Acknowledgment: Set
+        .... .... 1... = Push: Set
+        .... .... .0.. = Reset: Not set
+        .... .... ..0. = Syn: Not set
+        .... .... ...0 = Fin: Not set
+    Window size value: 16425
+    [Calculated window size: 65700]
+    [Window size scaling factor: 4]
+    Checksum: 0x38ac [validation disabled]
+        [Good Checksum: False]
+        [Bad Checksum: False]
+    Urgent pointer: 0
+    [SEQ/ACK analysis]
+        [iRTT: 0.004085000 seconds]
+        [Bytes in flight: 127]
+Hypertext Transfer Protocol
+    GET sunspots/Spot1/sensors/temperature HTTP/1.1\r\n
+        [Expert Info (Chat/Sequence): GET sunspots/Spot1/sensors/temperature HTTP/1.1\r\n]
+            [GET sunspots/Spot1/sensors/temperature HTTP/1.1\r\n]
+            [Severity level: Chat]
+            [Group: Sequence]
+        Request Method: GET
+        Request URI: sunspots/Spot1/sensors/temperature
+        Request Version: HTTP/1.1
+    Host: vslab.inf.ethz.ch:8081\r\n
+    Connection: close\r\n
+    Accept: application/json\r\n
+    \r\n
+    [Full request URI: http://vslab.inf.ethz.ch:8081sunspots/Spot1/sensors/temperature]
+    [HTTP request 1/1]
+    [Response in frame: 242]
+
+No.     Time           Source                Destination           Protocol Length Info
+    242 5.631044000    129.132.75.132        213.144.149.121       HTTP     60     HTTP/1.1 200 OK  (application/json)
+
+Frame 242: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface 0
+    Interface id: 0 (\Device\NPF_{986218A2-EF64-4A81-971E-8C3542CD6AB7})
+    Encapsulation type: Ethernet (1)
+    Arrival Time: Oct 19, 2014 12:36:19.149039000 Mitteleuropäische Sommerzeit
+    [Time shift for this packet: 0.000000000 seconds]
+    Epoch Time: 1413714979.149039000 seconds
+    [Time delta from previous captured frame: 0.000001000 seconds]
+    [Time delta from previous displayed frame: 0.012654000 seconds]
+    [Time since reference or first frame: 5.631044000 seconds]
+    Frame Number: 242
+    Frame Length: 60 bytes (480 bits)
+    Capture Length: 60 bytes (480 bits)
+    [Frame is marked: True]
+    [Frame is ignored: False]
+    [Protocols in frame: eth:ethertype:ip:tcp:http:json]
+    [Number of per-protocol-data: 1]
+    [Hypertext Transfer Protocol, key 0]
+    [Coloring Rule Name: HTTP]
+    [Coloring Rule String: http || tcp.port == 80 || http2]
+Ethernet II, Src: BrocadeC_a6:f8:00 (00:24:38:a6:f8:00), Dst: SamsungE_0e:5e:95 (e8:03:9a:0e:5e:95)
+    Destination: SamsungE_0e:5e:95 (e8:03:9a:0e:5e:95)
+        Address: SamsungE_0e:5e:95 (e8:03:9a:0e:5e:95)
+        .... ..0. .... .... .... .... = LG bit: Globally unique address (factory default)
+        .... ...0 .... .... .... .... = IG bit: Individual address (unicast)
+    Source: BrocadeC_a6:f8:00 (00:24:38:a6:f8:00)
+        Address: BrocadeC_a6:f8:00 (00:24:38:a6:f8:00)
+        .... ..0. .... .... .... .... = LG bit: Globally unique address (factory default)
+        .... ...0 .... .... .... .... = IG bit: Individual address (unicast)
+    Type: IP (0x0800)
+    Padding: 000000000000
+Internet Protocol Version 4, Src: 129.132.75.132 (129.132.75.132), Dst: 213.144.149.121 (213.144.149.121)
+    Version: 4
+    Header Length: 20 bytes
+    Differentiated Services Field: 0x00 (DSCP 0x00: Default; ECN: 0x00: Not-ECT (Not ECN-Capable Transport))
+        0000 00.. = Differentiated Services Codepoint: Default (0x00)
+        .... ..00 = Explicit Congestion Notification: Not-ECT (Not ECN-Capable Transport) (0x00)
+    Total Length: 40
+    Identification: 0x2d55 (11605)
+    Flags: 0x02 (Don't Fragment)
+        0... .... = Reserved bit: Not set
+        .1.. .... = Don't fragment: Set
+        ..0. .... = More fragments: Not set
+    Fragment offset: 0
+    Time to live: 54
+    Protocol: TCP (6)
+    Header checksum: 0xdf68 [validation disabled]
+        [Good: False]
+        [Bad: False]
+    Source: 129.132.75.132 (129.132.75.132)
+    Destination: 213.144.149.121 (213.144.149.121)
+    [Source GeoIP: Unknown]
+    [Destination GeoIP: Unknown]
+Transmission Control Protocol, Src Port: 8081 (8081), Dst Port: 60032 (60032), Seq: 352, Ack: 128, Len: 0
+    Source Port: 8081 (8081)
+    Destination Port: 60032 (60032)
+    [Stream index: 1]
+    [TCP Segment Len: 0]
+    Sequence number: 352    (relative sequence number)
+    Acknowledgment number: 128    (relative ack number)
+    Header Length: 20 bytes
+    .... 0000 0001 0001 = Flags: 0x011 (FIN, ACK)
+        000. .... .... = Reserved: Not set
+        ...0 .... .... = Nonce: Not set
+        .... 0... .... = Congestion Window Reduced (CWR): Not set
+        .... .0.. .... = ECN-Echo: Not set
+        .... ..0. .... = Urgent: Not set
+        .... ...1 .... = Acknowledgment: Set
+        .... .... 0... = Push: Not set
+        .... .... .0.. = Reset: Not set
+        .... .... ..0. = Syn: Not set
+        .... .... ...1 = Fin: Set
+            [Expert Info (Chat/Sequence): Connection finish (FIN)]
+                [Connection finish (FIN)]
+                [Severity level: Chat]
+                [Group: Sequence]
+    Window size value: 229
+    [Calculated window size: 29312]
+    [Window size scaling factor: 128]
+    Checksum: 0xded7 [validation disabled]
+        [Good Checksum: False]
+        [Bad Checksum: False]
+    Urgent pointer: 0
+[2 Reassembled TCP Segments (351 bytes): #241(351), #242(0)]
+    [Frame: 241, payload: 0-350 (351 bytes)]
+    [Frame: 242 (no data)]
+    [Segment count: 2]
+    [Reassembled TCP length: 351]
+    [Reassembled TCP Data: 485454502f312e3120323030204f4b0d0a7365727665723a...]
+Hypertext Transfer Protocol
+    HTTP/1.1 200 OK\r\n
+        [Expert Info (Chat/Sequence): HTTP/1.1 200 OK\r\n]
+            [HTTP/1.1 200 OK\r\n]
+            [Severity level: Chat]
+            [Group: Sequence]
+        Request Version: HTTP/1.1
+        Status Code: 200
+        Response Phrase: OK
+    server: grizzly/1.9.18\r\n
+    Content-Type: application/json\r\n
+    Date: Sun, 19 Oct 2014 10:36:21 GMT\r\n
+    Connection: close\r\n
+    \r\n
+    [HTTP response 1/1]
+    [Time since request: 0.012654000 seconds]
+    [Request in frame: 239]
+JavaScript Object Notation: application/json
+    Object
+        Member Key: "name"
+            String value: Temperature
+        Member Key: "context"
+            Object
+                Member Key: "hierarchicalLocation"
+                    Object
+                        Member Key: "delimiter"
+                            String value: /
+                        Member Key: "hierarchy"
+                            String value: cnb/h/108
+        Member Key: "value"
+            String value: 20.74
+        Member Key: "links"
+            Array
+                Object
+                    Member Key: "name"
+                        String value: Sensors
+                    Member Key: "rel"
+                        String value: parent
+                    Member Key: "uri"
+                        String value: http://vslab.inf.ethz.ch:8081/sunspots/Spot1/sensors

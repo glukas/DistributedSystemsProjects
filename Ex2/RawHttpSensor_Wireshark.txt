@@ -1,0 +1,281 @@
+No.     Time           Source                Destination           Protocol Length Info
+     65 16.806661000   213.144.149.121       129.132.75.132        HTTP     174    GET sunspots/Spot1/sensors/temperature HTTP/1.1 
+
+Frame 65: 174 bytes on wire (1392 bits), 174 bytes captured (1392 bits) on interface 0
+    Interface id: 0 (\Device\NPF_{986218A2-EF64-4A81-971E-8C3542CD6AB7})
+    Encapsulation type: Ethernet (1)
+    Arrival Time: Oct 19, 2014 12:30:38.799755000 Mitteleuropäische Sommerzeit
+    [Time shift for this packet: 0.000000000 seconds]
+    Epoch Time: 1413714638.799755000 seconds
+    [Time delta from previous captured frame: 0.028410000 seconds]
+    [Time delta from previous displayed frame: 1.733303000 seconds]
+    [Time since reference or first frame: 16.806661000 seconds]
+    Frame Number: 65
+    Frame Length: 174 bytes (1392 bits)
+    Capture Length: 174 bytes (1392 bits)
+    [Frame is marked: True]
+    [Frame is ignored: False]
+    [Protocols in frame: eth:ethertype:ip:tcp:http]
+    [Number of per-protocol-data: 1]
+    [Hypertext Transfer Protocol, key 0]
+    [Coloring Rule Name: HTTP]
+    [Coloring Rule String: http || tcp.port == 80 || http2]
+Ethernet II, Src: SamsungE_0e:5e:95 (e8:03:9a:0e:5e:95), Dst: BrocadeC_a6:f8:00 (00:24:38:a6:f8:00)
+    Destination: BrocadeC_a6:f8:00 (00:24:38:a6:f8:00)
+        Address: BrocadeC_a6:f8:00 (00:24:38:a6:f8:00)
+        .... ..0. .... .... .... .... = LG bit: Globally unique address (factory default)
+        .... ...0 .... .... .... .... = IG bit: Individual address (unicast)
+    Source: SamsungE_0e:5e:95 (e8:03:9a:0e:5e:95)
+        Address: SamsungE_0e:5e:95 (e8:03:9a:0e:5e:95)
+        .... ..0. .... .... .... .... = LG bit: Globally unique address (factory default)
+        .... ...0 .... .... .... .... = IG bit: Individual address (unicast)
+    Type: IP (0x0800)
+Internet Protocol Version 4, Src: 213.144.149.121 (213.144.149.121), Dst: 129.132.75.132 (129.132.75.132)
+    Version: 4
+    Header Length: 20 bytes
+    Differentiated Services Field: 0x00 (DSCP 0x00: Default; ECN: 0x00: Not-ECT (Not ECN-Capable Transport))
+        0000 00.. = Differentiated Services Codepoint: Default (0x00)
+        .... ..00 = Explicit Congestion Notification: Not-ECT (Not ECN-Capable Transport) (0x00)
+    Total Length: 160
+    Identification: 0x3582 (13698)
+    Flags: 0x02 (Don't Fragment)
+        0... .... = Reserved bit: Not set
+        .1.. .... = Don't fragment: Set
+        ..0. .... = More fragments: Not set
+    Fragment offset: 0
+    Time to live: 128
+    Protocol: TCP (6)
+    Header checksum: 0x0000 [validation disabled]
+        [Good: False]
+        [Bad: False]
+    Source: 213.144.149.121 (213.144.149.121)
+    Destination: 129.132.75.132 (129.132.75.132)
+    [Source GeoIP: Unknown]
+    [Destination GeoIP: Unknown]
+Transmission Control Protocol, Src Port: 60026 (60026), Dst Port: 8081 (8081), Seq: 1, Ack: 1, Len: 120
+    Source Port: 60026 (60026)
+    Destination Port: 8081 (8081)
+    [Stream index: 0]
+    [TCP Segment Len: 120]
+    Sequence number: 1    (relative sequence number)
+    [Next sequence number: 121    (relative sequence number)]
+    Acknowledgment number: 1    (relative ack number)
+    Header Length: 20 bytes
+    .... 0000 0001 1000 = Flags: 0x018 (PSH, ACK)
+        000. .... .... = Reserved: Not set
+        ...0 .... .... = Nonce: Not set
+        .... 0... .... = Congestion Window Reduced (CWR): Not set
+        .... .0.. .... = ECN-Echo: Not set
+        .... ..0. .... = Urgent: Not set
+        .... ...1 .... = Acknowledgment: Set
+        .... .... 1... = Push: Set
+        .... .... .0.. = Reset: Not set
+        .... .... ..0. = Syn: Not set
+        .... .... ...0 = Fin: Not set
+    Window size value: 16425
+    [Calculated window size: 65700]
+    [Window size scaling factor: 4]
+    Checksum: 0x38a5 [validation disabled]
+        [Good Checksum: False]
+        [Bad Checksum: False]
+    Urgent pointer: 0
+    [SEQ/ACK analysis]
+        [iRTT: 0.004497000 seconds]
+        [Bytes in flight: 120]
+Hypertext Transfer Protocol
+    GET sunspots/Spot1/sensors/temperature HTTP/1.1\r\n
+        [Expert Info (Chat/Sequence): GET sunspots/Spot1/sensors/temperature HTTP/1.1\r\n]
+            [GET sunspots/Spot1/sensors/temperature HTTP/1.1\r\n]
+            [Severity level: Chat]
+            [Group: Sequence]
+        Request Method: GET
+        Request URI: sunspots/Spot1/sensors/temperature
+        Request Version: HTTP/1.1
+    Host: vslab.inf.ethz.ch:8081\r\n
+    Connection: close\r\n
+    Accept: text/html\r\n
+    \r\n
+    [Full request URI: http://vslab.inf.ethz.ch:8081sunspots/Spot1/sensors/temperature]
+    [HTTP request 1/1]
+    [Response in frame: 70]
+
+No.     Time           Source                Destination           Protocol Length Info
+     70 16.820191000   129.132.75.132        213.144.149.121       HTTP     60     HTTP/1.1 200 OK  (text/html)
+
+Frame 70: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface 0
+    Interface id: 0 (\Device\NPF_{986218A2-EF64-4A81-971E-8C3542CD6AB7})
+    Encapsulation type: Ethernet (1)
+    Arrival Time: Oct 19, 2014 12:30:38.813285000 Mitteleuropäische Sommerzeit
+    [Time shift for this packet: 0.000000000 seconds]
+    Epoch Time: 1413714638.813285000 seconds
+    [Time delta from previous captured frame: 0.000000000 seconds]
+    [Time delta from previous displayed frame: 0.013530000 seconds]
+    [Time since reference or first frame: 16.820191000 seconds]
+    Frame Number: 70
+    Frame Length: 60 bytes (480 bits)
+    Capture Length: 60 bytes (480 bits)
+    [Frame is marked: True]
+    [Frame is ignored: False]
+    [Protocols in frame: eth:ethertype:ip:tcp:http:data-text-lines]
+    [Number of per-protocol-data: 1]
+    [Hypertext Transfer Protocol, key 0]
+    [Coloring Rule Name: HTTP]
+    [Coloring Rule String: http || tcp.port == 80 || http2]
+Ethernet II, Src: BrocadeC_a6:f8:00 (00:24:38:a6:f8:00), Dst: SamsungE_0e:5e:95 (e8:03:9a:0e:5e:95)
+    Destination: SamsungE_0e:5e:95 (e8:03:9a:0e:5e:95)
+        Address: SamsungE_0e:5e:95 (e8:03:9a:0e:5e:95)
+        .... ..0. .... .... .... .... = LG bit: Globally unique address (factory default)
+        .... ...0 .... .... .... .... = IG bit: Individual address (unicast)
+    Source: BrocadeC_a6:f8:00 (00:24:38:a6:f8:00)
+        Address: BrocadeC_a6:f8:00 (00:24:38:a6:f8:00)
+        .... ..0. .... .... .... .... = LG bit: Globally unique address (factory default)
+        .... ...0 .... .... .... .... = IG bit: Individual address (unicast)
+    Type: IP (0x0800)
+    Padding: 000000000000
+Internet Protocol Version 4, Src: 129.132.75.132 (129.132.75.132), Dst: 213.144.149.121 (213.144.149.121)
+    Version: 4
+    Header Length: 20 bytes
+    Differentiated Services Field: 0x00 (DSCP 0x00: Default; ECN: 0x00: Not-ECT (Not ECN-Capable Transport))
+        0000 00.. = Differentiated Services Codepoint: Default (0x00)
+        .... ..00 = Explicit Congestion Notification: Not-ECT (Not ECN-Capable Transport) (0x00)
+    Total Length: 40
+    Identification: 0x9d01 (40193)
+    Flags: 0x02 (Don't Fragment)
+        0... .... = Reserved bit: Not set
+        .1.. .... = Don't fragment: Set
+        ..0. .... = More fragments: Not set
+    Fragment offset: 0
+    Time to live: 54
+    Protocol: TCP (6)
+    Header checksum: 0x6fbc [validation disabled]
+        [Good: False]
+        [Bad: False]
+    Source: 129.132.75.132 (129.132.75.132)
+    Destination: 213.144.149.121 (213.144.149.121)
+    [Source GeoIP: Unknown]
+    [Destination GeoIP: Unknown]
+Transmission Control Protocol, Src Port: 8081 (8081), Dst Port: 60026 (60026), Seq: 3746, Ack: 121, Len: 0
+    Source Port: 8081 (8081)
+    Destination Port: 60026 (60026)
+    [Stream index: 0]
+    [TCP Segment Len: 0]
+    Sequence number: 3746    (relative sequence number)
+    Acknowledgment number: 121    (relative ack number)
+    Header Length: 20 bytes
+    .... 0000 0001 0001 = Flags: 0x011 (FIN, ACK)
+        000. .... .... = Reserved: Not set
+        ...0 .... .... = Nonce: Not set
+        .... 0... .... = Congestion Window Reduced (CWR): Not set
+        .... .0.. .... = ECN-Echo: Not set
+        .... ..0. .... = Urgent: Not set
+        .... ...1 .... = Acknowledgment: Set
+        .... .... 0... = Push: Not set
+        .... .... .0.. = Reset: Not set
+        .... .... ..0. = Syn: Not set
+        .... .... ...1 = Fin: Set
+            [Expert Info (Chat/Sequence): Connection finish (FIN)]
+                [Connection finish (FIN)]
+                [Severity level: Chat]
+                [Group: Sequence]
+    Window size value: 229
+    [Calculated window size: 29312]
+    [Window size scaling factor: 128]
+    Checksum: 0x3dd4 [validation disabled]
+        [Good Checksum: False]
+        [Bad Checksum: False]
+    Urgent pointer: 0
+[4 Reassembled TCP Segments (3745 bytes): #67(1460), #68(1460), #69(825), #70(0)]
+Hypertext Transfer Protocol
+    HTTP/1.1 200 OK\r\n
+        [Expert Info (Chat/Sequence): HTTP/1.1 200 OK\r\n]
+            [HTTP/1.1 200 OK\r\n]
+            [Severity level: Chat]
+            [Group: Sequence]
+        Request Version: HTTP/1.1
+        Status Code: 200
+        Response Phrase: OK
+    server: grizzly/1.9.18\r\n
+    Content-Type: text/html\r\n
+    Date: Sun, 19 Oct 2014 10:30:41 GMT\r\n
+    Connection: close\r\n
+    \r\n
+    [HTTP response 1/1]
+    [Time since request: 0.013530000 seconds]
+    [Request in frame: 65]
+Line-based text data: text/html
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> \n
+    <html xmlns="http://www.w3.org/1999/xhtml"> \n
+    \t<head>\n
+    \t\t<title>Web of Things - Resource Temperature</title>\n
+    \t\t<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />\n
+    \t\t<link rel="stylesheet" type="text/css" href="/webresources/stylesheets/main.css"/> \n
+    \t</head>\n
+    \t\n
+    \t<body>\n
+    \t\t<h1>Web of Things - Resource Temperature</h1>\n
+    \t\t\n
+    \t\t<p class = "informationcontainer">\n
+    \t\t\t<ul class = "std"> \n
+    \t\t\t\t<li class = "home"><a href="http://vslab.inf.ethz.ch:8081">Home</a></li> \n
+    \t\t\t\t<li class = "parent"><a href="http://vslab.inf.ethz.ch:8081/sunspots/Spot1/sensors">Parent</a></li> \n
+    \t\t\t\t<li class = "refresh"><a href="">Refresh</a></li> \n
+    \t\t\t</ul>\n
+    \t\t\t\n
+    \t\t\t\n
+    \t\t\t<ul class = "getter">\n
+    <li class = "getter">Temperature Getter: <span class="getterValue">20.84</span></li>\n
+    </ul>\n
+    \n
+    \t\t\t\n
+    \t\t\t\n
+    \t\t\t\n
+    \t\t\t<div itemscope>\n
+    \t\t\t\t<ul class="getter">\n
+    \t\t\t\t\t<li class="getter"><span itemscope itemprop="interaction">\n
+    \t\t\t\t\t\t\tTo present this sensor's data, you should use an <span itemprop="type-name">number</span> in the range of  \n
+    \t\t\t\t\t\t\t<span itemprop="type-range">0.0</span> to <span itemprop="type-range">50.0</span>. \n
+    \t\t\t\t\t\t\tThis represents a <span itemprop="name">proportion</span></span>.\n
+    \t\t\t\t\t</li>\n
+    \t\t\t\t</ul>\n
+    \t\t\t</div>\n
+    \t\t</p>\n
+    \t\t\n
+    \t\t<p class = "bigspacing"><br/></p>\n
+    <h2 class = "mftitle stress">hProduct</h2><span class="hproduct">\n
+    <span class="mftitle">Name: </span><span class="fn">Temperature</span><br/>\n
+    <span class="mftitle">Category: </span><span class="category">null</span><br/>\n
+    <span class="mftitle">Brand: </span><span class="brand"><span class="fn n"><span class="given-name">AutoWOT - Automatic Prototyping for the Web of Things</span></span></span><br/>\n
+    <span class="mftitle">Description: </span><span class="description"></span><br/>\n
+    <span class="mftitle">Photo: </span><a class="photo" href="http://www.webofthings.com/photos/Temperature">http://www.webofthings.com/photos/Temperature</a><br/>\n
+    <span class="mftitle">URL: </span><a class="url" href="http://www.webofthings.com/information/Temperature">http://www.webofthings.com/information/Temperature</a><br/>\n
+    </span>\n
+    \n
+    <h2 class = "mftitle stress">hReview</h2><span class="hreview">\n
+    <span class="mftitle">Description: </span><span class="description">This Resource has not yet been reviewed!</span><br/>\n
+    <span class="mftitle">Tags: </span><span class="tags">\n
+    <ul>\n
+    <li><span class="tag">Web of Things Testbed</span></li>\n
+    </ul></span></span>\n
+    \n
+    <h2 class = "mftitle stress">Geo</h2><span class="geo">\n
+    <span class="mftitle">Latitude: </span><span class="latitude">47.378088</span><br/>\n
+    <span class="mftitle">Longitude: </span><span class="longitude">8.549902</span><br/>\n
+    </span>\n
+    <h2 class = "mftitle stress">hRESTS</h2><span class="hrests">\n
+    <span class="service">\n
+    <span class="mftitle">Label: </span><span class="label"></span><br/>\n
+    <span class="mftitle">Data Format: </span><span class="data-format">String</span><br/>\n
+    <span class="mftitle">Operation: </span><span class="operation"><br/><span class="mftitle">Method: </span><span class="method">GET</span><br/>\n
+    <span class="mftitle">Address: </span><span class="address">http://vslab.inf.ethz.ch:8081/sunspots/Spot1/sensors/temperature</span><br/>\n
+    <span class="mftitle">Input: </span><span class="input"></span><br/>\n
+    <span class="mftitle">Output: </span><span class="output">Temperature Getter</span><br/>\n
+    </span>\n
+    </span><br/>\n
+    </span>\n
+    <h2 class="mftitle stress">Additional Information</h2><span class="infraWOTadditional">\n
+    <span class="mftitle">Subresources</span>\n
+    <ul class="subresources">\n
+    </ul>\n
+    </span>\n
+    \t</body>\n
+    </html>
