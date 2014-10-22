@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
-import ch.ethz.inf.vs.android.nethz.chat.R;
+import ch.ethz.inf.vs.android.glukas.capitalize.R;
 
 /**
  * DisplayMessageAdapter is a Custom class to implement custom row in ListView

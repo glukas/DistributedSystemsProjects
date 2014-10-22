@@ -2,7 +2,8 @@ package ch.ethz.inf.vs.android.glukas.chat;
 
 import java.util.ArrayList;
 
-import ch.ethz.inf.vs.android.nethz.chat.R;
+import ch.ethz.inf.vs.android.glukas.chat.R;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.Log;
 import android.view.Gravity;
@@ -19,6 +20,7 @@ import android.widget.TextView;
  * @author Adil Soomro
  *
  */
+@SuppressLint("ResourceAsColor")
 public class DisplayMessageAdapter extends BaseAdapter {
 	/**
 	 * The context of the activity

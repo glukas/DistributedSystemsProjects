@@ -2,7 +2,7 @@ package ch.ethz.inf.vs.android.glukas.chat;
 
 import java.util.ArrayList;
 
-import ch.ethz.inf.vs.android.nethz.chat.R;
+import ch.ethz.inf.vs.android.glukas.chat.R;
 import android.app.ListActivity;
 import android.os.Bundle;
 import android.os.Handler;

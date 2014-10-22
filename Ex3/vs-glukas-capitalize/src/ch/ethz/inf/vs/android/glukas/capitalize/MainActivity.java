@@ -8,7 +8,7 @@ import android.os.Handler;
 import android.os.StrictMode;
 import android.widget.Button;
 import android.widget.EditText;
-import ch.ethz.inf.vs.android.nethz.chat.R;
+import ch.ethz.inf.vs.android.glukas.capitalize.R;
 
 /**
  * This function represents the main activity for launching the app.

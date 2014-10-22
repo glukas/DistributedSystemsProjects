@@ -5,7 +5,7 @@
  * should not be modified by hand.
  */
 
-package ch.ethz.inf.vs.android.nethz.chat;
+package ch.ethz.inf.vs.android.glukas.chat;
 
 public final class R {
     public static final class attr {
