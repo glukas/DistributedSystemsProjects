@@ -1,22 +1,3 @@
-workspace/.metadata/.plugins/org.eclipse.core.resources/.projects/RemoteSystemsTempFiles/.markers.snap
-
-workspace/.metadata/.plugins/org.eclipse.core.resources/.projects/RemoteSystemsTempFiles/.syncinfo.snap
-
-workspace/.metadata/.plugins/org.eclipse.core.resources/.root/.indexes/properties.index
-
-workspace/.metadata/.plugins/org.eclipse.core.resources/.root/.indexes/properties.index
-
-workspace/.metadata/.plugins/org.eclipse.core.resources/.root/.markers.snap
-
-workspace/.metadata/.plugins/org.eclipse.core.resources/.safetable/org.eclipse.core.resources
-
-workspace/.metadata/.plugins/org.eclipse.core.resources/.snap
-
-workspace/.metadata/.plugins/org.eclipse.core.runtime/.settings/org.eclipse.jdt.ui.prefs
-
-workspace/.metadata/.plugins/org.eclipse.jdt.core/variablesAndContainers.dat
-
-workspace/.metadata/.plugins/org.eclipse.jdt.core/variablesAndContainers.dat
 
 *.jar
 !/Ex2/vs-glukas-client/libs/ksoap2-android-assembly-3.0.0-jar-with-dependencies.jar
@@ -31,12 +12,10 @@ workspace/.metadata/.plugins/org.eclipse.jdt.core/variablesAndContainers.dat
 
 *.aux
 
-part4/.texpadtmp/vdemotz_part4.synctex.gz
+*.gz
 
-part4/vdemotz_part4.pdf
+*.pdf
 
-part4/vdemotz_part4.synctex.gz
+*.gz
 
 *.log
-
-Ex2/part5.synctex.gz
