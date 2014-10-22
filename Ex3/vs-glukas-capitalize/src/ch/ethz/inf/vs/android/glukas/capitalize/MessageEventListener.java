@@ -2,6 +2,8 @@ package ch.ethz.inf.vs.android.glukas.capitalize;
 
 import java.util.EventListener;
 
+import ch.ethz.inf.vs.android.glukas.capitalize.MessageEventSource.ChatEvent;
+
 import android.os.Handler;
 
 /**
@@ -24,5 +26,11 @@ public interface MessageEventListener extends EventListener {
 	 */
 	public Handler getCallbackHandler();
 	
-	// TODO Add all necessary event triggers
+	// TODO Is this all we need?
+	
+	/**
+	 * Called when a response is received
+	 * @param message the message that was received from the server
+	 */
+	public void onReceiveChatEvent(ChatEvent message);
 }
