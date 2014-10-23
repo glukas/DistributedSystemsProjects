@@ -1,6 +1,21 @@
 package ch.ethz.inf.vs.android.glukas.capitalize;
 
+import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.DatagramSocketImpl;
+import java.net.DatagramSocketImplFactory;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.SocketAddress;
+import java.net.SocketException;
+import java.net.UnknownHostException;
+import java.nio.ByteBuffer;
+import java.nio.channels.DatagramChannel;
+
 import org.json.JSONObject;
+
+import android.util.Log;
 
 /**
  * This class should be used to interface with the server
@@ -9,12 +24,19 @@ import org.json.JSONObject;
  *
  */
 public class UDPCommunicator {
-	// TODO: Add the necessary objects
+	
+	private final int port;
+	private final String address;
+	private DatagramSocket socket;
+	private DatagramChannel channel;
 
 	/**
 	 * Constructor
+	 * @throws IOException 
 	 */
-	public UDPCommunicator() {
+	public UDPCommunicator(String address, int port) {
+		this.port = port;
+		this.address = address;
 		setupConnection();
 	}
 
@@ -24,8 +46,16 @@ public class UDPCommunicator {
 	 * @return
 	 */
 	public boolean setupConnection() {
-		// TODO Setup the connection with the server and make sure to bind the
-		// socket
+		
+		try {
+			channel = DatagramChannel.open();
+			socket = channel.socket();
+			SocketAddress localAddr = new InetSocketAddress(0);
+			socket.bind(localAddr);
+			socket.connect(InetAddress.getByName(address), port);
+		} catch (Exception ex){
+			Log.e("UDPCommunicator", "RESPONSE : failed to bind "+ex.getLocalizedMessage());
+		} 
 		return false;
 	}
 
@@ -34,6 +64,25 @@ public class UDPCommunicator {
 	 * @param request The request in JSON format
 	 */
 	public void sendRequest(JSONObject request) {
-		// TODO Implement sending the JSONObject to the server
+
+	}
+	
+	public void sendRequestString(String request) throws IOException{
+		
+		DatagramPacket packet = new DatagramPacket(request.getBytes(), request.length());
+		Log.e("", "RESPONSE : call send");
+		socket.send(packet);
+		Log.e("", "RESPONSE : send");
+	}
+	
+	public String receiveReply() throws IOException {
+
+		
+		byte[] buf = new byte[1024];
+		DatagramPacket packet = new DatagramPacket(buf, buf.length);
+		Log.e("", "RESPONSE : call receive");
+		socket.receive(packet);
+		Log.e("", "RESPONSE : received");
+		return new String(packet.getData(), 0, packet.getLength());
 	}
 }

@@ -2,6 +2,7 @@ package ch.ethz.inf.vs.android.glukas.capitalize;
 
 import java.util.ArrayList;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -18,6 +19,7 @@ import ch.ethz.inf.vs.android.glukas.capitalize.R;
  * @author Adil Soomro
  *
  */
+@SuppressLint("ResourceAsColor")
 public class DisplayMessageAdapter extends BaseAdapter {
 	/**
 	 * The context of the activity

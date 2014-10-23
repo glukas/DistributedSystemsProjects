@@ -67,6 +67,8 @@ public class MainActivity extends ListActivity implements MessageEventListener {
 		setListAdapter(adapter);
 		
 		this.textInput = (TextView) findViewById(R.id.text);
+		UDPCommunicatorTest.testSend();
+		
 	}
 
 	/**
