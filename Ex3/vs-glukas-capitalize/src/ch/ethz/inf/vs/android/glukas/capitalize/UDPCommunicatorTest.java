@@ -8,7 +8,7 @@ public class UDPCommunicatorTest {
 	
 	public static void testSend(){
 		
-		final UDPCommunicator communicator = new UDPCommunicator("129.132.75.194", 4999);
+		final UDPCommunicator communicator = new UDPCommunicator("129.132.75.194", 4000);
 		
 		Thread tSend = new Thread(){
 			@Override
@@ -35,11 +35,11 @@ public class UDPCommunicatorTest {
 		
 		
 		tReceive.start();
-		try {
+		/*try {
 			Thread.sleep(1000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
-		}
+		}*/
 		tSend.start();
 	}
 
