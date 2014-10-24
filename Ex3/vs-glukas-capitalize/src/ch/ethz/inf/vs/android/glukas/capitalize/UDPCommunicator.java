@@ -127,9 +127,9 @@ public class UDPCommunicator {
 	 */
 	public void sendRequestString(String request) throws IOException{
 		DatagramPacket packet = new DatagramPacket(request.getBytes(), request.length());
-		Log.e("", "RESPONSE : call send");
+		Log.i("", "RESPONSE : call send");
 		socket.send(packet);
-		Log.e("", "RESPONSE : send");
+		Log.i("", "RESPONSE : send");
 	}
 	
 	/**
@@ -140,10 +140,12 @@ public class UDPCommunicator {
 	public String receiveReply() throws IOException {
 		byte[] buf = new byte[receiveBufSize];
 		DatagramPacket packet = new DatagramPacket(buf, buf.length);
-		Log.e("", "RESPONSE : call receive");
-		socket.receive(packet);
-		Log.e("", "RESPONSE : received hopefully");
-		return new String(packet.getData(), 0, packet.getLength());
+		Log.v("", "RESPONSE : call receive");
+		do {
+			socket.receive(packet);
+		} while (packet.getLength() == 0);//ignore empty packets. (Why do we get those?)
+		Log.v("", "RESPONSE : received hopefully");
+		return new String(packet.getData(), packet.getOffset(), packet.getLength());
 	}
 	
 	////
