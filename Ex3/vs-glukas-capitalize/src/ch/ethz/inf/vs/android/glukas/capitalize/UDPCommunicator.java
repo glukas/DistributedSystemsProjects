@@ -3,18 +3,12 @@ package ch.ethz.inf.vs.android.glukas.capitalize;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
-import java.net.DatagramSocketImpl;
-import java.net.DatagramSocketImplFactory;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.net.SocketException;
-import java.net.UnknownHostException;
-import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
-
 import org.json.JSONObject;
-
 import android.util.Log;
 
 /**
@@ -29,6 +23,10 @@ public class UDPCommunicator {
 	private final String address;
 	private DatagramSocket socket;
 	private DatagramChannel channel;
+	private boolean  socketBounded;
+	private boolean channelOpen;
+	private int timeout;
+	private int receiveBufSize;
 
 	/**
 	 * Constructor
@@ -37,52 +35,179 @@ public class UDPCommunicator {
 	public UDPCommunicator(String address, int port) {
 		this.port = port;
 		this.address = address;
+		this.receiveBufSize = Utils.RECEIVE_BUFFER_SIZE;
 		setupConnection();
 	}
-
+	
 	/**
-	 * This function should be used to setup the "connection" to the server
-	 * Not crucial in task 1, but in task 2, the port should be bound.
-	 * @return
+	 * Constructor
+	 * @throws IOException 
 	 */
-	public boolean setupConnection() {
-		
-		try {
-			channel = DatagramChannel.open();
-			socket = channel.socket();
+	public UDPCommunicator(String address, int port, int receiveBufSize) {
+		this.port = port;
+		this.address = address;
+		this.receiveBufSize = receiveBufSize;
+		setupConnection();
+	}
+	
+	/**
+	 * Close the connection properly
+	 * @throws IOException
+	 */
+	public void finishConnection() throws IOException{
+		if (socket != null)
+			socket.close();
+		if (channel != null) 
+			channel.close();
+	}
+	
+	public boolean retryOpen(){
+		return openConnection();
+	}
+	
+	public boolean retryBound(){
+		if (socket == null){
+			return false;
+		}
+		return boundSocket();
+	}
+
+	////
+	//Connection set up
+	////
+	
+	private void setupConnection() {
+		channelOpen = openConnection();
+		if (channelOpen)
+			socketBounded = boundSocket();
+		else
+			socketBounded = false;
+	}
+	
+	private boolean boundSocket() {
+		try{
 			SocketAddress localAddr = new InetSocketAddress(0);
 			socket.bind(localAddr);
 			socket.connect(InetAddress.getByName(address), port);
-		} catch (Exception ex){
-			Log.e("UDPCommunicator", "RESPONSE : failed to bind "+ex.getLocalizedMessage());
-		} 
-		return false;
+			return true;
+		} catch (IOException ex){
+			Log.e("UDPCommunicator", ex.getLocalizedMessage());
+			return false;
+		}
 	}
+	
+	private boolean openConnection() {
+		try{
+			channel = DatagramChannel.open();
+			socket = channel.socket();
+			return true;
+		} catch (IOException ex){
+			Log.e("UDPCommunicator", ex.getLocalizedMessage());
+			return false;
+		}
+	}
+	
+	////
+	//Send and receive requests, responses
+	////
 
 	/**
 	 * This function should be used to send a request to the server
 	 * @param request The request in JSON format
+	 * @throws IOException 
 	 */
-	public void sendRequest(JSONObject request) {
-
+	public void sendRequest(JSONObject request) throws IOException {
+		sendRequestString(request.toString());
 	}
 	
+	/**
+	 * This function can be used to send a request in string format to host and by port defined at construction
+	 * @param request String representing the request to send
+	 * @throws IOException
+	 */
 	public void sendRequestString(String request) throws IOException{
-		
 		DatagramPacket packet = new DatagramPacket(request.getBytes(), request.length());
 		Log.e("", "RESPONSE : call send");
 		socket.send(packet);
 		Log.e("", "RESPONSE : send");
 	}
 	
+	/**
+	 * Blocking method that waits for the first packet to arrive
+	 * @return String representing message arrived at local port where the socket is bounded to
+	 * @throws IOException
+	 */
 	public String receiveReply() throws IOException {
-
-		
-		byte[] buf = new byte[1024];
+		byte[] buf = new byte[receiveBufSize];
 		DatagramPacket packet = new DatagramPacket(buf, buf.length);
 		Log.e("", "RESPONSE : call receive");
 		socket.receive(packet);
-		Log.e("", "RESPONSE : received");
+		Log.e("", "RESPONSE : received hopefully");
 		return new String(packet.getData(), 0, packet.getLength());
+	}
+	
+	////
+	//Getters and setters
+	////
+	
+	/** 
+	 * @return whether the socket is bounded to a port or not
+	 */
+	public boolean isBounded(){
+		return socketBounded;
+	}
+	
+	/** 
+	 * @return whether the socket is bounded to a port or not
+	 */
+	public boolean isOpen(){
+		return channelOpen;
+	}
+	
+	/**
+	 * @return port of the remote host
+	 */
+	public int getRemotePort(){
+		return port;
+	}
+	
+	/**
+	 * Gets the local port which the socket is bound to
+	 * @return local port, or -2 if socket is null, -1 if socket is closed, 0 if socket is unbound
+	 */
+	public int getLocalPort(){
+		if (socket != null) {
+			return socket.getLocalPort();
+		} else{
+			return -2;
+		}
+	}
+	
+	public String getAddress(){
+		return address;
+	}
+	
+	/**
+	 * @return the maximum size of a arriving packet
+	 */
+	public int getReceiveBufSize(){
+		return receiveBufSize;
+	}
+	
+	/**
+	 * Set a new size for maximum size of arriving packets
+	 * @param receiveBufSize
+	 */
+	public void SetReceiveBufSize(int receiveBufSize){
+		this.receiveBufSize = receiveBufSize;
+	}
+	
+	public void setTimeout(int timeout) throws SocketException{
+		this.timeout = timeout;
+		socket.setSoTimeout(this.timeout);
+	}
+	
+	public int getTimeout(){
+		return timeout;
 	}
 }

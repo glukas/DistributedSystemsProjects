@@ -16,9 +16,11 @@ public class Utils {
 	/*
 	 * Change me... Some useful constants
 	 */
-	public final static String SERVER_ADDRESS = "";
-	public final static int SERVER_PORT = -1;
-	public final static int RECEIVE_BUFFER_SIZE = -1;
+	public final static String SERVER_ADDRESS = "129.132.75.194";
+	public final static int SERVER_PORT_CAPITALIZE = 4000;
+	public final static int SERVER_PORT_CHAT_TEST = 4999;
+	public final static int SERVER_PORT_CHAT = 5000;
+	public final static int RECEIVE_BUFFER_SIZE = 2048;
 	public final static int SOCKET_TIMEOUT = -1;
 	public final static int RESPONSE_TIMEOUT = -1;
 	public final static int MESSAGE_TIMEOUT = -1;

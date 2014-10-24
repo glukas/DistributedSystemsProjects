@@ -1,12 +1,16 @@
 package ch.ethz.inf.vs.android.glukas.capitalize;
 
 import java.io.IOException;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.util.Log;
 
 
 public class UDPCommunicatorTest {
 	
-	public static void testSend(){
+	public static void testSendString(){
 		
 		final UDPCommunicator communicator = new UDPCommunicator("129.132.75.194", 4000);
 		
@@ -35,12 +39,12 @@ public class UDPCommunicatorTest {
 		
 		
 		tReceive.start();
-		/*try {
+		//ensures tReceive is waiting for response before any response arrives.
+		try {
 			Thread.sleep(1000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
-		}*/
+		}
 		tSend.start();
 	}
-
 }
