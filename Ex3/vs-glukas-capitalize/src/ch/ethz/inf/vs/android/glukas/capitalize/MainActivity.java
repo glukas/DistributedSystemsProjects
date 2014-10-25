@@ -74,7 +74,7 @@ public class MainActivity extends ListActivity implements MessageEventListener {
 		logic.addMessageEventListener(this);
 		
 		//TODO remove this
-		UDPCommunicatorTest.testSendString();
+		//UDPCommunicatorTest.testSendString();
 	}
 	
 	/**
@@ -103,6 +103,7 @@ public class MainActivity extends ListActivity implements MessageEventListener {
 				displayMessage(textInput.getText().toString(), "glukas_static", true);
 				
 				//TODO actually send message, using MessageLogic
+				logic.asyncNetwork.sendMessage(textInput.getText().toString());
 			}
 		}
 	}

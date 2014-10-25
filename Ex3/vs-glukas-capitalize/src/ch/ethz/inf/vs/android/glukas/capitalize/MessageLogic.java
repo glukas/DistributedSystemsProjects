@@ -31,9 +31,9 @@ public class MessageLogic extends MessageEventSource implements Serializable, As
 	 * @param context The calling activity
 	 */
 	public MessageLogic(Context context) {
-		asyncNetwork = new AsyncNetwork();
+		asyncNetwork = new AsyncNetwork(Utils.SERVER_ADDRESS,Utils.SERVER_PORT_CAPITALIZE);
 		asyncNetworkCallbackHandler = new Handler();
-		//asyncNetwork.setDelegate(this);
+		asyncNetwork.setDelegate(this);
 		this.initLogger();
 	}
 
