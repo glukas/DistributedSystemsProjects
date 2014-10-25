@@ -7,6 +7,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
@@ -17,18 +18,20 @@ import android.util.Log;
  * @author hong-an
  *
  */
-public class MessageLogic extends MessageEventSource implements Serializable{
+public class MessageLogic extends MessageEventSource implements Serializable, AsyncNetworkDelegate{
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -459244179641490462L;
+
 	/**
 	 * 
 	 */
 	Context appContext;
 	
-	public void sendMessage(String message) {
-		
+	@Override
+	public void OnReceive(String message) {
+		// TODO Auto-generated method stub
 	}
 	
 	/**
@@ -43,9 +46,6 @@ public class MessageLogic extends MessageEventSource implements Serializable{
 	 */
 	public MessageLogic(Context context) {
 		this.initLogger();
-	
-		
-	
 	}
 
 	/**
@@ -54,4 +54,13 @@ public class MessageLogic extends MessageEventSource implements Serializable{
 	public void initLogger() {
 		//this.log = new Logger(appContext);
 	}
+
+	@Override
+	public Handler getCallbackHandler() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
+
+

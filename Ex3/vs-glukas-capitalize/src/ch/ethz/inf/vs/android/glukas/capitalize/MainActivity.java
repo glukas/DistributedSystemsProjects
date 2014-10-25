@@ -43,7 +43,7 @@ public class MainActivity extends ListActivity implements MessageEventListener {
 	 * The view that contains the text the user wants to send
 	 */
 	TextView textInput;
-	
+
 	////
 	///ACTIVITY
 	////
@@ -59,6 +59,7 @@ public class MainActivity extends ListActivity implements MessageEventListener {
 				.permitAll().build();
 		StrictMode.setThreadPolicy(policy);
 		setContentView(R.layout.activity_main);
+		
 		//hook up list view to adapter
 		displayMessages = new ArrayList<DisplayMessage>();
 		displayMessages.add(new DisplayMessage("hello world", "glukas_static", true));
@@ -124,6 +125,7 @@ public class MainActivity extends ListActivity implements MessageEventListener {
 	
 	@Override
 	public void onReceiveChatEvent(ChatEvent message) {
+		//TODO username
 		displayMessage(message.message , "test" , false);
 	}
 }
