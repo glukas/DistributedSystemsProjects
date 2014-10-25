@@ -9,21 +9,54 @@ import android.util.Log;
 public class AsyncNetwork {
 
 	private Handler requestHandler;
-	private Handler receiveHandler;
-	private boolean alive = true;
+
+	private volatile boolean alive = true;
 	HandlerThread requestThread;
-	HandlerThread receiveThread;
+	Thread receiveThread;
 	UDPCommunicator comm;
-	AsyncNetworkDelegate delegate;
+	volatile AsyncNetworkDelegate delegate;
 
 	public AsyncNetwork(String address, int port) {
 		this.comm = new UDPCommunicator(address, port);
+		
+		/// Requests
 		requestThread = new HandlerThread("requestThread");
-		receiveThread = new HandlerThread("receiveThread");
-		receiveThread.start();
 		requestThread.start();
 		requestHandler = new Handler(requestThread.getLooper());
-		receiveHandler = new Handler(receiveThread.getLooper());
+		///
+		
+		
+		///Replies
+		receiveThread = new Thread() {
+			@Override
+			public void run() {
+				try {
+					Thread.sleep(5000);
+					while (alive) {
+						Log.d("", "Trying to receiveReply");
+						final String reply = comm.receiveReply();
+						delegate.getCallbackHandler().post(new Runnable() {
+
+							@Override
+							public void run() {
+								delegate.OnReceive(reply);
+							}
+						});
+					}
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+			}
+
+		};
+		receiveThread.start();
+		///
+		
 
 	}
 
@@ -47,38 +80,6 @@ public class AsyncNetwork {
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-				}
-
-			}
-
-		});
-		receiveHandler.post(new Runnable() {
-			@Override
-			public void run() {
-				while (true) {
-					final String reply;
-					try {
-						Log.d("Thread:", Thread.currentThread().getName());
-
-						// /
-						// Thread gets stuck here!
-						reply = comm.receiveReply();
-						// /
-
-						delegate.getCallbackHandler().post(new Runnable() {
-
-							@Override
-							public void run() {
-								delegate.OnReceive(reply);
-
-							}
-
-						});
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-
 				}
 
 			}

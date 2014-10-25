@@ -143,8 +143,9 @@ public class UDPCommunicator {
 		Log.v("", "RESPONSE : call receive");
 		do {
 			socket.receive(packet);
+			Log.v("", "RESPONSE : received hopefully");
 		} while (packet.getLength() == 0);//ignore empty packets. (Why do we get those?)
-		Log.v("", "RESPONSE : received hopefully");
+		
 		return new String(packet.getData(), packet.getOffset(), packet.getLength());
 	}
 	
