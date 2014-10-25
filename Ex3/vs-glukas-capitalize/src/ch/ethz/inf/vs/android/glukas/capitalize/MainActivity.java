@@ -125,8 +125,7 @@ public class MainActivity extends ListActivity implements MessageEventListener {
 	
 	@Override
 	public void onReceiveChatEvent(ChatEvent message) {
-		//TODO username
-		displayMessage(message.message , "test" , false);
+		displayMessage(message.message , "server" , false);
 	}
 }
 

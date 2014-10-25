@@ -25,9 +25,7 @@ public interface MessageEventListener extends EventListener {
 	 * @return
 	 */
 	public Handler getCallbackHandler();
-	
-	// TODO Is this all we need?
-	
+
 	/**
 	 * Called when a response is received
 	 * @param message the message that was received from the server

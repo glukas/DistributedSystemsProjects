@@ -1,16 +1,9 @@
 package ch.ethz.inf.vs.android.glukas.capitalize;
 
-import java.io.IOException;
 import java.io.Serializable;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.os.Bundle;
 import android.os.Handler;
-import android.os.HandlerThread;
-import android.os.Looper;
-import android.os.Message;
-import android.util.Log;
 
 @SuppressLint("UseSparseArrays")
 /**
@@ -19,19 +12,17 @@ import android.util.Log;
  *
  */
 public class MessageLogic extends MessageEventSource implements Serializable, AsyncNetworkDelegate{
-	/**
-	 * 
-	 */
+	
 	private static final long serialVersionUID = -459244179641490462L;
-
-	/**
-	 * 
-	 */
+	
 	Context appContext;
+	
+	Handler asyncNetworkHandler;
 	
 	@Override
 	public void OnReceive(String message) {
-		// TODO Auto-generated method stub
+		ChatEvent chatEvent = new ChatEvent(this, null, message, null);
+		chatEvent.dispatchEvent();
 	}
 	
 	/**
@@ -45,6 +36,7 @@ public class MessageLogic extends MessageEventSource implements Serializable, As
 	 * @param context The calling activity
 	 */
 	public MessageLogic(Context context) {
+		asyncNetworkHandler = new Handler();
 		this.initLogger();
 	}
 
@@ -57,8 +49,7 @@ public class MessageLogic extends MessageEventSource implements Serializable, As
 
 	@Override
 	public Handler getCallbackHandler() {
-		// TODO Auto-generated method stub
-		return null;
+		return asyncNetworkHandler;
 	}
 
 }
