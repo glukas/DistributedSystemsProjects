@@ -7,6 +7,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
@@ -17,83 +18,32 @@ import android.util.Log;
  * @author hong-an
  *
  */
-public class MessageLogic extends MessageEventSource implements Serializable{
+public class MessageLogic extends MessageEventSource implements Serializable, AsyncNetworkDelegate{
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -459244179641490462L;
 	String mess;
-	MessageEventSource eventsource;
+	
 	/**
 	 * 
 	 */
 	Context appContext;
-	
-
-	public void setMessage (String msg){
-		this.mess = msg;
-	}
-	
-	public void sendMessage() {
-		
-		Message message = Message.obtain();
-        Bundle b = new Bundle();
-        b.putString("message", this.mess);
-        message.setData(b);
-        Log.v("TEST", "Request Okay");
-	 	requestHandler.sendMessage(message);
-		
-	}
-	
-	public void sendReply(String reply) {
-		Message message = Message.obtain();
-        Bundle b = new Bundle();
-        b.putString("message", reply);
-        message.setData(b);
-        Log.v("TEST", "Reply Okay");
-	 	requestHandler.sendMessage(message);
-		
-		
-	}
-	public void setHandlers(Handler request, Handler receive){
-		
-		this.requestHandler = request;
-		this.receiveHandler = receive;
-	}
-	public String receive() throws IOException{
-		
-		return comm.receiveReply();
-	}
-	/**
-	 * Use this handler for outgoing traffic, aka requests to the server.
-	 */
 	private Handler requestHandler;
-		
-	
-	/**
-	 * Use this handler for incoming traffic, aka responses from the server.
-	 */
-
-
 	private Handler receiveHandler;
 	
-	/*class requestThread implements Runnable{
-		 @Override
-		 public void run(){
-			 	Message message = requestHandler.obtainMessage();
-                Bundle b = new Bundle();
-                b.putString("message", mess);
-                message.setData(b);
-               // if (message.getData().get("message").toString().isEmpty())
-                	Log.v("TEST", "Okay");
-			 	requestHandler.sendMessage(message);
-			 	
-			 }
-		 }
-	*/
+	
+	public void setMessage(String message){
+		this.mess = message;
+	}
 	
 	
-
+	
+	@Override
+	public void OnReceive(String message) {
+		// TODO Auto-generated method stub
+		
+	}
 
 
 	/**
@@ -112,6 +62,7 @@ public class MessageLogic extends MessageEventSource implements Serializable{
 	 * @param context The calling activity
 	 */
 	public MessageLogic(Context context) {
+		
 		this.initLogger();
 	
 		
@@ -124,4 +75,14 @@ public class MessageLogic extends MessageEventSource implements Serializable{
 	public void initLogger() {
 		//this.log = new Logger(appContext);
 	}
+
+	@Override
+	public Handler getCallbackHandler() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
 }
+
+
