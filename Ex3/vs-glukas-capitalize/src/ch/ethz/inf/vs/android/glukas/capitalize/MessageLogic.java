@@ -22,84 +22,14 @@ public class MessageLogic extends MessageEventSource implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = -459244179641490462L;
-	String mess;
-	MessageEventSource eventsource;
 	/**
 	 * 
 	 */
 	Context appContext;
 	
-
-	public void setMessage (String msg){
-		this.mess = msg;
-	}
-	
-	public void sendMessage() {
-		
-		Message message = Message.obtain();
-        Bundle b = new Bundle();
-        b.putString("message", this.mess);
-        message.setData(b);
-        Log.v("TEST", "Request Okay");
-	 	requestHandler.sendMessage(message);
+	public void sendMessage(String message) {
 		
 	}
-	
-	public void sendReply(String reply) {
-		Message message = Message.obtain();
-        Bundle b = new Bundle();
-        b.putString("message", reply);
-        message.setData(b);
-        Log.v("TEST", "Reply Okay");
-	 	requestHandler.sendMessage(message);
-		
-		
-	}
-	public void setHandlers(Handler request, Handler receive){
-		
-		this.requestHandler = request;
-		this.receiveHandler = receive;
-	}
-	public String receive() throws IOException{
-		
-		return comm.receiveReply();
-	}
-	/**
-	 * Use this handler for outgoing traffic, aka requests to the server.
-	 */
-	private Handler requestHandler;
-		
-	
-	/**
-	 * Use this handler for incoming traffic, aka responses from the server.
-	 */
-
-
-	private Handler receiveHandler;
-	
-	/*class requestThread implements Runnable{
-		 @Override
-		 public void run(){
-			 	Message message = requestHandler.obtainMessage();
-                Bundle b = new Bundle();
-                b.putString("message", mess);
-                message.setData(b);
-               // if (message.getData().get("message").toString().isEmpty())
-                	Log.v("TEST", "Okay");
-			 	requestHandler.sendMessage(message);
-			 	
-			 }
-		 }
-	*/
-	
-	
-
-
-
-	/**
-	 * This object handles the UDP communication between the client and the chat server
-	 */
-	UDPCommunicator comm = new UDPCommunicator("129.132.75.194", 4000);
 	
 	/**
 	 * This logger should always called when an incoming or outgoing message is ready to be
