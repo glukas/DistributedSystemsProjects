@@ -62,6 +62,10 @@ public class MessageEventSource {
 		 * Function used to notify that an event was triggered
 		 */
 		public void dispatchEvent() {
+			//ChatEvent chatevent = new ChatEvent(source , type , message , request);
+			for (MessageEventListener m : eventListenerList){
+				m.onReceiveChatEvent(this);
+			}
 			// TODO Fill me with events to dispatch to the listener
 		}
 	}
