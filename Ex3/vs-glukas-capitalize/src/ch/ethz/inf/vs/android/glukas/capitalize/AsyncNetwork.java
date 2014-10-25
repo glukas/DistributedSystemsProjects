@@ -10,11 +10,12 @@ public class AsyncNetwork {
 
 	private Handler requestHandler;
 
-	private volatile boolean alive = true;
+	volatile boolean alive = true;
 	HandlerThread requestThread;
 	Thread receiveThread;
+	Thread reqTest;
 	UDPCommunicator comm;
-	volatile AsyncNetworkDelegate delegate;
+	AsyncNetworkDelegate delegate;
 
 	public AsyncNetwork(String address, int port) {
 		this.comm = new UDPCommunicator(address, port);
@@ -28,11 +29,13 @@ public class AsyncNetwork {
 		
 		///Replies
 		receiveThread = new Thread() {
+			
 			@Override
 			public void run() {
+				
 				try {
-					Thread.sleep(5000);
-					while (alive) {
+					Thread.sleep(1000);
+					while(alive){
 						Log.d("", "Trying to receiveReply");
 						final String reply = comm.receiveReply();
 						delegate.getCallbackHandler().post(new Runnable() {
@@ -43,23 +46,41 @@ public class AsyncNetwork {
 							}
 						});
 					}
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+				}catch (InterruptedException e) {
+					//e.printStackTrace();
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					
+					//e.printStackTrace();
 				}
 
 			}
 
 		};
+		
 		receiveThread.start();
-		///
+		
+	
 		
 
 	}
 
+	
+	
+	public void stopThreads(){
+		this.alive=false;
+		receiveThread.interrupt();
+		requestThread.quit();
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		Log.v("requestThread alive:",	String.valueOf(requestThread.isAlive()));
+		Log.v("receiveThread alive:",	String.valueOf(receiveThread.isAlive()));
+		
+	}
+	
 	public void setDelegate(AsyncNetworkDelegate delegate) {
 		this.delegate = delegate;
 
@@ -68,11 +89,12 @@ public class AsyncNetwork {
 	public void sendMessage(String message) {
 
 		final String msg = message;
+		Log.v("Message:", msg);
 		requestHandler.post(new Runnable() {
 
 			@Override
 			public void run() {
-				Log.v("Thread:", Thread.currentThread().getName());
+				Log.v("Message:", "test");
 				try {
 
 					comm.sendRequestString(msg);

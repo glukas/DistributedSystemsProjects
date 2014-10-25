@@ -74,7 +74,7 @@ public class MainActivity extends ListActivity implements MessageEventListener {
 		logic.addMessageEventListener(this);
 		
 		//TODO remove this
-		//UDPCommunicatorTest.testSendString();
+		UDPCommunicatorTest.testSendString();
 	}
 	
 	/**
@@ -87,6 +87,7 @@ public class MainActivity extends ListActivity implements MessageEventListener {
 		// TODO Make sure to quit when the user presses on Back and to
 		// quit the app cleanly.
 		//TODO probably finish here
+		logic.asyncNetwork.stopThreads();
 		finish();
 	}
 	
@@ -100,10 +101,14 @@ public class MainActivity extends ListActivity implements MessageEventListener {
 	public void sendMessage(View view) {
 		if (view instanceof Button) {
 			if (textInput.getText().length() > 0) {
+				String message = textInput.getText().toString();
 				displayMessage(textInput.getText().toString(), "glukas_static", true);
 				
 				//TODO actually send message, using MessageLogic
-				logic.asyncNetwork.sendMessage(textInput.getText().toString());
+			//<--------- textInput is set to "" by displayMessage!!!!---->
+				Log.v("MainActivity: Message :", message);
+				logic.asyncNetwork.sendMessage(message);
+				
 			}
 		}
 	}
