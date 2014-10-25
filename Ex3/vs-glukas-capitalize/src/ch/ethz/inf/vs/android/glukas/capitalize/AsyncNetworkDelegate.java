@@ -8,8 +8,4 @@ public interface AsyncNetworkDelegate {
 	
 	public void OnReceive(String message);
 	
-	
-	
-	
-	
 }

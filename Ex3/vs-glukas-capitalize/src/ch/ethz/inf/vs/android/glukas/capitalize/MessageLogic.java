@@ -17,13 +17,8 @@ public class MessageLogic extends MessageEventSource implements Serializable, As
 	
 	Context appContext;
 	
-	Handler asyncNetworkHandler;
-	
-	@Override
-	public void OnReceive(String message) {
-		ChatEvent chatEvent = new ChatEvent(this, null, message, null);
-		chatEvent.dispatchEvent();
-	}
+	AsyncNetwork asyncNetwork;
+	Handler asyncNetworkCallbackHandler;
 	
 	/**
 	 * This logger should always called when an incoming or outgoing message is ready to be
@@ -36,7 +31,9 @@ public class MessageLogic extends MessageEventSource implements Serializable, As
 	 * @param context The calling activity
 	 */
 	public MessageLogic(Context context) {
-		asyncNetworkHandler = new Handler();
+		asyncNetwork = new AsyncNetwork();
+		asyncNetworkCallbackHandler = new Handler();
+		//asyncNetwork.setDelegate(this);
 		this.initLogger();
 	}
 
@@ -46,12 +43,22 @@ public class MessageLogic extends MessageEventSource implements Serializable, As
 	public void initLogger() {
 		//this.log = new Logger(appContext);
 	}
-
+	
+	////
+	//ASYNC NETWORK DELEGATE
+	////
+	
 	@Override
 	public Handler getCallbackHandler() {
-		return asyncNetworkHandler;
+		return asyncNetworkCallbackHandler;
 	}
 
+	@Override
+	public void OnReceive(String message) {
+		ChatEvent chatEvent = new ChatEvent(this, null, message, null);
+		chatEvent.dispatchEvent();
+	}
+	
 }
 
 
