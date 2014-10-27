@@ -58,7 +58,6 @@ public class MessageLogic extends MessageEventSource implements Serializable, As
 		ChatEvent chatEvent = new ChatEvent(this, null, message, null);
 		chatEvent.dispatchEvent();
 	}
-	
 }
 
 

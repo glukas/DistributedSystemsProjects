@@ -23,8 +23,8 @@ public class UDPCommunicator {
 	private final String address;
 	private DatagramSocket socket;
 	private DatagramChannel channel;
-	private boolean  socketBounded;
-	private boolean channelOpen;
+	private volatile boolean  socketBounded;
+	private volatile boolean channelOpen;
 	private int timeout;
 	private int receiveBufSize;
 
@@ -47,7 +47,9 @@ public class UDPCommunicator {
 		this.port = port;
 		this.address = address;
 		this.receiveBufSize = receiveBufSize;
+		Log.v("", "just set up");
 		setupConnection();
+		Log.v("", "finish to create connection");
 	}
 	
 	/**
@@ -78,10 +80,12 @@ public class UDPCommunicator {
 	
 	private void setupConnection() {
 		channelOpen = openConnection();
-		if (channelOpen)
+		if (channelOpen) {
 			socketBounded = boundSocket();
-		else
+		}
+		else {
 			socketBounded = false;
+		}
 	}
 	
 	private boolean boundSocket() {
@@ -127,9 +131,7 @@ public class UDPCommunicator {
 	 */
 	public void sendRequestString(String request) throws IOException{
 		DatagramPacket packet = new DatagramPacket(request.getBytes(), request.length());
-		Log.i("", "RESPONSE : call send");
 		socket.send(packet);
-		Log.i("", "RESPONSE : send");
 	}
 	
 	/**
@@ -140,11 +142,10 @@ public class UDPCommunicator {
 	public String receiveReply() throws IOException {
 		byte[] buf = new byte[receiveBufSize];
 		DatagramPacket packet = new DatagramPacket(buf, buf.length);
-		Log.v("", "RESPONSE : call receive");
 		//TODO : fix the issue of empty packets
 		do {
 			socket.receive(packet);
-			Log.v("", "RESPONSE : received hopefully");
+			Log.v("","Received something");
 		} while (packet.getLength() == 0);//ignore empty packets. (Why do we get those?)
 		
 		
