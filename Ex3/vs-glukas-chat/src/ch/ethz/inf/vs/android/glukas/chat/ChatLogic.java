@@ -1,6 +1,7 @@
 package ch.ethz.inf.vs.android.glukas.chat;
 
 import java.io.Serializable;
+import java.util.Map;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -19,22 +20,13 @@ import ch.ethz.inf.vs.android.glukas.chat.Utils.SyncType;
  * @author hong-an
  *
  */
-public class ChatLogic extends ChatEventSource{
+public class ChatLogic extends ChatEventSource implements ChatClientRequestInterface, ChatServerResponseInterface {
 
 	/**
 	 * Context of the activity
 	 */
 	Context appContext;
-
-	/**
-	 * Handler for outgoing requests.
-	 */
-	private Handler requestHandler;
-	/**
-	 * Handler for incoming requests.
-	 */
-	private Handler receiveHandler;
-
+	
 	/**
 	 * This object handles the UDP communication between the client and the chat
 	 * server
@@ -65,6 +57,8 @@ public class ChatLogic extends ChatEventSource{
 
 	}
 
+	
+	//TODO MOVE INTO SOME PARSER CLASS
 	/**
 	 * This function should parse incoming JSON packets and trigger
 	 * the necessary events.
@@ -75,6 +69,106 @@ public class ChatLogic extends ChatEventSource{
 	public ChatEventType parseJSON(JSONObject jsonMap) throws JSONException {
 		// TODO Fill me
 		return ChatEventType.SOME_STATE;
+	}
+
+	////
+	//CHAT CLIENT REQUEST INTERFACE
+	////
+	
+	@Override
+	public void register(String username) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void deregister() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void sendMessage(String message, int messageId) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void getClients() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	////
+	//CHAT SERVER RESPONSE INTERFACE
+	//(Called by the Parser component)
+	////
+	
+	@Override
+	public void onRegistrationSucceeded(int ownId, Lamport lamportClock,
+			VectorClock vectorClock) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onRegistrationFailed(ChatFailureReason reason) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onGetClientMapping(Map<Integer, String> clientIdToUsernameMap) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onGetClientMappingFailed(ChatFailureReason reason) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onMessageDeliverySucceeded(int id) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onMessageDeliveryFailed(ChatFailureReason reason, int id) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onMessageReceived(ChatMessage message) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onDeregistrarionSucceeded() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onDeregistrationFailed() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onClientDeregistered(Integer clientId, String clientUsername) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onClientRegistered(Integer clientId, String clientUsername) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
