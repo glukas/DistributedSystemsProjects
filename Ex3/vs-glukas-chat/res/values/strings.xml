@@ -9,5 +9,11 @@
 	<string name="welcome_string">Connect to the VS Chat Server...</string>
 	<string name="username_string">Enter your nethz</string>
 	<string name="number_string">(Opt.) Number</string>
+	<string name="login_failed">Login failed</string>
+	<string name="login">Login</string>
+	<string name="please_wait">Please wait...</string>
+	<string name="no_network_connectivity">No network connectivity</string>
+	<string name="error">Error</string>
+	<string name="ok">OK</string>
 
 </resources>

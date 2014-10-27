@@ -100,7 +100,8 @@
 	        android:text="Login"
 	        android:textSize="22sp"
 	        android:textStyle="bold"
-	        android:typeface="serif" />
+	        android:typeface="serif" 
+	        android:onClick="onClickLogin"/>
 	
 	</RelativeLayout>
 	
