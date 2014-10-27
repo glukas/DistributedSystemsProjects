@@ -13,6 +13,18 @@ import android.os.Handler;
  *
  */
 public interface ChatEventListener extends EventListener {
+	public enum FailureReason {
+		notRegistered,
+		alreadyRegistered,
+		usernameAlreadyInUse,
+		nethzNotRecognized,
+		invalidLength,
+		notOnETHSubnet,
+		timeout,
+		unknownCommand;
+	};
+	
+	
 	/**
 	 * Handler for the events stemming from the chat
 	 * logic.
@@ -25,22 +37,14 @@ public interface ChatEventListener extends EventListener {
 	 */
 	public Handler getCallbackHandler();
 	
-	public enum FailureReason {
-		notRegistered,
-		alreadyRegistered,
-		usernameAlreadyInUse,
-		nethzNotRecognized,
-		invalidLength,
-		notOnEthSubnet,
-		timeout,
-		unkownCommand;
-	};
 	
-	/*
+	////
+	//CALLBACKS FOR RESPONSES BY THE SERVER
+	////
 	
-	void onRegistrationSucceeded(int ownId, Lamport lamportClock, VectorClock, vectorClock);//TODO maybe separate onClientMapReceived
+	void onRegistrationSucceeded(int ownId);
 	
-	void onRegistrationFailed(FailureReson reason);
+	void onRegistrationFailed(FailureReason reason);
 	
 	
 	void onGetClientMapping(Map<Integer, String> clientIdToUsernameMap);
@@ -48,9 +52,9 @@ public interface ChatEventListener extends EventListener {
 	void onGetClientMappingFailed(FailureReason reason);
 	
 	
-	void onMessageDeliverySucceeded();//maybe provide handle to identify which message was delivered
+	void onMessageDeliverySucceeded(int id);
 	
-	void onMessageDeliveryFailed(FailureReson reason);
+	void onMessageDeliveryFailed(FailureReason reason, int id);
 	
 	
 	void onMessageReceived(ChatEvent message);
@@ -63,5 +67,5 @@ public interface ChatEventListener extends EventListener {
 
 	void onClientDeregistered(Integer clientId, String clientUsername);
 	
-	void onClientRegistered(Integer clientId, String clientUsername);*/
+	void onClientRegistered(Integer clientId, String clientUsername);
 }

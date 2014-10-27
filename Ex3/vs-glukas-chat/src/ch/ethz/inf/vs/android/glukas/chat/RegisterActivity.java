@@ -1,7 +1,9 @@
 package ch.ethz.inf.vs.android.glukas.chat;
 
 import java.util.ArrayList;
+import java.util.Map;
 
+import ch.ethz.inf.vs.android.glukas.chat.ChatEventSource.ChatEvent;
 import ch.ethz.inf.vs.android.glukas.chat.R;
 import android.app.ListActivity;
 import android.os.Bundle;
@@ -142,12 +144,84 @@ public class RegisterActivity extends ListActivity implements ChatEventListener{
 	public void onBackPressed() {
 		// TODO Make sure to deregister when the user presses on Back and to quit the app cleanly.
 	}
-	@Override
+	
+	////
+	//CHAT EVENT LISTENER
+	////
+	
+	
 	/**
 	 * This function returns the handler that returns the interaction
 	 * between ChatLogic and the activity.
 	 */
+	@Override
 	public Handler getCallbackHandler() {
 		return callbackHandler;
+	}
+
+	@Override
+	public void onRegistrationSucceeded(int ownId) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onRegistrationFailed(FailureReason reason) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onGetClientMapping(Map<Integer, String> clientIdToUsernameMap) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onGetClientMappingFailed(FailureReason reason) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onMessageDeliverySucceeded(int id) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onMessageDeliveryFailed(FailureReason reason, int id) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onMessageReceived(ChatEvent message) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onDeregistrarionSucceeded() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onDeregistrationFailed() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onClientDeregistered(Integer clientId, String clientUsername) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onClientRegistered(Integer clientId, String clientUsername) {
+		// TODO Auto-generated method stub
+		
 	}
 }

@@ -19,22 +19,13 @@ import ch.ethz.inf.vs.android.glukas.chat.Utils.SyncType;
  * @author hong-an
  *
  */
-public class ChatLogic extends ChatEventSource{
+public class ChatLogic extends ChatEventSource implements ChatClientRequestInterface {
 
 	/**
 	 * Context of the activity
 	 */
 	Context appContext;
-
-	/**
-	 * Handler for outgoing requests.
-	 */
-	private Handler requestHandler;
-	/**
-	 * Handler for incoming requests.
-	 */
-	private Handler receiveHandler;
-
+	
 	/**
 	 * This object handles the UDP communication between the client and the chat
 	 * server
@@ -65,6 +56,8 @@ public class ChatLogic extends ChatEventSource{
 
 	}
 
+	
+	//TODO MOVE INTO SOME PARSER CLASS
 	/**
 	 * This function should parse incoming JSON packets and trigger
 	 * the necessary events.
@@ -75,6 +68,34 @@ public class ChatLogic extends ChatEventSource{
 	public ChatEventType parseJSON(JSONObject jsonMap) throws JSONException {
 		// TODO Fill me
 		return ChatEventType.SOME_STATE;
+	}
+
+	////
+	//CHAT CLIENT REQUEST INTERFACE
+	////
+	
+	@Override
+	public void register(String username) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void deregister() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void sendMessage(String message, int messageId) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void getClients() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
