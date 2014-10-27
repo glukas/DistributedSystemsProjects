@@ -1,0 +1,19 @@
+MessageLogic Design considerations:
+
+Since the connection can be lossy, it is possible that operations fail without notice. In such cases, a missing acknoledgement/response by the server should be detected by a timeout.
+Since the ACK for the messages have no sequence numbers, we can have at most one outgoing message outstanding. We probably want to queue the message send requests from the upper layers in the MessageLogic. Maybe some handles should be provided such that the upper layers can know in case of failure which message failed. Having only one outstanding request allows us to have a single timeout, for the current message. If an ACK arrives after the timeout, we may be unable to detect to which message it actually pertains. Thus the timeout should be very conservative.
+
+Another possibility is to prohibit by means of UI to send another message before the previous one has been ACKed. This is less elegant.
+
+We should think about what happens if the list of current clients is outdated. If another user registers, but the registration notification is lost, then that entry may be missing in our clientId->username map. A possible remedy is that whenever the MainActivity encounters an unknown user, it asks for the current list of users.
+
+We might want that if a message fails, all other messages in the queue also fail. (Since they will probably also fail, and maybe this helps with the delayed ACK problem, as more time passes before the next message is sent out)
+
+A missing deregistration request should be treated as a failed deregistration.
+
+To handle the correctly ordered delivery the message logic can put all incoming messages in a set, ordered by the clock of the messages. On each arrival we deliver the message with smallest clock.
+
+
+Lamport Clocks:
+-When does the clock tick?
+-When is a message delivered to the UI?
