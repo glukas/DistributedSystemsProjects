@@ -66,9 +66,9 @@ public class RegisterActivity extends ListActivity implements ChatEventListener 
 		numberUsername = (EditText) findViewById(R.id.number);
 		
 		if (lamportRadio.isChecked()){
-			chatLogic = new ChatLogic(this, Utils.SyncType.LAMPORT_SYNC);
+			chatLogic = new ChatLogic(Utils.SyncType.LAMPORT_SYNC);
 		} else {
-			chatLogic = new ChatLogic(this, Utils.SyncType.VECTOR_CLOCK_SYNC);
+			chatLogic = new ChatLogic(Utils.SyncType.VECTOR_CLOCK_SYNC);
 		}
 		chatLogic.register(username.getText().toString() + numberUsername.getText().toString());
 	}

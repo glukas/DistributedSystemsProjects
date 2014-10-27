@@ -9,6 +9,8 @@ import org.json.JSONObject;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Handler;
+import ch.ethz.inf.vs.android.glukas.chat.AsyncNetwork;
+import ch.ethz.inf.vs.android.glukas.chat.Utils;
 import ch.ethz.inf.vs.android.glukas.chat.Utils.ChatEventType;
 import ch.ethz.inf.vs.android.glukas.chat.Utils.SyncType;
 
@@ -20,55 +22,44 @@ import ch.ethz.inf.vs.android.glukas.chat.Utils.SyncType;
  * @author hong-an
  *
  */
-public class ChatLogic extends ChatEventSource implements ChatClientRequestInterface, ChatServerResponseInterface {
+public class ChatLogic extends ChatEventSource implements ChatClientRequestInterface, ChatServerResponseInterface, AsyncNetworkDelegate {
 
-	/**
-	 * Context of the activity
-	 */
-	Context appContext;
+	private AsyncNetwork asyncNetwork;
+	private Handler asyncNetworkCallbackHandler;
+
+	private SyncType syncType;
 	
-	/**
-	 * This object handles the UDP communication between the client and the chat
-	 * server
-	 */
-	UDPCommunicator comm;
-	
-	/**
-	 * This object should be used to log 
-	 * deliverable messages.
-	 */
-	Logger log;
-
-	/**
-	 * This function should initialize the logger as
-	 * soon as the username is registered.
-	 * @param username
-	 */
-	public void initLogger(String username) {
-		this.log = new Logger(username, appContext);
-	}
-
 	/**
 	 * Constructor
-	 * @param context Context of the Activity
-	 * @param sync Indicates whether Lamport timestamps or Vector clocks should be used
+	 * @param vectorClockSync 
+	 * @param context The calling activity
 	 */
-	public ChatLogic(Context context, SyncType sync) {
-
+	public ChatLogic(SyncType syncType) {
+		this.syncType = syncType;
+		asyncNetworkCallbackHandler = new Handler();
+		asyncNetwork = new AsyncNetwork(Utils.SERVER_ADDRESS,Utils.SERVER_PORT_CHAT, this);
+	}
+	
+	public void close() {
+		asyncNetwork.close();
+	}
+	
+	private void sendMessage(String message) {
+		asyncNetwork.sendMessage(message);
+	}
+	////
+	//ASYNC NETWORK DELEGATE
+	////
+	
+	@Override
+	public Handler getCallbackHandler() {
+		return asyncNetworkCallbackHandler;
 	}
 
-	
-	//TODO MOVE INTO SOME PARSER CLASS
-	/**
-	 * This function should parse incoming JSON packets and trigger
-	 * the necessary events.
-	 * @param jsonMap Incoming JSON packet
-	 * @return The type of event that took place.
-	 * @throws JSONException
-	 */
-	public ChatEventType parseJSON(JSONObject jsonMap) throws JSONException {
-		// TODO Fill me
-		return ChatEventType.SOME_STATE;
+	@Override
+	public void OnReceive(String message) {
+		ChatEvent chatEvent = new ChatEvent(this, null, message, null);
+		chatEvent.dispatchEvent();
 	}
 
 	////
@@ -105,16 +96,13 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 	////
 	
 	@Override
-	public void onRegistrationSucceeded(int ownId, Lamport lamportClock,
-			VectorClock vectorClock) {
+	public void onRegistrationSucceeded(int ownId, Lamport lamportClock, VectorClock vectorClock) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void onRegistrationFailed(ChatFailureReason reason) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
