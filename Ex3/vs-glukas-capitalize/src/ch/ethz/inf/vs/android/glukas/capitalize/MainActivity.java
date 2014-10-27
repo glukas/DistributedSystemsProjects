@@ -67,7 +67,7 @@ public class MainActivity extends ListActivity implements MessageEventListener {
 		this.textInput = (TextView) findViewById(R.id.text);
 		
 		//register for messages
-		logic = new MessageLogic(this);
+		logic = new MessageLogic();
 		logic.addMessageEventListener(this);
 		
 		//Logger
