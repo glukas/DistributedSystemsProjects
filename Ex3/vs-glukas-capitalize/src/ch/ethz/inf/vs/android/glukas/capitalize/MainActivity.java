@@ -1,19 +1,13 @@
 package ch.ethz.inf.vs.android.glukas.capitalize;
 
-import java.io.IOException;
 import java.util.ArrayList;
-
 import android.app.ListActivity;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
 import android.os.StrictMode;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.TextView;
 import ch.ethz.inf.vs.android.glukas.capitalize.MessageEventSource.ChatEvent;
 import ch.ethz.inf.vs.android.glukas.capitalize.R;
@@ -80,9 +74,6 @@ public class MainActivity extends ListActivity implements MessageEventListener {
 		
 		//Logger
 		logger = new Logger(this);
-		
-		//TODO remove this
-		//UDPCommunicatorTest.testSendString();
 	}
 	
 	/**
@@ -92,9 +83,6 @@ public class MainActivity extends ListActivity implements MessageEventListener {
 	@Override
 	public void onBackPressed() {
 		Log.v(this.getClass().toString(), "onBackPressed");
-		// TODO Make sure to quit when the user presses on Back and to
-		// quit the app cleanly.
-		//TODO probably finish here
 		logic.asyncNetwork.stopThreads();
 		finish();
 	}
@@ -108,10 +96,6 @@ public class MainActivity extends ListActivity implements MessageEventListener {
 			if (textInput.getText().length() > 0) {
 				String message = textInput.getText().toString();
 				displayMessage(textInput.getText().toString(), "glukas_static", true);
-				
-				//TODO actually send message, using MessageLogic
-			//<--------- textInput is set to "" by displayMessage!!!!---->
-				Log.v("MainActivity: Message :", message);
 				logic.asyncNetwork.sendMessage(message);
 				
 			}

@@ -2,9 +2,6 @@ package ch.ethz.inf.vs.android.glukas.capitalize;
 
 import java.io.Serializable;
 
-import android.provider.Settings.System;
-import android.text.format.Time;
-
 /**
  * Message is a Custom Object to encapsulate message information/fields
  * 

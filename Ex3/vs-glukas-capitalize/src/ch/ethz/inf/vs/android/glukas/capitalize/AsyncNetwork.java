@@ -10,31 +10,27 @@ public class AsyncNetwork {
 
 	private Handler requestHandler;
 
-	volatile boolean alive = true;
-	HandlerThread requestThread;
-	Thread receiveThread;
-	Thread reqTest;
-	UDPCommunicator comm;
-	AsyncNetworkDelegate delegate;
+	private volatile boolean alive = true;
+	private HandlerThread requestThread;
+	private Thread receiveThread;
+	private UDPCommunicator comm;
+	private AsyncNetworkDelegate delegate;
 
 	public AsyncNetwork(String address, int port) {
 		this.comm = new UDPCommunicator(address, port);
 		
-		/// Requests
+		//Requests
 		requestThread = new HandlerThread("requestThread");
 		requestThread.start();
-		requestHandler = new Handler(requestThread.getLooper());
-		///
+		requestHandler = new Handler(requestThread.getLooper());		
 		
-		
-		///Replies
+		//Replies
 		receiveThread = new Thread() {
 			
 			@Override
 			public void run() {
 				
 				try {
-					Thread.sleep(1000);
 					while(alive){
 						Log.d("", "Trying to receiveReply");
 						final String reply = comm.receiveReply();
@@ -46,39 +42,27 @@ public class AsyncNetwork {
 							}
 						});
 					}
-				}catch (InterruptedException e) {
-					//e.printStackTrace();
 				} catch (IOException e) {
-					
-					//e.printStackTrace();
+					if (alive){
+						Log.e(this.getClass().toString(), e.getLocalizedMessage());
+					}
 				}
-
 			}
-
 		};
 		
 		receiveThread.start();
-		
-	
-		
-
 	}
 
 	
 	
-	public void stopThreads(){
+	public void stopThreads() {
 		this.alive=false;
-		receiveThread.interrupt();
-		requestThread.quit();
 		try {
-			Thread.sleep(5000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			comm.finishConnection();
+		} catch (IOException ex) {
+			Log.e(this.getClass().toString(), ex.getLocalizedMessage());
 		}
-		Log.v("requestThread alive:",	String.valueOf(requestThread.isAlive()));
-		Log.v("receiveThread alive:",	String.valueOf(receiveThread.isAlive()));
-		
+		requestThread.quit();
 	}
 	
 	public void setDelegate(AsyncNetworkDelegate delegate) {
@@ -87,27 +71,16 @@ public class AsyncNetwork {
 	}
 
 	public void sendMessage(String message) {
-
 		final String msg = message;
-		Log.v("Message:", msg);
 		requestHandler.post(new Runnable() {
-
 			@Override
 			public void run() {
-				Log.v("Message:", "test");
 				try {
-
 					comm.sendRequestString(msg);
-					Log.v("Request:", "Sent");
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					Log.e(this.getClass().toString(), e.getLocalizedMessage());
 				}
-
 			}
-
 		});
-
 	}
-
 }

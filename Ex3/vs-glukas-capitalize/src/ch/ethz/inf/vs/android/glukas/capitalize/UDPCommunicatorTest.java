@@ -1,10 +1,6 @@
 package ch.ethz.inf.vs.android.glukas.capitalize;
 
 import java.io.IOException;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.util.Log;
 
 
@@ -21,14 +17,11 @@ public class UDPCommunicatorTest {
 			public void run(){
 				try{
 					for (int i=0; i<numMessages; i++) {
-						//Thread.sleep(10);
 						communicator.sendRequestString("i want to be upper case " + i);
 					}
 				} catch (IOException ex){
 					ex.printStackTrace();
-				}// catch (InterruptedException e) {
-				//	e.printStackTrace();
-				//}
+				}
 			}
 		};
 		
