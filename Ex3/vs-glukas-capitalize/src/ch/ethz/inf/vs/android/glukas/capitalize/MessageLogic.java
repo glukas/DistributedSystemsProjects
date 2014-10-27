@@ -17,8 +17,8 @@ public class MessageLogic extends MessageEventSource implements Serializable, As
 	
 	Context appContext;
 	
-	AsyncNetwork asyncNetwork;
-	Handler asyncNetworkCallbackHandler;
+	private AsyncNetwork asyncNetwork;
+	private Handler asyncNetworkCallbackHandler;
 	
 	/**
 	 * This logger should always called when an incoming or outgoing message is ready to be
@@ -42,6 +42,14 @@ public class MessageLogic extends MessageEventSource implements Serializable, As
 	 */
 	public void initLogger() {
 		//this.log = new Logger(appContext);
+	}
+	
+	public void sendMessage(String message) {
+		asyncNetwork.sendMessage(message);
+	}
+	
+	public void close() {
+		asyncNetwork.stopThreads();
 	}
 	
 	////

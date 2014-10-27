@@ -61,8 +61,6 @@ public class MainActivity extends ListActivity implements MessageEventListener {
 		
 		//hook up list view to adapter
 		displayMessages = new ArrayList<DisplayMessage>();
-		displayMessages.add(new DisplayMessage("hello world", "glukas_static", true));
-		displayMessages.add(new DisplayMessage("this is just set statically in onCreate", "server_static", false));
 		adapter = new DisplayMessageAdapter(this, displayMessages);
 		setListAdapter(adapter);
 		
@@ -83,7 +81,7 @@ public class MainActivity extends ListActivity implements MessageEventListener {
 	@Override
 	public void onBackPressed() {
 		Log.v(this.getClass().toString(), "onBackPressed");
-		logic.asyncNetwork.stopThreads();
+		logic.close();
 		finish();
 	}
 	
@@ -95,9 +93,8 @@ public class MainActivity extends ListActivity implements MessageEventListener {
 		if (view instanceof Button) {
 			if (textInput.getText().length() > 0) {
 				String message = textInput.getText().toString();
-				displayMessage(textInput.getText().toString(), "glukas_static", true);
-				logic.asyncNetwork.sendMessage(message);
-				
+				displayMessage(textInput.getText().toString(), "glukas", true);
+				logic.sendMessage(message);
 			}
 		}
 	}
