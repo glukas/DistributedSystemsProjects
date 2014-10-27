@@ -1,6 +1,7 @@
 package ch.ethz.inf.vs.android.glukas.chat;
 
 import java.io.Serializable;
+import java.util.Map;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -19,7 +20,7 @@ import ch.ethz.inf.vs.android.glukas.chat.Utils.SyncType;
  * @author hong-an
  *
  */
-public class ChatLogic extends ChatEventSource implements ChatClientRequestInterface {
+public class ChatLogic extends ChatEventSource implements ChatClientRequestInterface, ChatServerResponseInterface {
 
 	/**
 	 * Context of the activity
@@ -94,6 +95,78 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 
 	@Override
 	public void getClients() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	////
+	//CHAT SERVER RESPONSE INTERFACE
+	//(Called by the Parser component)
+	////
+	
+	@Override
+	public void onRegistrationSucceeded(int ownId, Lamport lamportClock,
+			VectorClock vectorClock) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onRegistrationFailed(ChatFailureReason reason) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onGetClientMapping(Map<Integer, String> clientIdToUsernameMap) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onGetClientMappingFailed(ChatFailureReason reason) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onMessageDeliverySucceeded(int id) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onMessageDeliveryFailed(ChatFailureReason reason, int id) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onMessageReceived(ChatMessage message) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onDeregistrarionSucceeded() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onDeregistrationFailed() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onClientDeregistered(Integer clientId, String clientUsername) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onClientRegistered(Integer clientId, String clientUsername) {
 		// TODO Auto-generated method stub
 		
 	}
