@@ -43,6 +43,11 @@ public class MainActivity extends ListActivity implements MessageEventListener {
 	 * The view that contains the text the user wants to send
 	 */
 	TextView textInput;
+	
+	/**
+	 * The logger to log messages
+	 */
+	Logger logger;
 
 	////
 	///ACTIVITY
@@ -73,8 +78,11 @@ public class MainActivity extends ListActivity implements MessageEventListener {
 		logic = new MessageLogic(this);
 		logic.addMessageEventListener(this);
 		
+		//Logger
+		logger = new Logger(this);
+		
 		//TODO remove this
-		UDPCommunicatorTest.testSendString();
+		//UDPCommunicatorTest.testSendString();
 	}
 	
 	/**
@@ -93,10 +101,7 @@ public class MainActivity extends ListActivity implements MessageEventListener {
 	
 	////
 	//MAIN ACTIVITY
-	////
-
-					
-		
+	////				
 		
 	public void sendMessage(View view) {
 		if (view instanceof Button) {
@@ -113,8 +118,10 @@ public class MainActivity extends ListActivity implements MessageEventListener {
 		}
 	}
 	
-	private void displayMessage(String message, String username, boolean isOwn) {
-		displayMessages.add(new DisplayMessage(message, username, isOwn));
+	private void displayMessage(String message, String username, boolean isMine) {
+		DisplayMessage displayMessage = new DisplayMessage(message, username, isMine);
+		logger.logReadyMsg(displayMessage, !displayMessage.isMine());
+		displayMessages.add(displayMessage);
 		adapter.notifyDataSetChanged();
 		textInput.setText("");
 		getListView().smoothScrollToPosition(adapter.getCount()-1);

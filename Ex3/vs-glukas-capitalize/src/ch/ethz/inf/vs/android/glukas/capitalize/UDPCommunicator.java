@@ -141,10 +141,12 @@ public class UDPCommunicator {
 		byte[] buf = new byte[receiveBufSize];
 		DatagramPacket packet = new DatagramPacket(buf, buf.length);
 		Log.v("", "RESPONSE : call receive");
+		//TODO : fix the issue of empty packets
 		do {
 			socket.receive(packet);
 			Log.v("", "RESPONSE : received hopefully");
 		} while (packet.getLength() == 0);//ignore empty packets. (Why do we get those?)
+		
 		
 		return new String(packet.getData(), packet.getOffset(), packet.getLength());
 	}
