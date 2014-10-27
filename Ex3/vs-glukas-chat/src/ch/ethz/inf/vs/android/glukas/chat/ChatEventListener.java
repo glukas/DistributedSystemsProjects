@@ -8,23 +8,12 @@ import ch.ethz.inf.vs.android.glukas.chat.ChatEventSource.ChatEvent;
 import android.os.Handler;
 
 /**
- * This class is intercepting events triggered by the logic
+ * This class is intercepting events triggered by the logic.
  * @author hong-an
  *
  */
 public interface ChatEventListener extends EventListener {
-	public enum FailureReason {
-		notRegistered,
-		alreadyRegistered,
-		usernameAlreadyInUse,
-		nethzNotRecognized,
-		invalidLength,
-		notOnETHSubnet,
-		timeout,
-		unknownCommand;
-	};
-	
-	
+
 	/**
 	 * Handler for the events stemming from the chat
 	 * logic.
@@ -44,17 +33,17 @@ public interface ChatEventListener extends EventListener {
 	
 	void onRegistrationSucceeded(int ownId);
 	
-	void onRegistrationFailed(FailureReason reason);
+	void onRegistrationFailed(ChatFailureReason reason);
 	
 	
 	void onGetClientMapping(Map<Integer, String> clientIdToUsernameMap);
 	
-	void onGetClientMappingFailed(FailureReason reason);
+	void onGetClientMappingFailed(ChatFailureReason reason);
 	
 	
 	void onMessageDeliverySucceeded(int id);
 	
-	void onMessageDeliveryFailed(FailureReason reason, int id);
+	void onMessageDeliveryFailed(ChatFailureReason reason, int id);
 	
 	
 	void onMessageReceived(ChatEvent message);

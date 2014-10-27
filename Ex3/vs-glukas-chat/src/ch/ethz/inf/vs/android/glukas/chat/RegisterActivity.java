@@ -166,7 +166,7 @@ public class RegisterActivity extends ListActivity implements ChatEventListener{
 	}
 
 	@Override
-	public void onRegistrationFailed(FailureReason reason) {
+	public void onRegistrationFailed(ChatFailureReason reason) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -178,7 +178,7 @@ public class RegisterActivity extends ListActivity implements ChatEventListener{
 	}
 
 	@Override
-	public void onGetClientMappingFailed(FailureReason reason) {
+	public void onGetClientMappingFailed(ChatFailureReason reason) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -190,7 +190,7 @@ public class RegisterActivity extends ListActivity implements ChatEventListener{
 	}
 
 	@Override
-	public void onMessageDeliveryFailed(FailureReason reason, int id) {
+	public void onMessageDeliveryFailed(ChatFailureReason reason, int id) {
 		// TODO Auto-generated method stub
 		
 	}
