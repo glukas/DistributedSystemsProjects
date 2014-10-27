@@ -37,20 +37,21 @@ public class UDPCommunicator {
 		this.address = address;
 		this.receiveBufSize = Utils.RECEIVE_BUFFER_SIZE;
 		setupConnection();
+		Log.v("", "finish to create connection, socket bound: "+socketBounded);
 	}
 	
 	/**
 	 * Constructor
 	 * @throws IOException 
 	 */
-	public UDPCommunicator(String address, int port, int receiveBufSize) {
+	/*public UDPCommunicator(String address, int port, int receiveBufSize) {
 		this.port = port;
 		this.address = address;
 		this.receiveBufSize = receiveBufSize;
 		Log.v("", "just set up");
 		setupConnection();
 		Log.v("", "finish to create connection");
-	}
+	}*/
 	
 	/**
 	 * Close the connection properly
@@ -114,15 +115,6 @@ public class UDPCommunicator {
 	////
 	//Send and receive requests, responses
 	////
-
-	/**
-	 * This function should be used to send a request to the server
-	 * @param request The request in JSON format
-	 * @throws IOException 
-	 */
-	public void sendRequest(JSONObject request) throws IOException {
-		sendRequestString(request.toString());
-	}
 	
 	/**
 	 * This function can be used to send a request in string format to host and by port defined at construction
@@ -131,6 +123,7 @@ public class UDPCommunicator {
 	 */
 	public void sendRequestString(String request) throws IOException{
 		DatagramPacket packet = new DatagramPacket(request.getBytes(), request.length());
+		Log.v(this.getClass().toString(), "send : " + request);
 		socket.send(packet);
 	}
 	

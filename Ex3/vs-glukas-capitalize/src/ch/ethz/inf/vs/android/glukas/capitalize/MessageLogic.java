@@ -23,9 +23,8 @@ public class MessageLogic extends MessageEventSource implements Serializable, As
 	 * @param context The calling activity
 	 */
 	public MessageLogic() {
-		asyncNetwork = new AsyncNetwork(Utils.SERVER_ADDRESS,Utils.SERVER_PORT_CAPITALIZE);
 		asyncNetworkCallbackHandler = new Handler();
-		asyncNetwork.setDelegate(this);
+		asyncNetwork = new AsyncNetwork(Utils.SERVER_ADDRESS,Utils.SERVER_PORT_CAPITALIZE, this);
 	}
 	
 	public void sendMessage(String message) {
@@ -33,7 +32,7 @@ public class MessageLogic extends MessageEventSource implements Serializable, As
 	}
 	
 	public void close() {
-		asyncNetwork.stopThreads();
+		asyncNetwork.close();
 	}
 	
 	////
