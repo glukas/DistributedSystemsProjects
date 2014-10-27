@@ -12,7 +12,7 @@ import android.os.Handler;
  * @author hong-an
  *
  */
-public interface ChatEventListener extends EventListener {
+public interface ChatEventListener extends ChatServerResponseInterface {
 
 	/**
 	 * Handler for the events stemming from the chat
@@ -26,35 +26,5 @@ public interface ChatEventListener extends EventListener {
 	 */
 	public Handler getCallbackHandler();
 	
-	
-	////
-	//CALLBACKS FOR RESPONSES BY THE SERVER
-	////
-	
-	void onRegistrationSucceeded(int ownId);
-	
-	void onRegistrationFailed(ChatFailureReason reason);
-	
-	
-	void onGetClientMapping(Map<Integer, String> clientIdToUsernameMap);
-	
-	void onGetClientMappingFailed(ChatFailureReason reason);
-	
-	
-	void onMessageDeliverySucceeded(int id);
-	
-	void onMessageDeliveryFailed(ChatFailureReason reason, int id);
-	
-	
-	void onMessageReceived(ChatEvent message);
 
-	
-	void onDeregistrarionSucceeded();
-	
-	void onDeregistrationFailed();
-
-
-	void onClientDeregistered(Integer clientId, String clientUsername);
-	
-	void onClientRegistered(Integer clientId, String clientUsername);
 }

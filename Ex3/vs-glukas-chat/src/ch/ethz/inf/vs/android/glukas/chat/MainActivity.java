@@ -56,12 +56,6 @@ public class MainActivity extends ListActivity implements ChatEventListener {
 
 
 	@Override
-	public void onRegistrationSucceeded(int ownId) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
 	public void onRegistrationFailed(ChatFailureReason reason) {
 		// TODO Auto-generated method stub
 		
@@ -92,7 +86,7 @@ public class MainActivity extends ListActivity implements ChatEventListener {
 	}
 
 	@Override
-	public void onMessageReceived(ChatEvent message) {
+	public void onMessageReceived(ChatMessage message) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -117,6 +111,12 @@ public class MainActivity extends ListActivity implements ChatEventListener {
 
 	@Override
 	public void onClientRegistered(Integer clientId, String clientUsername) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onRegistrationSucceeded(int ownId, Lamport lamportClock, VectorClock vectorClock) {
 		// TODO Auto-generated method stub
 		
 	}
