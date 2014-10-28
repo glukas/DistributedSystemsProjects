@@ -42,7 +42,7 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 		this.syncType = syncType;
 		asyncNetworkCallbackHandler = new Handler();
 		asyncNetwork = new AsyncNetwork(Utils.SERVER_ADDRESS,Utils.SERVER_PORT_CHAT, this);
-		parser = new ResponseParser(null);//TODO
+		parser = new ResponseParser();//TODO
 	}
 	
 	public void setSyncType(SyncType syncType) {
@@ -68,7 +68,7 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 	private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
 		asyncNetworkCallbackHandler = new Handler();//TODO can we be sure that this is called on the UI thread?
 		asyncNetwork = new AsyncNetwork(Utils.SERVER_ADDRESS,Utils.SERVER_PORT_CHAT, this);
-		parser = new ResponseParser(null);//TODO
+		parser = new ResponseParser();
 	}
 	
 	////
@@ -91,32 +91,31 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 	
 	@Override
 	public void register(String username) {
-		// TODO Move to parser
-		String registerString = "{\"cmd\": \"register\"" +  ", \"text\": " + username+ "}";
+		
+		String registerString = parser.getRegisterRequest(username);
 		this.sendMessage(registerString);
 	}
 
 	@Override
 	public void deregister() {
-		// TODO Move to parser
-		String deregisterString = "{\"cmd\": \"deregister\"" + "}";
+	
+		String deregisterString = parser.getderegisterRequest();
 		this.sendMessage(deregisterString);
 		
 	}
 
 	@Override
 	public void sendMessage(String message, int messageId) {
-		// TODO Move to parser
-		String messageString = 	"{\"cmd\": \"message\"" + "\"text\": " + message
-				+ ", \"messageId\": " + String.valueOf(messageId) + "}";	
+		
+		String messageString = 	parser.getsendMessageRequest(message, messageId);	
 		this.sendMessage(messageString);
 		
 	}
 
 	@Override
 	public void getClients() {
-		// TODO Move to parser
-		String getClientsString = "{\"cmd\": \"get_clients\"" + "}";
+
+		String getClientsString = parser.getClientsRequest();
 		this.sendMessage(getClientsString);
 	}
 

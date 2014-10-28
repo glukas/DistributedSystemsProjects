@@ -9,7 +9,7 @@ public enum ChatFailureReason {
 	notOnETHSubnet("not on ETH subnet"),
 	timeout("timeout"),
 	unknownCommand("unknown command");
-	
+		
 	private final String reasonString;
 	
 	ChatFailureReason (String s){
