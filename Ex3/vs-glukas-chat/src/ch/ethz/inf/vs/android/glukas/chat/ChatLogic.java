@@ -42,7 +42,8 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 		this.syncType = syncType;
 		asyncNetworkCallbackHandler = new Handler();
 		asyncNetwork = new AsyncNetwork(Utils.SERVER_ADDRESS,Utils.SERVER_PORT_CHAT, this);
-		parser = new ResponseParser();//TODO
+		parser = new ResponseParser();
+		parser.setDelegate(this);
 	}
 	
 	public void setSyncType(SyncType syncType) {
@@ -53,11 +54,11 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 		asyncNetwork.close();
 	}
 	
-	private void sendMessage(String message) {
+	private void asyncSendRequest(String message) {
 		//TODO : make sure no more than 1 message is in the network at the same time (otherwise the ACKs will be useless)
 		asyncNetwork.sendMessage(message);
 	}
-	
+
 	////
 	//SERIALIZATION
 	////
@@ -69,8 +70,8 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 		asyncNetworkCallbackHandler = new Handler();//TODO can we be sure that this is called on the UI thread?
 		asyncNetwork = new AsyncNetwork(Utils.SERVER_ADDRESS,Utils.SERVER_PORT_CHAT, this);
 		parser = new ResponseParser();
+		parser.setDelegate(this);
 	}
-	
 	////
 	//ASYNC NETWORK DELEGATE
 	////
@@ -81,42 +82,41 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 	}
 
 	@Override
-	public void OnReceive(String message) {
-		this.parser.parseResponse(message);
+	public void onReceive(String message) {
+		parser.parseResponse(message);
 	}
-
+	
+	@Override
+	public void onDeliveryFailed() {
+		this.onMessageDeliveryFailed(ChatFailureReason.noNetwork);
+	}
+	
 	////
 	//CHAT CLIENT REQUEST INTERFACE
 	////
 	
 	@Override
 	public void register(String username) {
-		
 		String registerString = parser.getRegisterRequest(username);
-		this.sendMessage(registerString);
+		asyncSendRequest(registerString);
 	}
 
 	@Override
 	public void deregister() {
-	
 		String deregisterString = parser.getderegisterRequest();
-		this.sendMessage(deregisterString);
-		
+		asyncSendRequest(deregisterString);
 	}
 
 	@Override
 	public void sendMessage(String message, int messageId) {
-		
 		String messageString = 	parser.getsendMessageRequest(message, messageId);	
-		this.sendMessage(messageString);
-		
+		asyncSendRequest(messageString);
 	}
 
 	@Override
 	public void getClients() {
-
 		String getClientsString = parser.getClientsRequest();
-		this.sendMessage(getClientsString);
+		asyncSendRequest(getClientsString);
 	}
 
 	////
@@ -170,6 +170,9 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 	@Override
 	public void onMessageReceived(ChatMessage message) {
 		// TODO see if deliverable, if so deliver, otherwise enqueue
+		for (ChatEventListener l : eventListenerList) {
+			l.onMessageReceived(message);
+		}
 	}
 
 	@Override

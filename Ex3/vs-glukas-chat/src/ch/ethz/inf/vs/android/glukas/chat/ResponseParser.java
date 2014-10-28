@@ -13,7 +13,7 @@ import ch.ethz.inf.vs.android.glukas.chat.Utils.SyncType;
 public class ResponseParser {
 
 	private JSONObject responseJSON;
-	private ChatServerResponseInterface delegate;
+	private ChatServerRawResponseInterface delegate;
 
 	public ResponseParser() {
 	}
@@ -51,7 +51,7 @@ public class ResponseParser {
 	// Responses
 	// /
 
-	public void setDelegate(ChatServerResponseInterface delegate) {
+	public void setDelegate(ChatServerRawResponseInterface delegate) {
 		this.delegate = delegate;
 	}
 
@@ -64,7 +64,7 @@ public class ResponseParser {
 		} else if (this.getCommand() == "register") {
 
 			if (this.getStatus() == "success") {
-				delegate.onRegistrationSucceeded();
+				delegate.onRegistrationSucceeded(0, null, null);//TODO (Young)
 
 			} else if (this.getStatus() == "failure") {
 				this.checkRegisterFailureReason();
@@ -105,10 +105,7 @@ public class ResponseParser {
 					null);
 			delegate.onMessageReceived(notificationMessage);
 		} else if (this.getCommand() == "unknown") {
-			// TODO Not sure if we actually get the MessageId
-			Integer messageId = Integer.valueOf(this.getMessageId());
-			delegate.onMessageDeliveryFailed(ChatFailureReason.unknownCommand,
-					messageId);
+			delegate.onMessageDeliveryFailed(ChatFailureReason.unknownCommand);
 
 		}
 
@@ -126,21 +123,21 @@ public class ResponseParser {
 		}
 	}
 
-	private void checkMessageFailureReason(Integer messageId) {
+	private void checkMessageFailureReason() {
 		// TODO Young : How do I get the failure reasons?
-		delegate.onMessageDeliveryFailed(ChatFailureReason.timeout, messageId);
+		delegate.onMessageDeliveryFailed(ChatFailureReason.timeout);
 
 	}
 
 	private void checkMessageType() {
 		if (this.responseJSON.has("status")) {
-			Integer messageId = Integer.valueOf(this.getMessageId());
+			
 			if (this.getStatus() == "success") {
-
-				delegate.onMessageDeliverySucceeded(messageId);
+				
+				delegate.onMessageDeliverySucceeded();
 
 			} else if (this.getStatus() == "failure") {
-				checkMessageFailureReason(messageId);
+				checkMessageFailureReason();
 
 			}
 		} else {

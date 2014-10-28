@@ -68,7 +68,7 @@ public class AsyncNetwork {
 		delegate.getCallbackHandler().post(new Runnable() {
 			@Override
 			public void run() {
-				delegate.OnReceive(reply);
+				delegate.onReceive(reply);
 			}
 		});
 	}
@@ -97,7 +97,12 @@ public class AsyncNetwork {
 				} catch (IOException e) {
 					Log.e("Error delivering : " +this.getClass().toString(), e.getLocalizedMessage());
 					close();
-					postResponseToDelegate("No network connection : failed to deliver");
+					delegate.getCallbackHandler().post(new Runnable() {
+						@Override
+						public void run() {
+							delegate.onDeliveryFailed();
+						}
+					});
 				}
 			}
 		});

@@ -8,7 +8,8 @@ public enum ChatFailureReason {
 	invalidLength("invalid length"),
 	notOnETHSubnet("not on ETH subnet"),
 	timeout("timeout"),
-	unknownCommand("unknown command");
+	unknownCommand("unknown command"),
+	noNetwork("no network");
 		
 	private final String reasonString;
 	

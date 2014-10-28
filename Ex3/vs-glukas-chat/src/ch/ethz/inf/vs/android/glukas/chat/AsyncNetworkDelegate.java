@@ -6,6 +6,8 @@ public interface AsyncNetworkDelegate {
 
 	Handler getCallbackHandler();
 	
-	public void OnReceive(String message);
+	public void onReceive(String message);
+	
+	public void onDeliveryFailed();
 	
 }
