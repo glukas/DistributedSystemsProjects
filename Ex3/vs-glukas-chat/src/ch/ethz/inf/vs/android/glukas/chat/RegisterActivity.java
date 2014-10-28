@@ -2,6 +2,7 @@ package ch.ethz.inf.vs.android.glukas.chat;
 
 import java.util.Map;
 import ch.ethz.inf.vs.android.glukas.chat.R;
+import ch.ethz.inf.vs.android.glukas.chat.Utils.SyncType;
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.Context;
@@ -11,7 +12,6 @@ import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.StrictMode;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RadioButton;
@@ -24,9 +24,13 @@ import android.widget.RadioButton;
  */
 public class RegisterActivity extends ListActivity implements ChatEventListener {
 
+	////
+	//Members
+	////
+	
 	//Views
 	private RadioButton lamportRadio;
-	private EditText username;
+	private EditText usernameEditText;
 	private EditText numberUsername;
 	
 	//connectivity
@@ -34,22 +38,30 @@ public class RegisterActivity extends ListActivity implements ChatEventListener 
 	
 	//callback handler
 	final Handler callbackHandler = new Handler();
-
+	
+	//user informations
+	private SyncType syncType;
+	private String username;
+	
+	////
+	//Life cycle
+	////
+	
 	public void onCreate(Bundle savedInstanceState) {
-
 		super.onCreate(savedInstanceState);
 		StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
 		.permitAll().build();
 		StrictMode.setThreadPolicy(policy);
-
 		setContentView(R.layout.activity_register);
-		
+	}
+	
+	public void onBackPressed() {
+		//react to back pressed
+		chatLogic.deregister();
 	}
 	
 	public void onClickLogin(View v) {
-		Log.v("", "on click login");
-		
-		
+		//react to the click on login button
 		if (!haveNetworkConnection()){
 			onNoNetworkConnection();
 			return;
@@ -57,40 +69,64 @@ public class RegisterActivity extends ListActivity implements ChatEventListener 
 		tryLogin();
 		createDialogMessage(getResources().getString(R.string.please_wait),
 				getResources().getString(R.string.login), false);
+		
+		//DEBUG : (directly jump into MainActivity, normally wait the callBack from network)
+		this.onRegistrationSucceeded(-1, null, null);
 	}
 	
+	////
+	//Login
+	////
+	
 	private void tryLogin() {
-		Log.v("", "Try log in");
+		//get all informations provided by the user and try to register to the chat
 		lamportRadio = (RadioButton) findViewById(R.id.lamportRadio);
-		username = (EditText) findViewById(R.id.username);
+		usernameEditText = (EditText) findViewById(R.id.username);
 		numberUsername = (EditText) findViewById(R.id.number);
 		
-		if (lamportRadio.isChecked()){
+		syncType = lamportRadio.isChecked() ? Utils.SyncType.LAMPORT_SYNC : Utils.SyncType.VECTOR_CLOCK_SYNC;
+		
+		if (syncType.equals(Utils.SyncType.LAMPORT_SYNC)){
 			chatLogic = new ChatLogic(Utils.SyncType.LAMPORT_SYNC);
 		} else {
 			chatLogic = new ChatLogic(Utils.SyncType.VECTOR_CLOCK_SYNC);
 		}
-		chatLogic.register(username.getText().toString() + numberUsername.getText().toString());
+		username = usernameEditText.getText().toString() + numberUsername.getText().toString();
+		chatLogic.register(username);
 	}
 	
+	private boolean haveNetworkConnection() {
+		//check if the device is able to send and receive data from the Internet
+		ConnectivityManager connectivityManager = (ConnectivityManager) this
+	               .getSystemService(Context.CONNECTIVITY_SERVICE);
+		if (connectivityManager.getActiveNetworkInfo() != null){
+			return connectivityManager.getActiveNetworkInfo().isAvailable() && 
+					connectivityManager.getActiveNetworkInfo().isConnected();
+		}	
+		return false;
+	}
+	
+	
+	////
+	//React to failures
+	////
 	private void onNoNetworkConnection() {
-		Log.v("", "No Network Connection");
+		//display dialog if device has no connection
 		createDialogMessage(getResources().getString(R.string.no_network_connectivity),
 				getResources().getString(R.string.error), true);
 	}
 	
 	private void onLoginError(String reasonError) {
-		Log.v("", "Login error : "+reasonError);
+		//display dialog if an error occurred while login
 		createDialogMessage(getResources().getString(R.string.login_failed),
 				getResources().getString(R.string.error)+ " "+reasonError, true);
 	}
 	
 	private void createDialogMessage(String text, String title, boolean isErasable){
+		//create a new dialog and display it
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
 		builder.setMessage(text)
 		       .setTitle(title);
-		
 		if (isErasable){
 			builder.setNegativeButton(R.string.ok, new DialogInterface.OnClickListener() {
 		           public void onClick(DialogInterface dialog, int id) {
@@ -100,37 +136,28 @@ public class RegisterActivity extends ListActivity implements ChatEventListener 
 		AlertDialog dialog = builder.create();
 		dialog.show(); 
 	}
-
-	/**
-	 * Check if a connectivity interface exists, if the device is connected to and
-	 * if it's possible to pass and receive data
-	 */
-	private boolean haveNetworkConnection() {
-		ConnectivityManager connectivityManager = (ConnectivityManager) this
-	               .getSystemService(Context.CONNECTIVITY_SERVICE);
-		if (connectivityManager.getActiveNetworkInfo() != null){
-			return connectivityManager.getActiveNetworkInfo().isAvailable() && 
-					connectivityManager.getActiveNetworkInfo().isConnected();
-		}	
-		return false;
-	}
-
-	/**
-	 * This function should be called when the back button is pressed. 
-	 * Make sure everything is closed / quit properly.
-	 */
-	public void onBackPressed() {
-		chatLogic.deregister();
-	}
-
+	
+	////
+	//Networking
+	////
+	
 	@Override
 	public void onRegistrationSucceeded(int ownId, Lamport lamportClock,
 			VectorClock vectorClock) {
-		//TODO : start MainActivity
+		//call back from the network, server accepted connection
+		Intent intent = new Intent(this, MainActivity.class);
+		Bundle bundle = new Bundle();
+		bundle.putSerializable(Utils.INTENT_ARG_CHAT, chatLogic);
+		intent.putExtras(bundle);
+		intent.putExtra(Utils.INTENT_ARG_OWNID, ownId);
+		intent.putExtra(Utils.INTENT_ARG_SYNCTYPEID, syncType.getTypeId());
+		intent.putExtra(Utils.INTENT_ARG_USERNAME, username);
+		startActivity(intent);
 	}
 
 	@Override
 	public void onRegistrationFailed(ChatFailureReason reason) {
+		//call back from the network, server rejected connection
 		onLoginError(reason.getReasonString());
 	}
 	
@@ -177,6 +204,5 @@ public class RegisterActivity extends ListActivity implements ChatEventListener 
 
 	@Override
 	public void onClientDeregistered(Integer clientId, String clientUsername) {
-		
 	}
 }

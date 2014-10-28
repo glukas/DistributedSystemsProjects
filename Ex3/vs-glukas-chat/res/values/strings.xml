@@ -15,5 +15,7 @@
 	<string name="no_network_connectivity">No network connectivity</string>
 	<string name="error">Error</string>
 	<string name="ok">OK</string>
+	<string name="system">System</string>
+	<string name="enter_chat_greetings">Welcome to chat</string>
 
 </resources>

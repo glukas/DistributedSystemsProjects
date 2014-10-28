@@ -2,7 +2,6 @@ package ch.ethz.inf.vs.android.glukas.capitalize;
 
 import java.io.Serializable;
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.os.Handler;
 
 @SuppressLint("UseSparseArrays")

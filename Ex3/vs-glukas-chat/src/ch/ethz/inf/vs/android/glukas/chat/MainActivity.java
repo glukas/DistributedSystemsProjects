@@ -2,51 +2,104 @@ package ch.ethz.inf.vs.android.glukas.chat;
 
 import java.util.ArrayList;
 import java.util.Map;
-
-import ch.ethz.inf.vs.android.glukas.chat.ChatEventSource.ChatEvent;
+import ch.ethz.inf.vs.android.glukas.chat.DisplayMessage;
+import ch.ethz.inf.vs.android.glukas.chat.DisplayMessageAdapter;
 import ch.ethz.inf.vs.android.glukas.chat.R;
 import android.app.ListActivity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.StrictMode;
-import android.widget.Button;
-import android.widget.EditText;
+import android.widget.TextView;
 
 public class MainActivity extends ListActivity implements ChatEventListener {
+	
+	////
+	//Members
+	////
+	
+	//Views
+	TextView textInput;
+	
+	//networking
 	private ChatLogic chat;
-	ArrayList<DisplayMessage> displayMessages;
-	DisplayMessageAdapter adapter;
-	EditText text;
-	String sender;
-	String ownUsername;
-	String ownNethz;
-	String ownUsernameNumber;
+	private final Handler callbackHandler = new Handler();
 	
-	Button loginButton;
-	EditText nethzText;
-	EditText numberText;
+	//messages
+	private ArrayList<DisplayMessage> displayMessages;
+	private DisplayMessageAdapter adapter;
+	private Map<Integer, String> clientIdToUsernameMap;
 	
-	final Handler callbackHandler = new Handler();
+	//user
+	private String username;
+	
+	//Logger
+	private Logger logger;
+	
+	////
+	//Life cycle
+	////
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+		
 		super.onCreate(savedInstanceState);
-
 		setContentView(R.layout.activity_main);
 		StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
-
-		//Retrieve ChatLogic object from ConnectionActivity
-		this.chat = (ChatLogic) getIntent().getSerializableExtra("ChatLogic");
+        
+        //set views
+        this.textInput = (TextView) findViewById(R.id.text);
+        
+		//Retrieve and restore ChatLogic
+		this.chat = (ChatLogic) getIntent().getSerializableExtra(Utils.INTENT_ARG_CHAT);
+		chat.setSyncType(Utils.SyncType.getSyncTypeById(getIntent().getIntExtra(Utils.INTENT_ARG_SYNCTYPEID, 1)));
+		
+		//Get info from Intent
+		username = getIntent().getStringExtra(Utils.INTENT_ARG_USERNAME);
+		
+		//Register to chat
+		chat.addChatEventListener(this);
+		
+		//Hook up list view to adapter
+		displayMessages = new ArrayList<DisplayMessage>();
+		adapter = new DisplayMessageAdapter(this, displayMessages);
+		setListAdapter(adapter);
+		
+		//Logger
+		logger = new Logger(username, this);
+		
+		//display greetings
+		this.displayMessageSystem(true, getResources().getString(R.string.enter_chat_greetings),
+				getResources().getString(R.string.system));
+		
+		//TODO : ask for users already in the chat
+		
 	}
 	
 	public void onBackPressed() {
-		// TODO Make sure to deregister when the user presses on Back and to quit the app cleanly.
+		chat.deregister();
+	}
+	
+	private void displayMessageUser(String text, String username, boolean isMine){
+		DisplayMessage displayMessage = new DisplayMessage(text, username, isMine);
+		displayMessages.add(displayMessage);
+		adapter.notifyDataSetChanged();
+		textInput.setText("");
+		getListView().smoothScrollToPosition(adapter.getCount()-1);
+		
+	}
+	
+	private void displayMessageSystem(boolean isStatus, String text, String username){
+		DisplayMessage displayMessage = new DisplayMessage(isStatus, text, username);
+		displayMessages.add(displayMessage);
+		adapter.notifyDataSetChanged();
+		textInput.setText("");
+		getListView().smoothScrollToPosition(adapter.getCount()-1);
 	}
 
 
 	////
-	//CHAT EVENT LISTENER
+	//Chat event listener
 	////
 	
 	@Override
@@ -54,70 +107,52 @@ public class MainActivity extends ListActivity implements ChatEventListener {
 		return this.callbackHandler;
 	}
 
-
-	@Override
-	public void onRegistrationFailed(ChatFailureReason reason) {
-		// TODO Auto-generated method stub
-		
-	}
-
 	@Override
 	public void onGetClientMapping(Map<Integer, String> clientIdToUsernameMap) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void onGetClientMappingFailed(ChatFailureReason reason) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void onMessageDeliverySucceeded(int id) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void onMessageDeliveryFailed(ChatFailureReason reason, int id) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void onMessageReceived(ChatMessage message) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void onDeregistrarionSucceeded() {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void onDeregistrationFailed() {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void onClientDeregistered(Integer clientId, String clientUsername) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void onClientRegistered(Integer clientId, String clientUsername) {
-		// TODO Auto-generated method stub
-		
+	}
+	
+	
+	////
+	//Not used by this activity
+	////
+	
+	@Override
+	public void onRegistrationFailed(ChatFailureReason reason) {
 	}
 
 	@Override
 	public void onRegistrationSucceeded(int ownId, Lamport lamportClock, VectorClock vectorClock) {
-		// TODO Auto-generated method stub
-		
 	}
 }

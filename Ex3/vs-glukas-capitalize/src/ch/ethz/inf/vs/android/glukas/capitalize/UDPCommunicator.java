@@ -8,7 +8,6 @@ import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.net.SocketException;
 import java.nio.channels.DatagramChannel;
-import org.json.JSONObject;
 import android.util.Log;
 
 /**

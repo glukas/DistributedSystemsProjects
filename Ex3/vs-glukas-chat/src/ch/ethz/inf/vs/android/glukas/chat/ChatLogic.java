@@ -1,5 +1,7 @@
 package ch.ethz.inf.vs.android.glukas.chat;
 
+import java.io.IOException;
+import java.io.ObjectStreamException;
 import java.io.Serializable;
 import java.util.Map;
 
@@ -22,12 +24,12 @@ import ch.ethz.inf.vs.android.glukas.chat.Utils.SyncType;
  * @author hong-an
  *
  */
-public class ChatLogic extends ChatEventSource implements ChatClientRequestInterface, ChatServerResponseInterface, AsyncNetworkDelegate {
+public class ChatLogic extends ChatEventSource implements ChatClientRequestInterface, ChatServerResponseInterface, AsyncNetworkDelegate, Serializable {
 
-	private AsyncNetwork asyncNetwork;
-	private Handler asyncNetworkCallbackHandler;
+	private transient AsyncNetwork asyncNetwork;
+	private transient Handler asyncNetworkCallbackHandler;
 
-	private SyncType syncType;
+	private transient SyncType syncType;
 	
 	/**
 	 * Constructor
@@ -40,6 +42,10 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 		asyncNetwork = new AsyncNetwork(Utils.SERVER_ADDRESS,Utils.SERVER_PORT_CHAT, this);
 	}
 	
+	public void setSyncType(SyncType syncType) {
+		this.syncType = syncType;
+	}
+	
 	public void close() {
 		asyncNetwork.close();
 	}
@@ -47,6 +53,19 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 	private void sendMessage(String message) {
 		asyncNetwork.sendMessage(message);
 	}
+	
+	////
+	//SERIALIZATION
+	////
+	
+	private void writeObject(java.io.ObjectOutputStream out) throws IOException {
+	}
+	
+	private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
+		asyncNetworkCallbackHandler = new Handler();
+		asyncNetwork = new AsyncNetwork(Utils.SERVER_ADDRESS,Utils.SERVER_PORT_CHAT, this);
+	}
+	
 	////
 	//ASYNC NETWORK DELEGATE
 	////
