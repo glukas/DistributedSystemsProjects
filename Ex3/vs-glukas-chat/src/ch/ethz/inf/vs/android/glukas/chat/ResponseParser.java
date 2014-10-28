@@ -14,6 +14,10 @@ public class ResponseParser {
 		
 	}
 	
+	public void parseResponse(String response) {
+		//TODO (Young)
+	}
+	
 	public String getText() {
 		try {
 			return this.responseJSON.getString("text");

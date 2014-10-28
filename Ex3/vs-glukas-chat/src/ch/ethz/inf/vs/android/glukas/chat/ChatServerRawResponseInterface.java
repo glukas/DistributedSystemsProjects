@@ -3,13 +3,13 @@ package ch.ethz.inf.vs.android.glukas.chat;
 import java.util.EventListener;
 import java.util.Map;
 
-public interface ChatServerResponseInterface extends EventListener {
+public interface ChatServerRawResponseInterface extends EventListener {
 
 	////
 	//CALLBACKS FOR RESPONSES BY THE SERVER
 	////
 	
-	void onRegistrationSucceeded();
+	void onRegistrationSucceeded(int ownId, Lamport lamportClock, VectorClock vectorClock);
 	
 	void onRegistrationFailed(ChatFailureReason reason);
 	
@@ -19,9 +19,9 @@ public interface ChatServerResponseInterface extends EventListener {
 	void onGetClientMappingFailed(ChatFailureReason reason);
 	
 	
-	void onMessageDeliverySucceeded(int id);
+	void onMessageDeliverySucceeded();
 	
-	void onMessageDeliveryFailed(ChatFailureReason reason, int id);
+	void onMessageDeliveryFailed(ChatFailureReason reason);
 	
 	
 	void onMessageReceived(ChatMessage message);

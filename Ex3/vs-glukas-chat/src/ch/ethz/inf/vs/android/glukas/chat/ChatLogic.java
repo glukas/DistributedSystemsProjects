@@ -24,12 +24,14 @@ import ch.ethz.inf.vs.android.glukas.chat.Utils.SyncType;
  * @author hong-an
  *
  */
-public class ChatLogic extends ChatEventSource implements ChatClientRequestInterface, ChatServerResponseInterface, AsyncNetworkDelegate, Serializable {
+public class ChatLogic extends ChatEventSource implements ChatClientRequestInterface, ChatServerRawResponseInterface, AsyncNetworkDelegate, Serializable {
 
 	private transient AsyncNetwork asyncNetwork;
 	private transient Handler asyncNetworkCallbackHandler;
 
 	private transient SyncType syncType;
+	
+	private transient ResponseParser parser;
 	
 	/**
 	 * Constructor
@@ -40,6 +42,7 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 		this.syncType = syncType;
 		asyncNetworkCallbackHandler = new Handler();
 		asyncNetwork = new AsyncNetwork(Utils.SERVER_ADDRESS,Utils.SERVER_PORT_CHAT, this);
+		parser = new ResponseParser(null);//TODO
 	}
 	
 	public void setSyncType(SyncType syncType) {
@@ -51,6 +54,7 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 	}
 	
 	private void sendMessage(String message) {
+		//TODO : make sure no more than 1 message is in the network at the same time (otherwise the ACKs will be useless)
 		asyncNetwork.sendMessage(message);
 	}
 	
@@ -62,8 +66,9 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 	}
 	
 	private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
-		asyncNetworkCallbackHandler = new Handler();
+		asyncNetworkCallbackHandler = new Handler();//TODO can we be sure that this is called on the UI thread?
 		asyncNetwork = new AsyncNetwork(Utils.SERVER_ADDRESS,Utils.SERVER_PORT_CHAT, this);
+		parser = new ResponseParser(null);//TODO
 	}
 	
 	////
@@ -77,8 +82,7 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 
 	@Override
 	public void OnReceive(String message) {
-		ChatEvent chatEvent = new ChatEvent(this, null, message, null);
-		chatEvent.dispatchEvent();
+		this.parser.parseResponse(message);
 	}
 
 	////
@@ -87,18 +91,14 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 	
 	@Override
 	public void register(String username) {
-		// TODO Auto-generated method stub
+		// TODO Move to parser
 		String registerString = "{\"cmd\": \"register\"" +  ", \"text\": " + username+ "}";
 		this.sendMessage(registerString);
-		
-		
-		
-		
 	}
 
 	@Override
 	public void deregister() {
-		// TODO Auto-generated method stub
+		// TODO Move to parser
 		String deregisterString = "{\"cmd\": \"deregister\"" + "}";
 		this.sendMessage(deregisterString);
 		
@@ -106,7 +106,7 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 
 	@Override
 	public void sendMessage(String message, int messageId) {
-		// TODO Auto-generated method stub
+		// TODO Move to parser
 		String messageString = 	"{\"cmd\": \"message\"" + "\"text\": " + message
 				+ ", \"messageId\": " + String.valueOf(messageId) + "}";	
 		this.sendMessage(messageString);
@@ -115,7 +115,7 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 
 	@Override
 	public void getClients() {
-		// TODO Auto-generated method stub
+		// TODO Move to parser
 		String getClientsString = "{\"cmd\": \"get_clients\"" + "}";
 		this.sendMessage(getClientsString);
 	}
@@ -125,68 +125,80 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 	//(Called by the Parser component)
 	////
 	
+	//TODO (Lukas) enqueue message send requests, on received ack we can go on
+	
 	@Override
 	public void onRegistrationSucceeded(int ownId, Lamport lamportClock, VectorClock vectorClock) {
-		// TODO Auto-generated method stub
+		//TODO (Lukas) some housekeeping (keep track of ownId, lamportClock, vectorClock)
+		for (ChatEventListener l : eventListenerList) {
+			l.onRegistrationSucceeded();
+		}
 	}
 
 	@Override
 	public void onRegistrationFailed(ChatFailureReason reason) {
-		// TODO Auto-generated method stub
+		for (ChatEventListener l : eventListenerList) {
+			l.onRegistrationFailed(reason);
+		}
 	}
 
 	@Override
 	public void onGetClientMapping(Map<Integer, String> clientIdToUsernameMap) {
-		// TODO Auto-generated method stub
-		
+		for (ChatEventListener l : eventListenerList) {
+			l.onGetClientMapping(clientIdToUsernameMap);
+		}
 	}
 
 	@Override
 	public void onGetClientMappingFailed(ChatFailureReason reason) {
-		// TODO Auto-generated method stub
+		for (ChatEventListener l : eventListenerList) {
+			l.onGetClientMappingFailed(reason);
+		}
+	}
+
+	@Override
+	public void onMessageDeliverySucceeded() {
+		// TODO find message Id, notify listeners
 		
 	}
 
 	@Override
-	public void onMessageDeliverySucceeded(int id) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onMessageDeliveryFailed(ChatFailureReason reason, int id) {
-		// TODO Auto-generated method stub
+	public void onMessageDeliveryFailed(ChatFailureReason reason) {
+		// TODO find message Id, notify listeners
 		
 	}
 
 	@Override
 	public void onMessageReceived(ChatMessage message) {
-		// TODO Auto-generated method stub
-		
+		// TODO see if deliverable, if so deliver, otherwise enqueue
 	}
 
 	@Override
 	public void onDeregistrarionSucceeded() {
-		// TODO Auto-generated method stub
-		
+		for (ChatEventListener l : eventListenerList) {
+			l.onDeregistrarionSucceeded();
+		}
 	}
 
 	@Override
 	public void onDeregistrationFailed() {
-		// TODO Auto-generated method stub
-		
+		for (ChatEventListener l : eventListenerList) {
+			l.onDeregistrationFailed();
+		}
 	}
 
 	@Override
 	public void onClientDeregistered(Integer clientId, String clientUsername) {
-		// TODO Auto-generated method stub
-		
+		for (ChatEventListener l : eventListenerList) {
+			l.onClientDeregistered(clientId, clientUsername);
+		}
 	}
 
 	@Override
 	public void onClientRegistered(Integer clientId, String clientUsername) {
-		// TODO Auto-generated method stub
-		
+		for (ChatEventListener l : eventListenerList) {
+			l.onClientRegistered(clientId, clientUsername);
+		}
 	}
 
 }

@@ -54,7 +54,7 @@ public class Utils {
 	public final static int MESSAGE_TIMEOUT = -1;
 	public final static String INTENT_ARG_CHAT = "IntentChatLogic";
 	public final static String INTENT_ARG_SYNCTYPEID = "IntentSyncTypeId";
-	public final static String INTENT_ARG_OWNID = "IntentOwnId";
+	//public final static String INTENT_ARG_OWNID = "IntentOwnId";
 	public final static String INTENT_ARG_USERNAME = "IntentUsername";
 
 	// TODO Fill me with macros for the states

@@ -203,7 +203,7 @@ public class MainActivity extends ListActivity implements ChatEventListener {
 	}
 
 	@Override
-	public void onRegistrationSucceeded(int ownId, Lamport lamportClock, VectorClock vectorClock) {
+	public void onRegistrationSucceeded() {
 	}
 	
 	@Override

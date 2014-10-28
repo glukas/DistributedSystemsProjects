@@ -69,7 +69,7 @@ public class RegisterActivity extends ListActivity implements ChatEventListener 
 				getResources().getString(R.string.login), this).show();
 		
 		//TODO DEBUG : (directly jump into MainActivity, normally wait the callBack from network)
-		this.onRegistrationSucceeded(-1, null, null);
+		this.onRegistrationSucceeded();
 	}
 	
 	////
@@ -125,14 +125,13 @@ public class RegisterActivity extends ListActivity implements ChatEventListener 
 	////
 	
 	@Override
-	public void onRegistrationSucceeded(int ownId, Lamport lamportClock,
-			VectorClock vectorClock) {
+	public void onRegistrationSucceeded() {
 		//call back from the network, server accepted connection
 		Intent intent = new Intent(this, MainActivity.class);
 		Bundle bundle = new Bundle();
 		bundle.putSerializable(Utils.INTENT_ARG_CHAT, chatLogic);
 		intent.putExtras(bundle);
-		intent.putExtra(Utils.INTENT_ARG_OWNID, ownId);
+		//intent.putExtra(Utils.INTENT_ARG_OWNID, ownId);
 		intent.putExtra(Utils.INTENT_ARG_SYNCTYPEID, syncType.getTypeId());
 		intent.putExtra(Utils.INTENT_ARG_USERNAME, username);
 		startActivity(intent);
