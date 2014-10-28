@@ -44,6 +44,21 @@ public class DisplayMessage implements Serializable{
 	 * message is delivered.
 	 */
 	private String date;
+	
+	/**
+	 * boolean to determine whether the message is still on the flight or not.
+	 */
+	private boolean isSending;
+	
+	/**
+	 * boolean to determine whether the message has been successfully send or not.
+	 */
+	private boolean failedToSend;
+	
+	/**
+	 * String that indicates the reason of the failure of message send
+	 */
+	private String reasonFailure = "";
 
 	/**
 	 * Constructor to make a Message object
@@ -54,7 +69,23 @@ public class DisplayMessage implements Serializable{
 		this.username = username;
 		this.isMine = isMine;
 		this.isStatusMessage = false;
+		this.isSending = false;
 		this.date = Utils.getTime();
+		this.failedToSend = false;
+	}
+	
+	/**
+	 * Constructor to make a Message object
+	 */
+	public DisplayMessage(String message, String username, boolean isMine, boolean isSending) {
+		super();
+		this.message = message;
+		this.username = username;
+		this.isMine = isMine;
+		this.isStatusMessage = false;
+		this.isSending = isSending;
+		this.date = Utils.getTime();
+		this.failedToSend = false;
 	}
 
 	/**
@@ -68,7 +99,9 @@ public class DisplayMessage implements Serializable{
 		this.username = username;
 		this.isMine = false;
 		this.isStatusMessage = status;
+		this.isSending = false;
 		this.date = Utils.getTime();
+		this.failedToSend = false;
 	}
 
 	/**
@@ -110,7 +143,55 @@ public class DisplayMessage implements Serializable{
 	public boolean isStatusMessage() {
 		return isStatusMessage;
 	}
+	
+	/**
+	 * Getter for the state of the message
+	 * @return a boolean that indicates the state of the message
+	 */
+	public boolean isSending(){
+		return isSending;
+	}
+	
+	/**
+	 * Setter for the indicator whether the message is currently being send
+	 * @param isSending
+	 */
+	public void setSending(boolean isSending){
+		this.isSending = isSending;
+	}
 
+	/**
+	 * Getter for the indicator whether the message has failed to be send
+	 * @return
+	 */
+	public boolean hasFailed(){
+		return failedToSend;
+	}
+	
+	/**
+	 * Setter for the indicator whether the message has failed to be send
+	 * @param hasFailed
+	 */
+	public void setHasFailed(boolean hasFailed){
+		this.failedToSend = hasFailed;
+	}
+	
+	/**
+	 * Setter for the reason of the failure of sending message
+	 * @param reason
+	 */
+	public void setReasonFailure(String reason){
+		this.reasonFailure = reason;
+	}
+	
+	/**
+	 * Getter for the reason of the failure of sending message
+	 * @return
+	 */
+	public String getReasonFailure(){
+		return this.reasonFailure;
+	}
+	
 	/**
 	 * Setter for the status of message (currently being written)... Not useful in this exercise
 	 * @param isStatusMessage a boolean that indicates the status of the message
@@ -144,6 +225,11 @@ public class DisplayMessage implements Serializable{
 	 * @return String for the time
 	 */
 	public String getDate() {
+		if (isSending){
+			return "Sending message ... ";
+		} else if (failedToSend){
+			return "Message failed to be delivered : "+this.reasonFailure;
+		}
 		return date;
 	}
 

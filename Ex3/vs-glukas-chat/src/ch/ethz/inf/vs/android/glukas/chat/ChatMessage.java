@@ -78,5 +78,13 @@ public class ChatMessage extends ChatInteraction {
 		// TODO Auto-generated method stub
 
 	}
+	
+	public String getText(){
+		return text;
+	}
+	
+	public int getSenderId(){
+		return sender;
+	}
 
 }

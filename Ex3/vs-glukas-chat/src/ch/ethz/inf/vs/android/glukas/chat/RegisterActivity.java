@@ -3,10 +3,8 @@ package ch.ethz.inf.vs.android.glukas.chat;
 import java.util.Map;
 import ch.ethz.inf.vs.android.glukas.chat.R;
 import ch.ethz.inf.vs.android.glukas.chat.Utils.SyncType;
-import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
@@ -67,10 +65,10 @@ public class RegisterActivity extends ListActivity implements ChatEventListener 
 			return;
 		}
 		tryLogin();
-		createDialogMessage(getResources().getString(R.string.please_wait),
-				getResources().getString(R.string.login), false);
+		DialogFactory.createDialogNonErasable(getResources().getString(R.string.please_wait),
+				getResources().getString(R.string.login), this).show();
 		
-		//DEBUG : (directly jump into MainActivity, normally wait the callBack from network)
+		//TODO DEBUG : (directly jump into MainActivity, normally wait the callBack from network)
 		this.onRegistrationSucceeded(-1, null, null);
 	}
 	
@@ -112,29 +110,14 @@ public class RegisterActivity extends ListActivity implements ChatEventListener 
 	////
 	private void onNoNetworkConnection() {
 		//display dialog if device has no connection
-		createDialogMessage(getResources().getString(R.string.no_network_connectivity),
-				getResources().getString(R.string.error), true);
+		DialogFactory.createDialogMessage(getResources().getString(R.string.no_network_connectivity),
+				getResources().getString(R.string.error), this).show();
 	}
 	
 	private void onLoginError(String reasonError) {
 		//display dialog if an error occurred while login
-		createDialogMessage(getResources().getString(R.string.login_failed),
-				getResources().getString(R.string.error)+ " "+reasonError, true);
-	}
-	
-	private void createDialogMessage(String text, String title, boolean isErasable){
-		//create a new dialog and display it
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setMessage(text)
-		       .setTitle(title);
-		if (isErasable){
-			builder.setNegativeButton(R.string.ok, new DialogInterface.OnClickListener() {
-		           public void onClick(DialogInterface dialog, int id) {
-		           }
-		       });
-		}
-		AlertDialog dialog = builder.create();
-		dialog.show(); 
+		DialogFactory.createDialogMessage(getResources().getString(R.string.login_failed),
+				getResources().getString(R.string.error)+ " "+reasonError, this).show();
 	}
 	
 	////
