@@ -88,25 +88,36 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 	@Override
 	public void register(String username) {
 		// TODO Auto-generated method stub
+		String registerString = "{\"cmd\": \"register\"" +  ", \"text\": " + username+ "}";
+		this.sendMessage(registerString);
+		
+		
+		
 		
 	}
 
 	@Override
 	public void deregister() {
 		// TODO Auto-generated method stub
+		String deregisterString = "{\"cmd\": \"deregister\"" + "}";
+		this.sendMessage(deregisterString);
 		
 	}
 
 	@Override
 	public void sendMessage(String message, int messageId) {
 		// TODO Auto-generated method stub
+		String messageString = 	"{\"cmd\": \"message\"" + "\"text\": " + message
+				+ ", \"messageId\": " + String.valueOf(messageId) + "}";	
+		this.sendMessage(messageString);
 		
 	}
 
 	@Override
 	public void getClients() {
 		// TODO Auto-generated method stub
-		
+		String getClientsString = "{\"cmd\": \"get_clients\"" + "}";
+		this.sendMessage(getClientsString);
 	}
 
 	////
