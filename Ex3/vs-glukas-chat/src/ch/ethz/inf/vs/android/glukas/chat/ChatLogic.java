@@ -56,6 +56,7 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 	 * @param context The calling activity
 	 */
 	public ChatLogic(SyncType syncType) {
+		
 		this.syncType = syncType;
 		asyncNetworkCallbackHandler = new Handler();
 		asyncNetwork = new AsyncNetwork(Utils.SERVER_ADDRESS,Utils.SERVER_PORT_CHAT_TEST, this);

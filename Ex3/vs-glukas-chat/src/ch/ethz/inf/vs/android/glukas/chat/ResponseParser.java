@@ -3,14 +3,10 @@ package ch.ethz.inf.vs.android.glukas.chat;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import android.util.Log;
-
 import ch.ethz.inf.vs.android.glukas.chat.Utils.ChatEventType;
-import ch.ethz.inf.vs.android.glukas.chat.Utils.SyncType;
 
 public class ResponseParser {
 
@@ -21,9 +17,10 @@ public class ResponseParser {
 	public ResponseParser() {
 	}
 
-	// /
+	////
 	// Requests
-	// /
+	////
+	
 	public String getRegisterRequest(String username) {
 
 		String registerString = "{\"cmd\": \"register\"" + ", \"user\": "
@@ -313,6 +310,7 @@ public class ResponseParser {
 
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
+			Log.v("","RAISED");
 			e.printStackTrace();
 			return null;
 		}
@@ -327,7 +325,5 @@ public class ResponseParser {
 			e.printStackTrace();
 			return "Failure";
 		}
-
 	}
-
 }

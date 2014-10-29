@@ -112,10 +112,11 @@ public class RegisterActivity extends ListActivity implements ChatEventListener 
 		//get all informations provided by the user and try to register to the chat
 		syncType = lamportRadio.isChecked() ? Utils.SyncType.LAMPORT_SYNC : Utils.SyncType.VECTOR_CLOCK_SYNC;
 		if (syncType.equals(Utils.SyncType.LAMPORT_SYNC)){
-			chatLogic = new ChatLogic(Utils.SyncType.LAMPORT_SYNC);
+			ChatLogicFactory.setSyncType(Utils.SyncType.LAMPORT_SYNC);
 		} else {
-			chatLogic = new ChatLogic(Utils.SyncType.VECTOR_CLOCK_SYNC);
+			ChatLogicFactory.setSyncType(Utils.SyncType.VECTOR_CLOCK_SYNC);
 		}
+		chatLogic = ChatLogicFactory.getInstance();
 		chatLogic.addChatEventListener(this);
 		username = usernameEditText.getText().toString() + numberUsername.getText().toString();
 		chatLogic.register(username);
@@ -224,10 +225,6 @@ public class RegisterActivity extends ListActivity implements ChatEventListener 
 		//call back from the network, server accepted connection
 		Log.d(this.getClass().toString(), "registration succeeded");
 		Intent intent = new Intent(this, MainActivity.class);
-		Bundle bundle = new Bundle();
-		bundle.putSerializable(Utils.INTENT_ARG_CHAT, chatLogic);
-		intent.putExtras(bundle);
-		intent.putExtra(Utils.INTENT_ARG_SYNCTYPEID, syncType.getTypeId());
 		intent.putExtra(Utils.INTENT_ARG_USERNAME, username);
 		startActivity(intent);
 	}

@@ -55,8 +55,7 @@ public class MainActivity extends ListActivity implements ChatEventListener {
         this.textInput = (TextView) findViewById(R.id.text);
         
 		//Retrieve and restore ChatLogic
-		this.chat = (ChatLogic) getIntent().getSerializableExtra(Utils.INTENT_ARG_CHAT);
-		chat.setSyncType(Utils.SyncType.getSyncTypeById(getIntent().getIntExtra(Utils.INTENT_ARG_SYNCTYPEID, 1)));
+		this.chat = ChatLogicFactory.getInstance();
 		
 		//Get info from Intent
 		username = getIntent().getStringExtra(Utils.INTENT_ARG_USERNAME);
