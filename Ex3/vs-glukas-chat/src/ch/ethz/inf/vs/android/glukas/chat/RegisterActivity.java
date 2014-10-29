@@ -88,6 +88,7 @@ public class RegisterActivity extends ListActivity implements ChatEventListener 
 	
 	@Override
 	public void onDestroy() {
+		super.onDestroy();
 		if (chatLogic != null){
 			chatLogic.deregister();
 		}
@@ -125,12 +126,7 @@ public class RegisterActivity extends ListActivity implements ChatEventListener 
 		username = usernameEditText.getText().toString() + numberUsername.getText().toString();
 		chatLogic.register(username);
 		
-		try {
-			Thread.sleep(2000);
-		} catch (InterruptedException e) {
-			// TODO DEBUG, REMOVE ME WHEN REGISTRATION IS WORKING
-			e.printStackTrace();
-		}
+		//don't need to wait
 		this.onRegistrationSucceeded();
 	}
 	
