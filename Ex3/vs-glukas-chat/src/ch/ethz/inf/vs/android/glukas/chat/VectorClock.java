@@ -82,7 +82,7 @@ public class VectorClock implements Comparable<VectorClock>{
 		
 		String result = "{";
 		for(Map.Entry<Integer, Integer> entry : clock.entrySet()){
-			result += "\""+ String.valueOf(entry.getKey()) + "\" : " + "\"" + String.valueOf(entry.getValue()) + "\" ,"; 
+			result += "\""+ String.valueOf(entry.getKey()) + "\" : "  + String.valueOf(entry.getValue())+  ","; 
 		}
 		result += "}";
 		result = result.replace (",}", "}");

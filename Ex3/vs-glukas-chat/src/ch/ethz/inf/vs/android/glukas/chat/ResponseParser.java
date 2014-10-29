@@ -40,7 +40,7 @@ public class ResponseParser {
 		+ "\""	+ message + "\"" 
 		+ ", \"lamport\": "   + this.testlamport.toString() 
 		+ ", \"time_vector\": " + this.testvectorClock.toString() 
-		//+ ", \"messageId\": " + "\"" + String.valueOf(messageId) + "\"" 
+		+ ", \"messageId\": " + "\"" + String.valueOf(messageId) + "\"" 
 		+ "}";
 		Log.v("", messageString);
 		return messageString;
