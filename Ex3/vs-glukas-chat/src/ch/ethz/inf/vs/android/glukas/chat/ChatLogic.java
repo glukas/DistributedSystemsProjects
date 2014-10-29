@@ -11,6 +11,7 @@ import org.json.JSONObject;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Handler;
+import android.util.Log;
 import ch.ethz.inf.vs.android.glukas.chat.AsyncNetwork;
 import ch.ethz.inf.vs.android.glukas.chat.Utils;
 import ch.ethz.inf.vs.android.glukas.chat.Utils.ChatEventType;
@@ -68,7 +69,7 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 	
 	private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
 		asyncNetworkCallbackHandler = new Handler();//TODO can we be sure that this is called on the UI thread?
-		asyncNetwork = new AsyncNetwork(Utils.SERVER_ADDRESS,Utils.SERVER_PORT_CHAT, this);
+		asyncNetwork = new AsyncNetwork(Utils.SERVER_ADDRESS,Utils.SERVER_PORT_CHAT_TEST, this);
 		parser = new ResponseParser();
 		parser.setDelegate(this);
 	}
@@ -98,6 +99,7 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 	@Override
 	public void register(String username) {
 		String registerString = parser.getRegisterRequest(username);
+		Log.e("Displayrequest : ", registerString);
 		asyncSendRequest(registerString);
 	}
 

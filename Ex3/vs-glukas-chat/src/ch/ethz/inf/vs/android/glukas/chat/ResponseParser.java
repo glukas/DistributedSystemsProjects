@@ -23,15 +23,16 @@ public class ResponseParser {
 	// /
 	public String getRegisterRequest(String username) {
 
-		String registerString = "{\"cmd\": \"register\"" + ", \"text\": "
-				+ username + "}";
+		String registerString = "{\"cmd\": \"register\"" + ", \"user\": "
+				+ "\"" + username + "\"" + "}";
 		return registerString;
 	}
 
 	public String getsendMessageRequest(String message, int messageId) {
 
-		String messageString = "{\"cmd\": \"message\"" + "\"text\": " + message
-				+ ", \"messageId\": " + String.valueOf(messageId) + "}";
+		String messageString = "{\"cmd\": \"message\"" + "\"text\": " + "\""
+				+ message + "\"" + ", \"messageId\": " + "\""
+				+ String.valueOf(messageId) + "\"" + "}";
 		return messageString;
 
 	}
@@ -64,7 +65,9 @@ public class ResponseParser {
 		} else if (this.getCommand() == "register") {
 
 			if (this.getStatus() == "success") {
-				delegate.onRegistrationSucceeded(0, null, null);//TODO (Young)
+				delegate.onRegistrationSucceeded(this.getIndex(),
+						this.getLamport(), this.getVectorClock());// TODO
+																	// (Young)
 
 			} else if (this.getStatus() == "failure") {
 				this.checkRegisterFailureReason();
@@ -131,9 +134,9 @@ public class ResponseParser {
 
 	private void checkMessageType() {
 		if (this.responseJSON.has("status")) {
-			
+
 			if (this.getStatus() == "success") {
-				
+
 				delegate.onMessageDeliverySucceeded();
 
 			} else if (this.getStatus() == "failure") {
@@ -185,6 +188,36 @@ public class ResponseParser {
 
 	}
 
+	private HashMap<Integer, Integer> getVectorClockMap() {
+
+		try {
+			HashMap<Integer, Integer> vectorMap = new HashMap<Integer, Integer>();
+			String vectorString = this.responseJSON.getString("time_vector");
+			JSONObject clientJSON = new JSONObject(vectorString);
+			Iterator<?> keys = clientJSON.keys();
+			while (keys.hasNext()) {
+				String keyString = keys.next().toString();
+				Integer keyInteger = Integer.valueOf(keyString);
+				Integer valueInteger = Integer.valueOf(clientJSON
+						.getString(keyString));
+				vectorMap.put(keyInteger, valueInteger);
+			}
+			return vectorMap;
+
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+
+	}
+
+	private VectorClock getVectorClock() {
+		VectorClock vectorclock = new VectorClock(this.getVectorClockMap(),
+				this.getIndex());
+		return vectorclock;
+	}
+
 	private String getText() {
 		try {
 			return this.responseJSON.getString("text");
@@ -192,6 +225,20 @@ public class ResponseParser {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return "Failure";
+		}
+
+	}
+
+	private Integer getIndex() {
+
+		Integer index;
+		try {
+			index = this.responseJSON.getInt("index");
+			return index;
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return 0;
 		}
 
 	}
@@ -229,24 +276,15 @@ public class ResponseParser {
 
 	}
 
-	private String getLamport() {
+	private Lamport getLamport() {
 		try {
-			return this.responseJSON.getString("lamport");
+			Lamport lamport = new Lamport(this.responseJSON.getInt("lamport"));
+			return lamport;
+
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return "Failure";
-		}
-
-	}
-
-	private String getVector() {
-		try {
-			return this.responseJSON.getString("time_vector");
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return "Failure";
+			return null;
 		}
 
 	}
