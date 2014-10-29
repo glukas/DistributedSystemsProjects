@@ -100,6 +100,10 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 		asyncSendNext();
 	}
 	
+	private void inconsistentResponse() {
+		Log.e(this.getClass().toString(), "inconsistent request/response pair");
+	}
+	
 	////
 	//SERIALIZATION
 	////
@@ -185,58 +189,72 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 	public void onRegistrationSucceeded(int ownId, Lamport lamportClock, VectorClock vectorClock) {
 		//TODO (Lukas) some housekeeping (keep track of ownId, lamportClock, vectorClock)
 		Log.i(this.getClass().toString(), "onRegistrationSucceeded");
-		outgoingMessages.pollFirst();
-		for (ChatEventListener l : eventListenerList) {
-			l.onRegistrationSucceeded();
+		//remove the first message from the queue and check if it has the right type (it should!)
+		if (!outgoingMessages.isEmpty() && outgoingMessages.pollFirst().type == MessageRequestType.register) {
+			for (ChatEventListener l : eventListenerList) {
+				l.onRegistrationSucceeded();
+			}
+		} else {
+			inconsistentResponse();
 		}
 	}
 
 	@Override
 	public void onRegistrationFailed(ChatFailureReason reason) {
 		Log.i(this.getClass().toString(), "onRegistrationFailed");
-		outgoingMessages.pollFirst();
-		for (ChatEventListener l : eventListenerList) {
-			l.onRegistrationFailed(reason);
+		//remove the first message from the queue and check if it has the right type (it should!)
+		if (!outgoingMessages.isEmpty() && outgoingMessages.pollFirst().type == MessageRequestType.register) {
+			for (ChatEventListener l : eventListenerList) {
+				l.onRegistrationFailed(reason);
+			}
+		} else {
+			inconsistentResponse();
 		}
 	}
 
 	@Override
 	public void onGetClientMapping(Map<Integer, String> clientIdToUsernameMap) {
-		outgoingMessages.pollFirst();
-		for (ChatEventListener l : eventListenerList) {
-			l.onGetClientMapping(clientIdToUsernameMap);
+		if (!outgoingMessages.isEmpty() && outgoingMessages.pollFirst().type == MessageRequestType.getClients) {
+			for (ChatEventListener l : eventListenerList) {
+				l.onGetClientMapping(clientIdToUsernameMap);
+			}
+		} else {
+			inconsistentResponse();
 		}
 	}
 
 	@Override
 	public void onGetClientMappingFailed(ChatFailureReason reason) {
-		outgoingMessages.pollFirst();
-		for (ChatEventListener l : eventListenerList) {
-			l.onGetClientMappingFailed(reason);
+		if (!outgoingMessages.isEmpty() && outgoingMessages.pollFirst().type == MessageRequestType.getClients) {
+			for (ChatEventListener l : eventListenerList) {
+				l.onGetClientMappingFailed(reason);
+			}
+		} else {
+			inconsistentResponse();	
 		}
 	}
 
 	@Override
 	public void onMessageDeliverySucceeded() {
-		if (!outgoingMessages.isEmpty()) {
+		if (!outgoingMessages.isEmpty() && outgoingMessages.pollFirst().type == MessageRequestType.sendMessage) {
 			int id = outgoingMessages.pollFirst().id;
 			for (ChatEventListener l : eventListenerList) {
 				l.onMessageDeliverySucceeded(id);
 			}
 		} else {
-			//something went wrong (probably in the network)
+			inconsistentResponse();	
 		}
 	}
 
 	@Override
 	public void onMessageDeliveryFailed(ChatFailureReason reason) {
-		if (!outgoingMessages.isEmpty()) {
+		if (!outgoingMessages.isEmpty() && outgoingMessages.pollFirst().type == MessageRequestType.sendMessage) {
 			int id = outgoingMessages.pollFirst().id;
 			for (ChatEventListener l : eventListenerList) {
 				l.onMessageDeliveryFailed(reason, id);
 			}
 		} else {
-			//something went wrong (probably in the network)
+			inconsistentResponse();	
 		}
 	}
 
@@ -251,17 +269,24 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 
 	@Override
 	public void onDeregistrarionSucceeded() {
-		outgoingMessages.pollFirst();
-		for (ChatEventListener l : eventListenerList) {
-			l.onDeregistrarionSucceeded();
+		if (!outgoingMessages.isEmpty() && outgoingMessages.pollFirst().type == MessageRequestType.deregister) {
+			for (ChatEventListener l : eventListenerList) {
+				l.onDeregistrarionSucceeded();
+			}
+		} else {
+			inconsistentResponse();	
 		}
 	}
 
+
 	@Override
 	public void onDeregistrationFailed() {
-		outgoingMessages.pollFirst();
-		for (ChatEventListener l : eventListenerList) {
-			l.onDeregistrationFailed();
+		if (!outgoingMessages.isEmpty() && outgoingMessages.pollFirst().type == MessageRequestType.deregister) {
+			for (ChatEventListener l : eventListenerList) {
+				l.onDeregistrationFailed();
+			}
+		} else {
+			inconsistentResponse();
 		}
 	}
 
