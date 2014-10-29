@@ -73,9 +73,9 @@ public final class R {
     }
     public static final class string {
         public static final int app_name=0x7f060001;
-        public static final int deregistration_failed=0x7f060013;
+        public static final int deregistration_failed=0x7f060014;
         public static final int enter_chat_greetings=0x7f060008;
-        public static final int error=0x7f060010;
+        public static final int error=0x7f060011;
         public static final int hello=0x7f060000;
         public static final int joined=0x7f060006;
         public static final int left=0x7f060007;
@@ -84,13 +84,14 @@ public final class R {
          */
         public static final int login_failed=0x7f06000b;
         public static final int main_empty_list=0x7f060009;
-        public static final int no_network_connectivity=0x7f06000f;
+        public static final int no_network_connectivity=0x7f060010;
         public static final int number_string=0x7f060004;
-        public static final int ok=0x7f060011;
-        public static final int please_wait=0x7f06000d;
+        public static final int ok=0x7f060012;
+        public static final int please_wait=0x7f06000e;
         public static final int send_button=0x7f06000a;
-        public static final int sending=0x7f06000e;
-        public static final int system=0x7f060012;
+        public static final int sending=0x7f06000f;
+        public static final int system=0x7f060013;
+        public static final int unLogin=0x7f06000d;
         /**  CHAT 
          */
         public static final int unknown=0x7f060005;

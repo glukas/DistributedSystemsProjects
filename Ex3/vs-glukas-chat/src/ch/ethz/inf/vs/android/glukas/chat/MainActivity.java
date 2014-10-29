@@ -81,11 +81,15 @@ public class MainActivity extends ListActivity implements ChatEventListener {
 		
 	}
 	
+	@Override
+	public void onDestroy(){
+		chat.deregister();
+	}
+	
 	public void onBackPressed() {
 		chat.deregister();
-		
-		//TODO : DEBUG , normally wait for call from network
-		this.onDeregistrarionSucceeded();
+		DialogFactory.createDialogNonErasable(getResources().getString(R.string.please_wait),
+				getResources().getString(R.string.unLogin), this).show();
 	}
 	
 	////

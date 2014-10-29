@@ -82,6 +82,13 @@ public class RegisterActivity extends ListActivity implements ChatEventListener 
 		}	
 	}
 	
+	@Override
+	public void onDestroy() {
+		if (chatLogic != null){
+			chatLogic.deregister();
+		}
+	}
+	
 	public void onClickLogin(View v) {
 		//react to the click on login button
 		if (!haveNetworkConnection()){
@@ -94,9 +101,6 @@ public class RegisterActivity extends ListActivity implements ChatEventListener 
 		//display to the user that the application tries to log
 		DialogFactory.createDialogNonErasable(getResources().getString(R.string.please_wait),
 				getResources().getString(R.string.login), this).show();
-		
-		//TODO DEBUG : (directly jump into MainActivity, normally wait the callBack from network)
-		//this.onRegistrationSucceeded();
 	}
 	
 	////
