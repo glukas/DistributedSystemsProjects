@@ -108,6 +108,7 @@ public class MainActivity extends ListActivity implements ChatEventListener {
 	////
 	
 	private void displayMessageUser(DisplayMessage message){
+		//TODO : log message
 		displayMessages.add(message);
 		adapter.notifyDataSetChanged();
 		textInput.setText("");
@@ -115,6 +116,7 @@ public class MainActivity extends ListActivity implements ChatEventListener {
 	}
 	
 	private void setTryToSendToSend(int id){
+		//TODO : log message
 		displayMessages.get(id).setSending(false);
 	}
 	
@@ -125,6 +127,7 @@ public class MainActivity extends ListActivity implements ChatEventListener {
 	}
 	
 	private void displayMessageSystem(DisplayMessage message){
+		//TODO : log message
 		displayMessages.add(message);
 		adapter.notifyDataSetChanged();
 		textInput.setText("");
@@ -173,6 +176,8 @@ public class MainActivity extends ListActivity implements ChatEventListener {
 
 	@Override
 	public void onDeregistrationFailed() {
+		DialogFactory.createDialogMessage(getResources().getString(R.string.deregistration_failed), 
+				getResources().getString(R.string.error), this).show();
 	}
 
 	@Override

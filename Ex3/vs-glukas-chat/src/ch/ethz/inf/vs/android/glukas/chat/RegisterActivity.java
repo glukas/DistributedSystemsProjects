@@ -6,11 +6,14 @@ import ch.ethz.inf.vs.android.glukas.chat.Utils.SyncType;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.StrictMode;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RadioButton;
 
@@ -28,8 +31,10 @@ public class RegisterActivity extends ListActivity implements ChatEventListener 
 	
 	//Views
 	private RadioButton lamportRadio;
+	private RadioButton vectorClockRadio;
 	private EditText usernameEditText;
 	private EditText numberUsername;
+	private CheckBox checkBox;
 	
 	//connectivity
 	private ChatLogic chatLogic;
@@ -40,6 +45,10 @@ public class RegisterActivity extends ListActivity implements ChatEventListener 
 	//user informations
 	private SyncType syncType;
 	private String username;
+	private SharedPreferences preferences;
+	
+	//dialog message
+	private volatile boolean isLogging = false;
 	
 	////
 	//Life cycle
@@ -51,11 +60,26 @@ public class RegisterActivity extends ListActivity implements ChatEventListener 
 		.permitAll().build();
 		StrictMode.setThreadPolicy(policy);
 		setContentView(R.layout.activity_register);
+		
+		//views
+		usernameEditText = (EditText) findViewById(R.id.username);
+		numberUsername = (EditText) findViewById(R.id.number);
+		checkBox = (CheckBox) findViewById(R.id.remember);
+		lamportRadio = (RadioButton) findViewById(R.id.lamportRadio);
+		vectorClockRadio = (RadioButton) findViewById(R.id.vectorRadio);
+		
+		//preferences
+		preferences = this.getSharedPreferences(Settings.SETTINGS_CHAT, MODE_PRIVATE);
+		restoreUserPreferences();
 	}
 	
 	public void onBackPressed() {
 		//react to back pressed
-		chatLogic.deregister();
+		if (isLogging){
+			isLogging = false;
+		} else if (chatLogic != null){
+			chatLogic.deregister();
+		}	
 	}
 	
 	public void onClickLogin(View v) {
@@ -64,12 +88,15 @@ public class RegisterActivity extends ListActivity implements ChatEventListener 
 			onNoNetworkConnection();
 			return;
 		}
+		setRemember();
+		isLogging = true;
 		tryLogin();
+		//display to the user that the application tries to log
 		DialogFactory.createDialogNonErasable(getResources().getString(R.string.please_wait),
 				getResources().getString(R.string.login), this).show();
 		
 		//TODO DEBUG : (directly jump into MainActivity, normally wait the callBack from network)
-		this.onRegistrationSucceeded();
+		//this.onRegistrationSucceeded();
 	}
 	
 	////
@@ -78,12 +105,7 @@ public class RegisterActivity extends ListActivity implements ChatEventListener 
 	
 	private void tryLogin() {
 		//get all informations provided by the user and try to register to the chat
-		lamportRadio = (RadioButton) findViewById(R.id.lamportRadio);
-		usernameEditText = (EditText) findViewById(R.id.username);
-		numberUsername = (EditText) findViewById(R.id.number);
-		
 		syncType = lamportRadio.isChecked() ? Utils.SyncType.LAMPORT_SYNC : Utils.SyncType.VECTOR_CLOCK_SYNC;
-		
 		if (syncType.equals(Utils.SyncType.LAMPORT_SYNC)){
 			chatLogic = new ChatLogic(Utils.SyncType.LAMPORT_SYNC);
 		} else {
@@ -102,6 +124,65 @@ public class RegisterActivity extends ListActivity implements ChatEventListener 
 					connectivityManager.getActiveNetworkInfo().isConnected();
 		}	
 		return false;
+	}
+	
+	////
+	//User preferences saving
+	////
+	
+	private void restoreUserPreferences(){
+		//reload into the views user preferences
+		if (preferences.getBoolean(Settings.REMEMBER_ME_STR, false)){
+			usernameEditText.setText(preferences.getString(Settings.USERNAME, ""));
+			numberUsername.setText(preferences.getString(Settings.NUMBER_USERNAME, ""));
+			checkBox.setChecked(true);
+			if (preferences.getBoolean(Settings.SYNC_TYPE, false)){
+				lamportRadio.setChecked(false);
+				vectorClockRadio.setChecked(true);
+			} else {
+				vectorClockRadio.setChecked(false);
+				lamportRadio.setChecked(true);
+			}
+		}
+	}
+	
+	private void onRememberMe(String usernameArg, String numberUsernameArg, boolean syncTypeArg){
+		//store user preferences
+		Editor preferencesEditor = preferences.edit();
+		preferencesEditor.putString(Settings.USERNAME, usernameArg);
+		preferencesEditor.putString(Settings.NUMBER_USERNAME, numberUsernameArg);
+		preferencesEditor.putBoolean(Settings.REMEMBER_ME_STR, true);
+		if (syncTypeArg) {
+			preferencesEditor.putBoolean(Settings.SYNC_TYPE, false);
+		} else {
+			preferencesEditor.putBoolean(Settings.SYNC_TYPE, true);
+		}
+		preferencesEditor.apply();
+	}
+	
+	private void onNotRememberMe(){
+		//erase all user preferences
+		Editor preferencesEditor = preferences.edit();
+		preferencesEditor.putString(Settings.USERNAME, "");
+		preferencesEditor.putString(Settings.NUMBER_USERNAME, "");
+		preferencesEditor.putBoolean(Settings.REMEMBER_ME_STR, false);
+		preferencesEditor.putBoolean(Settings.SYNC_TYPE, false);
+		preferencesEditor.apply();
+	}
+	
+	public void setRemember(){
+		//decide if and what to remember
+		if (checkBox.isChecked()){
+			String arg1 = usernameEditText.getText().toString();
+			String arg2 = numberUsername.getText().toString();
+			if (lamportRadio.isChecked()){
+				onRememberMe(arg1, arg2, false);
+			} else {
+				onRememberMe(arg1, arg2, true);
+			}
+		} else {
+			onNotRememberMe();
+		}
 	}
 	
 	
@@ -131,7 +212,6 @@ public class RegisterActivity extends ListActivity implements ChatEventListener 
 		Bundle bundle = new Bundle();
 		bundle.putSerializable(Utils.INTENT_ARG_CHAT, chatLogic);
 		intent.putExtras(bundle);
-		//intent.putExtra(Utils.INTENT_ARG_OWNID, ownId);
 		intent.putExtra(Utils.INTENT_ARG_SYNCTYPEID, syncType.getTypeId());
 		intent.putExtra(Utils.INTENT_ARG_USERNAME, username);
 		startActivity(intent);
