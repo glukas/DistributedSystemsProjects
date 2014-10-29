@@ -119,6 +119,14 @@ public class RegisterActivity extends ListActivity implements ChatEventListener 
 		chatLogic.addChatEventListener(this);
 		username = usernameEditText.getText().toString() + numberUsername.getText().toString();
 		chatLogic.register(username);
+		
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		this.onRegistrationSucceeded();
 	}
 	
 	private boolean haveNetworkConnection() {

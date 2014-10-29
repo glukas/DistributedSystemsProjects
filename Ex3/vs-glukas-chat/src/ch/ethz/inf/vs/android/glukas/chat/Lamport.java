@@ -53,6 +53,6 @@ public class Lamport implements Comparable<Lamport> {
 	 */
 	public String toString() {
 		// TODO Fill me
-		return null;
+		return String.valueOf(this.value);
 	}
 }

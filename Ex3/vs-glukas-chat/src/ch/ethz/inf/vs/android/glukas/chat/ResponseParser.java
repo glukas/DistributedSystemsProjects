@@ -7,6 +7,8 @@ import java.util.Map;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.util.Log;
+
 import ch.ethz.inf.vs.android.glukas.chat.Utils.ChatEventType;
 import ch.ethz.inf.vs.android.glukas.chat.Utils.SyncType;
 
@@ -14,7 +16,8 @@ public class ResponseParser {
 
 	private JSONObject responseJSON;
 	private ChatServerRawResponseInterface delegate;
-
+	private Lamport testlamport = new Lamport();
+	private VectorClock testvectorClock = new VectorClock();
 	public ResponseParser() {
 	}
 
@@ -29,10 +32,20 @@ public class ResponseParser {
 	}
 
 	public String getsendMessageRequest(String message, int messageId) {
-
-		String messageString = "{\"cmd\": \"message\"" + "\"text\": " + "\""
-				+ message + "\"" + ", \"messageId\": " + "\""
-				+ String.valueOf(messageId) + "\"" + "}";
+		if (this.testlamport == null) {
+			Log.v("test", "Yes lamport is null!");
+		}
+		if (this.testvectorClock == null){
+			Log.v("test", "Yes vectorclock is null!");
+		}
+	
+		String messageString = "{\"cmd\": \"message\"" + ", \"text\": "
+		+ "\""	+ message + "\"" 
+		+ ", \"lamport\": "   + this.testlamport.toString() 
+		+ ", \"time_vector\": " + this.testvectorClock.toString() 
+		//+ ", \"messageId\": " + "\"" + String.valueOf(messageId) + "\"" 
+		+ "}";
+		Log.v("", messageString);
 		return messageString;
 
 	}
@@ -58,34 +71,42 @@ public class ResponseParser {
 
 	public void parseResponse(String response) {
 		// TODO (Young)
-		buildJSON(response);
-
-		if (this.getCommand() == "message") {
+		this.buildJSON(response);
+		try {
+			Log.v("After Build", this.responseJSON.getString("init_time_vector"));
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		Log.v("Command", this.getCommand());
+		Log.v("Success", this.getStatus());
+		if (this.getCommand().equals( "message")) {
 			this.checkMessageType();
-		} else if (this.getCommand() == "register") {
-
-			if (this.getStatus() == "success") {
+		} else if (this.getCommand().equals("register")) {
+			Log.v("Register", "okay");
+			if (this.getStatus().equals( "success")) {
+				Log.v("Status", "okay");
 				delegate.onRegistrationSucceeded(this.getIndex(),
 						this.getLamport(), this.getVectorClock());// TODO
 																	// (Young)
 
-			} else if (this.getStatus() == "failure") {
+			} else if (this.getStatus().equals("failure")) {
 				this.checkRegisterFailureReason();
 
 			}
 
-		} else if (this.getCommand() == "deregister") {
-			if (this.getStatus() == "success") {
+		} else if (this.getCommand().equals( "deregister")) {
+			if (this.getStatus().equals( "success")) {
 				delegate.onDeregistrarionSucceeded();
 			}
-			if (this.getStatus() == "failure") {
+			if (this.getStatus().equals( "failure")) {
 				delegate.onDeregistrationFailed();
 
 			}
 
-		} else if (this.getCommand() == "get_clients") {
+		} else if (this.getCommand().equals( "get_clients")) {
 			if (this.responseJSON.has("status")) {
-				if (this.getStatus() == "failure") {
+				if (this.getStatus().equals( "failure")) {
 
 					// TODO Young : How do I know what reason?
 					delegate.onGetClientMappingFailed(ChatFailureReason.timeout);
@@ -96,18 +117,18 @@ public class ResponseParser {
 				delegate.onGetClientMapping(clientMap);
 			}
 
-		} else if (this.getCommand() == "info") {
+		} else if (this.getCommand().equals( "info")) {
 			// TODO Young : ChatMessage
 			ChatMessage infoMessage = new ChatMessage(ChatEventType.SOME_STATE,
 					0, this.getText(), null, null, 0, null);
 			delegate.onMessageReceived(infoMessage);
-		} else if (this.getCommand() == "notification") {
+		} else if (this.getCommand().equals( "notification")) {
 			// TODO Young : ChatMessage
 			ChatMessage notificationMessage = new ChatMessage(
 					ChatEventType.SOME_STATE, 0, this.getText(), null, null, 0,
 					null);
 			delegate.onMessageReceived(notificationMessage);
-		} else if (this.getCommand() == "unknown") {
+		} else if (this.getCommand().equals("unknown")) {
 			delegate.onMessageDeliveryFailed(ChatFailureReason.unknownCommand);
 
 		}
@@ -118,9 +139,9 @@ public class ResponseParser {
 		String reason = this.getText();
 		if (reason.contains("username already in use")) {
 			delegate.onRegistrationFailed(ChatFailureReason.usernameAlreadyInUse);
-		} else if (reason == "Not registered") {
+		} else if (reason.equals( "Not registered")) {
 			delegate.onRegistrationFailed(ChatFailureReason.notRegistered);
-		} else if (reason == "Already registered") {
+		} else if (reason.equals( "Already registered")) {
 			delegate.onRegistrationFailed(ChatFailureReason.alreadyRegistered);
 
 		}
@@ -135,11 +156,11 @@ public class ResponseParser {
 	private void checkMessageType() {
 		if (this.responseJSON.has("status")) {
 
-			if (this.getStatus() == "success") {
+			if (this.getStatus().equals("success")) {
 
 				delegate.onMessageDeliverySucceeded();
 
-			} else if (this.getStatus() == "failure") {
+			} else if (this.getStatus().equals( "failure")) {
 				checkMessageFailureReason();
 
 			}
@@ -192,7 +213,8 @@ public class ResponseParser {
 
 		try {
 			HashMap<Integer, Integer> vectorMap = new HashMap<Integer, Integer>();
-			String vectorString = this.responseJSON.getString("time_vector");
+			String vectorString = this.responseJSON.getString("init_time_vector");
+			
 			JSONObject clientJSON = new JSONObject(vectorString);
 			Iterator<?> keys = clientJSON.keys();
 			while (keys.hasNext()) {
@@ -207,14 +229,17 @@ public class ResponseParser {
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			Log.v("JSONException", "VectorMap");
 			return null;
 		}
 
 	}
 
 	private VectorClock getVectorClock() {
+		Log.v("getVectorClock", "got called");
 		VectorClock vectorclock = new VectorClock(this.getVectorClockMap(),
 				this.getIndex());
+		this.testvectorClock = vectorclock;
 		return vectorclock;
 	}
 
@@ -277,8 +302,13 @@ public class ResponseParser {
 	}
 
 	private Lamport getLamport() {
+		Log.v("getLamport", "got called");
 		try {
-			Lamport lamport = new Lamport(this.responseJSON.getInt("lamport"));
+			
+			Lamport lamport = new Lamport(this.responseJSON.getInt("init_lamport"));
+			
+			this.testlamport = lamport;
+			Log.v("getLamport",this.testlamport.toString());
 			return lamport;
 
 		} catch (JSONException e) {

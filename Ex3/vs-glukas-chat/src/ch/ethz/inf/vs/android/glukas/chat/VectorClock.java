@@ -1,6 +1,8 @@
 package ch.ethz.inf.vs.android.glukas.chat;
 
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 import org.json.JSONObject;
 
@@ -77,6 +79,13 @@ public class VectorClock implements Comparable<VectorClock>{
 	 */
 	public String toString(){
 		// TODO Fill me
-		return null;
+		
+		String result = "{";
+		for(Map.Entry<Integer, Integer> entry : clock.entrySet()){
+			result += "\""+ String.valueOf(entry.getKey()) + "\" : " + "\"" + String.valueOf(entry.getValue()) + "\" ,"; 
+		}
+		result += "}";
+		result = result.replace (",}", "}");
+		return result;
 	}
 }
