@@ -1,10 +1,12 @@
 package ch.ethz.inf.vs.android.glukas.chat;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 import ch.ethz.inf.vs.android.glukas.chat.DisplayMessage;
 import ch.ethz.inf.vs.android.glukas.chat.DisplayMessageAdapter;
 import ch.ethz.inf.vs.android.glukas.chat.R;
+import android.annotation.SuppressLint;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -43,6 +45,7 @@ public class MainActivity extends ListActivity implements ChatEventListener {
 	//Life cycle
 	////
 	
+	@SuppressLint("UseSparseArrays")
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		
@@ -76,7 +79,7 @@ public class MainActivity extends ListActivity implements ChatEventListener {
 				getResources().getString(R.string.system)));
 		
 		//Ask for users already in the chat
-		this.clientIdToUsernameMap = null;
+		this.clientIdToUsernameMap = new HashMap<Integer, String>();
 		chat.getClients();
 		
 	}

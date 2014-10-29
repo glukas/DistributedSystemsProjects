@@ -3,6 +3,7 @@ package ch.ethz.inf.vs.android.glukas.chat;
 import java.util.Map;
 import ch.ethz.inf.vs.android.glukas.chat.R;
 import ch.ethz.inf.vs.android.glukas.chat.Utils.SyncType;
+import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
@@ -50,6 +51,7 @@ public class RegisterActivity extends ListActivity implements ChatEventListener 
 	
 	//dialog message
 	private volatile boolean isLogging = false;
+	private AlertDialog logMessage;
 	
 	////
 	//Life cycle
@@ -80,7 +82,8 @@ public class RegisterActivity extends ListActivity implements ChatEventListener 
 			isLogging = false;
 		} else if (chatLogic != null){
 			chatLogic.deregister();
-		}	
+		}
+		finish();
 	}
 	
 	@Override
@@ -100,8 +103,9 @@ public class RegisterActivity extends ListActivity implements ChatEventListener 
 		isLogging = true;
 		tryLogin();
 		//display to the user that the application tries to log
-		DialogFactory.createDialogNonErasable(getResources().getString(R.string.please_wait),
-				getResources().getString(R.string.login), this).show();
+		logMessage = DialogFactory.createDialogNonErasable(getResources().getString(R.string.please_wait),
+				getResources().getString(R.string.login), this);
+		logMessage.show();
 	}
 	
 	////
@@ -124,7 +128,7 @@ public class RegisterActivity extends ListActivity implements ChatEventListener 
 		try {
 			Thread.sleep(2000);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
+			// TODO DEBUG, REMOVE ME WHEN REGISTRATION IS WORKING
 			e.printStackTrace();
 		}
 		this.onRegistrationSucceeded();
@@ -212,6 +216,7 @@ public class RegisterActivity extends ListActivity implements ChatEventListener 
 	
 	private void onLoginError(String reasonError) {
 		//display dialog if an error occurred while login
+		logMessage.dismiss();
 		DialogFactory.createDialogMessage(getResources().getString(R.string.login_failed),
 				getResources().getString(R.string.error)+ " "+reasonError, this).show();
 	}
