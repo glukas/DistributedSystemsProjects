@@ -3,6 +3,8 @@ package ch.ethz.inf.vs.android.glukas.chat;
 import java.io.IOException;
 import java.io.ObjectStreamException;
 import java.io.Serializable;
+import java.util.Deque;
+import java.util.LinkedList;
 import java.util.Map;
 
 import org.json.JSONException;
@@ -13,6 +15,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.util.Log;
 import ch.ethz.inf.vs.android.glukas.chat.AsyncNetwork;
+import ch.ethz.inf.vs.android.glukas.chat.MessageRequest.MessageRequestType;
 import ch.ethz.inf.vs.android.glukas.chat.Utils;
 import ch.ethz.inf.vs.android.glukas.chat.Utils.ChatEventType;
 import ch.ethz.inf.vs.android.glukas.chat.Utils.SyncType;
@@ -26,13 +29,26 @@ import ch.ethz.inf.vs.android.glukas.chat.Utils.SyncType;
  *
  */
 public class ChatLogic extends ChatEventSource implements ChatClientRequestInterface, ChatServerRawResponseInterface, AsyncNetworkDelegate, Serializable {
-
+	
+	private static final long RECEIVE_TIMEOUT_MILLIS = 2000;
+	
 	private transient AsyncNetwork asyncNetwork;
 	private transient Handler asyncNetworkCallbackHandler;
 
 	private transient SyncType syncType;
 	
 	private transient ResponseParser parser;
+	
+	private transient Deque<MessageRequest> outgoingMessages;
+	
+	private boolean sending = false;
+	
+	private transient Runnable timeout = new Runnable() {
+		@Override
+		public void run() {
+			onResponseTimedOut();
+		}
+	};
 	
 	/**
 	 * Constructor
@@ -45,6 +61,7 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 		asyncNetwork = new AsyncNetwork(Utils.SERVER_ADDRESS,Utils.SERVER_PORT_CHAT_TEST, this);
 		parser = new ResponseParser();
 		parser.setDelegate(this);
+		outgoingMessages = new LinkedList<MessageRequest>();
 	}
 	
 	public void setSyncType(SyncType syncType) {
@@ -55,11 +72,34 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 		asyncNetwork.close();
 	}
 	
-	private void asyncSendRequest(String message) {
-		//TODO : make sure no more than 1 message is in the network at the same time (otherwise the ACKs will be useless)
-		asyncNetwork.sendMessage(message);
+	private void asyncSendNext() {
+
+		if (!sending && !outgoingMessages.isEmpty()) {
+			sending = true;
+			
+			Log.d(this.getClass().toString(), "sending " + this.outgoingMessages.peekFirst().message);
+			
+			asyncNetwork.sendMessage(this.outgoingMessages.peekFirst().message);
+			this.getCallbackHandler().postDelayed(timeout, RECEIVE_TIMEOUT_MILLIS);
+		}
 	}
 
+	private void onResponseTimedOut() {
+		this.sending = false;
+		Log.d(this.getClass().toString(), "timed out " + this.outgoingMessages.peekFirst().message);
+		switch(this.outgoingMessages.peek().type) {
+		case register : this.onRegistrationFailed(ChatFailureReason.timeout);
+			break;
+		case deregister: this.onDeregistrationFailed();
+			break;
+		case getClients: this.onGetClientMappingFailed(ChatFailureReason.timeout);
+			break;
+		case sendMessage: this.onMessageDeliveryFailed(ChatFailureReason.timeout);
+			break;
+		}
+		asyncSendNext();
+	}
+	
 	////
 	//SERIALIZATION
 	////
@@ -72,6 +112,8 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 		asyncNetwork = new AsyncNetwork(Utils.SERVER_ADDRESS,Utils.SERVER_PORT_CHAT_TEST, this);
 		parser = new ResponseParser();
 		parser.setDelegate(this);
+		outgoingMessages = new LinkedList<MessageRequest>();
+		this.sending = false;
 	}
 	////
 	//ASYNC NETWORK DELEGATE
@@ -84,12 +126,19 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 
 	@Override
 	public void onReceive(String message) {
+		this.getCallbackHandler().removeCallbacks(timeout);
+		Log.d(this.getClass().toString(), "onReceive : " + message);
+		this.sending = false;
 		parser.parseResponse(message);
+		//asyncSendNext();
 	}
 	
 	@Override
 	public void onDeliveryFailed() {
+		this.getCallbackHandler().removeCallbacks(timeout);
+		this.sending = false;
 		this.onMessageDeliveryFailed(ChatFailureReason.noNetwork);
+		//asyncSendNext();
 	}
 	
 	////
@@ -99,26 +148,30 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 	@Override
 	public void register(String username) {
 		String registerString = parser.getRegisterRequest(username);
-		Log.e("Displayrequest : ", registerString);
-		asyncSendRequest(registerString);
+		Log.e(this.getClass().toString(), registerString);
+		outgoingMessages.add(new MessageRequest(0, registerString, MessageRequestType.register));
+		asyncSendNext();
 	}
 
 	@Override
 	public void deregister() {
 		String deregisterString = parser.getderegisterRequest();
-		asyncSendRequest(deregisterString);
+		outgoingMessages.add(new MessageRequest(0, deregisterString, MessageRequestType.deregister));
+		asyncSendNext();
 	}
 
 	@Override
 	public void sendMessage(String message, int messageId) {
-		String messageString = 	parser.getsendMessageRequest(message, messageId);	
-		asyncSendRequest(messageString);
+		String messageString = 	parser.getsendMessageRequest(message, messageId);
+		outgoingMessages.add(new MessageRequest(messageId, messageString, MessageRequestType.sendMessage));
+		asyncSendNext();
 	}
 
 	@Override
 	public void getClients() {
 		String getClientsString = parser.getClientsRequest();
-		asyncSendRequest(getClientsString);
+		outgoingMessages.add(new MessageRequest(0, getClientsString, MessageRequestType.register));
+		asyncSendNext();
 	}
 
 	////
@@ -131,6 +184,8 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 	@Override
 	public void onRegistrationSucceeded(int ownId, Lamport lamportClock, VectorClock vectorClock) {
 		//TODO (Lukas) some housekeeping (keep track of ownId, lamportClock, vectorClock)
+		Log.i(this.getClass().toString(), "onRegistrationSucceeded");
+		outgoingMessages.pollFirst();
 		for (ChatEventListener l : eventListenerList) {
 			l.onRegistrationSucceeded();
 		}
@@ -138,6 +193,8 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 
 	@Override
 	public void onRegistrationFailed(ChatFailureReason reason) {
+		Log.i(this.getClass().toString(), "onRegistrationFailed");
+		outgoingMessages.pollFirst();
 		for (ChatEventListener l : eventListenerList) {
 			l.onRegistrationFailed(reason);
 		}
@@ -145,6 +202,7 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 
 	@Override
 	public void onGetClientMapping(Map<Integer, String> clientIdToUsernameMap) {
+		outgoingMessages.pollFirst();
 		for (ChatEventListener l : eventListenerList) {
 			l.onGetClientMapping(clientIdToUsernameMap);
 		}
@@ -152,6 +210,7 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 
 	@Override
 	public void onGetClientMappingFailed(ChatFailureReason reason) {
+		outgoingMessages.pollFirst();
 		for (ChatEventListener l : eventListenerList) {
 			l.onGetClientMappingFailed(reason);
 		}
@@ -159,19 +218,32 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 
 	@Override
 	public void onMessageDeliverySucceeded() {
-		// TODO find message Id, notify listeners
-		
+		if (!outgoingMessages.isEmpty()) {
+			int id = outgoingMessages.pollFirst().id;
+			for (ChatEventListener l : eventListenerList) {
+				l.onMessageDeliverySucceeded(id);
+			}
+		} else {
+			//something went wrong (probably in the network)
+		}
 	}
 
 	@Override
 	public void onMessageDeliveryFailed(ChatFailureReason reason) {
-		// TODO find message Id, notify listeners
-		
+		if (!outgoingMessages.isEmpty()) {
+			int id = outgoingMessages.pollFirst().id;
+			for (ChatEventListener l : eventListenerList) {
+				l.onMessageDeliveryFailed(reason, id);
+			}
+		} else {
+			//something went wrong (probably in the network)
+		}
 	}
 
 	@Override
 	public void onMessageReceived(ChatMessage message) {
 		// TODO see if deliverable, if so deliver, otherwise enqueue
+		Log.i(this.getClass().toString(), "onMessageReceived");
 		for (ChatEventListener l : eventListenerList) {
 			l.onMessageReceived(message);
 		}
@@ -179,6 +251,7 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 
 	@Override
 	public void onDeregistrarionSucceeded() {
+		outgoingMessages.pollFirst();
 		for (ChatEventListener l : eventListenerList) {
 			l.onDeregistrarionSucceeded();
 		}
@@ -186,6 +259,7 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 
 	@Override
 	public void onDeregistrationFailed() {
+		outgoingMessages.pollFirst();
 		for (ChatEventListener l : eventListenerList) {
 			l.onDeregistrationFailed();
 		}

@@ -12,6 +12,7 @@ import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.StrictMode;
+import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -115,6 +116,7 @@ public class RegisterActivity extends ListActivity implements ChatEventListener 
 		} else {
 			chatLogic = new ChatLogic(Utils.SyncType.VECTOR_CLOCK_SYNC);
 		}
+		chatLogic.addChatEventListener(this);
 		username = usernameEditText.getText().toString() + numberUsername.getText().toString();
 		chatLogic.register(username);
 	}
@@ -212,6 +214,7 @@ public class RegisterActivity extends ListActivity implements ChatEventListener 
 	@Override
 	public void onRegistrationSucceeded() {
 		//call back from the network, server accepted connection
+		Log.d(this.getClass().toString(), "registration succeeded");
 		Intent intent = new Intent(this, MainActivity.class);
 		Bundle bundle = new Bundle();
 		bundle.putSerializable(Utils.INTENT_ARG_CHAT, chatLogic);
@@ -223,6 +226,7 @@ public class RegisterActivity extends ListActivity implements ChatEventListener 
 
 	@Override
 	public void onRegistrationFailed(ChatFailureReason reason) {
+		Log.e(this.getClass().toString(), reason.getReasonString());
 		//call back from the network, server rejected connection
 		onLoginError(reason.getReasonString());
 	}
