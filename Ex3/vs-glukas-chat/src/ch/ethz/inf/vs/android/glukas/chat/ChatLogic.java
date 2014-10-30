@@ -23,8 +23,8 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 	
 	//networking
 	private static final long RECEIVE_TIMEOUT_MILLIS = 2000;
-	private AsyncNetwork asyncNetwork;
-	private Handler asyncNetworkCallbackHandler;
+	private AsyncNetwork asyncNetwork = new AsyncNetwork(Utils.SERVER_ADDRESS, Utils.SERVER_PORT_CHAT_TEST, this);
+	private Handler asyncNetworkCallbackHandler = new Handler();
 	private boolean sending = false;
 	private Runnable timeout = new Runnable() {
 		@Override
@@ -35,10 +35,10 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 
 	//protocol
 	private SyncType syncType;
-	private ResponseParser parser;
+	private ResponseParser parser = new ResponseParser(this);
 	
 	//messages
-	private Deque<MessageRequest> outgoingMessages;
+	private Deque<MessageRequest> outgoingMessages = new LinkedList<MessageRequest>();
 	
 	//sorting
 	private LamportSorting lampSorter;
@@ -49,12 +49,9 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 	 * @param vectorClockSync 
 	 * @param context The calling activity
 	 */
+	//TODO why do why need the username here?
 	public ChatLogic(SyncType syncType, String username) {
 		this.syncType = syncType;
-		asyncNetworkCallbackHandler = new Handler();
-		asyncNetwork = new AsyncNetwork(Utils.SERVER_ADDRESS,Utils.SERVER_PORT_CHAT_TEST, this);
-		parser = new ResponseParser(this);
-		outgoingMessages = new LinkedList<MessageRequest>();
 	}
 	
 	public void close() {
@@ -62,7 +59,6 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 	}
 	
 	private void asyncSendNext() {
-
 		if (!sending && !outgoingMessages.isEmpty()) {
 			sending = true;
 			
@@ -96,7 +92,7 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 	private void inconsistentResponse() {
 		Log.e(this.getClass().toString(), "inconsistent request/response pair");
 	}
-
+	
 	////
 	//ASYNC NETWORK DELEGATE
 	////
@@ -137,7 +133,7 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 
 	@Override
 	public void deregister() {
-		//TODO : deregister should be immediate
+		//TODO : should deregister be immediate?
 		String deregisterString = parser.getderegisterRequest();
 		outgoingMessages.add(new MessageRequest(0, deregisterString, MessageRequestType.deregister));
 		asyncSendNext();
@@ -156,13 +152,22 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 		outgoingMessages.add(new MessageRequest(0, getClientsString, MessageRequestType.getClients));
 		asyncSendNext();
 	}
+	
+	////
+	//CALLBACK FOR THE SEQUENCER
+	//Called when the message should be forwarded to the listeners (UI)
+	////
+	
+	public void onDisplayMessage(ChatMessage message) {
+		for (ChatEventListener l : eventListenerList) {
+			l.onMessageReceived(message);
+		}
+	}
 
 	////
 	//CHAT SERVER RESPONSE INTERFACE
 	//(Called by the Parser component)
 	////
-	
-	//TODO (Lukas) enqueue message send requests, on received ack we can go on
 	
 	@Override
 	public void onRegistrationSucceeded(int ownId, Lamport lamportClock, VectorClock vectorClock) {
@@ -176,7 +181,7 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 		} else {
 			inconsistentResponse();
 		}
-		
+		//TODO use new implementations (that are to come)
 		if (syncType.equals(SyncType.LAMPORT_SYNC)){
 			lampSorter = new LamportSorting(true, lamportClock, this);
 			vecClockSorter = new VectorClockSorting(false, vectorClock, this);
@@ -251,16 +256,10 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 
 	@Override
 	public void onMessageReceived(ChatMessage message) {
-		// TODO see if deliverable, if so deliver, otherwise enqueue
 		Log.i(this.getClass().toString(), "onMessageReceived");
+		//enqueue the message on the sequencers
 		lampSorter.onMessageReceived(message);
 		vecClockSorter.onMessageReceived(message);
-	}
-	
-	public void onDisplayMessage(ChatMessage message) {
-		for (ChatEventListener l : eventListenerList) {
-			l.onMessageReceived(message);
-		}
 	}
 
 	@Override
