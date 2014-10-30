@@ -1,9 +1,8 @@
 package ch.ethz.inf.vs.android.glukas.chat;
 
+import android.annotation.SuppressLint;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
-
 import org.json.JSONObject;
 
 /**
@@ -12,6 +11,7 @@ import org.json.JSONObject;
  * @author hong-an
  *
  */
+@SuppressLint("UseSparseArrays")
 public class VectorClock implements Comparable<VectorClock>{
 	/**
 	 * This should contain the vector clock

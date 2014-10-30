@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import ch.ethz.inf.vs.android.glukas.chat.R;
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -56,8 +55,16 @@ public class DisplayMessageAdapter extends BaseAdapter {
 	/**
 	 * Retrieving a message at a given position in the list
 	 */
-	public Object getItem(int position) {
+	public DisplayMessage getItem(int position) {
 		return mDisplayMessages.get(position);
+	}
+	
+	public void insertItem(DisplayMessage message) {
+		mDisplayMessages.add(message);
+	}
+	
+	public int getPosition(DisplayMessage message) {
+		return mDisplayMessages.indexOf(message);
 	}
 
 	@SuppressWarnings("deprecation")

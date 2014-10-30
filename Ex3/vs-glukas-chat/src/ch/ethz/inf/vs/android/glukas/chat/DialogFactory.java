@@ -26,7 +26,7 @@ public class DialogFactory {
 	}
 	
 	/**
-	 * Create a dialog non erasables
+	 * Create a dialog non erasable
 	 * @param text of the dialog
 	 * @param title of the dialog
 	 * @param context where to display the dialog

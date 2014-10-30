@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.StrictMode;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -30,7 +31,7 @@ public class MainActivity extends ListActivity implements ChatEventListener {
 	private final Handler callbackHandler = new Handler();
 	
 	//messages
-	private ArrayList<DisplayMessage> displayMessages;
+	private volatile ArrayList<DisplayMessage> displayMessages;
 	private DisplayMessageAdapter adapter;
 	private Map<Integer, String> clientIdToUsernameMap;
 	
@@ -81,7 +82,6 @@ public class MainActivity extends ListActivity implements ChatEventListener {
 		//Ask for users already in the chat
 		this.clientIdToUsernameMap = new HashMap<Integer, String>();
 		chat.getClients();
-		
 	}
 	
 	@Override
@@ -105,7 +105,9 @@ public class MainActivity extends ListActivity implements ChatEventListener {
 				String message = textInput.getText().toString();
 				DisplayMessage messageToSend = new DisplayMessage(textInput.getText().toString(), username, true, true);
 				displayMessageUser(messageToSend);
-				chat.sendMessage(message, displayMessages.size() - 1);
+				chat.sendMessage(message, adapter.getPosition(messageToSend));
+				Log.v("", "Id of the message is : "+adapter.getPosition(messageToSend) +" and size of the list : "+adapter.getCount());
+				textInput.setText("");
 			}
 		}
 	}
@@ -115,26 +117,36 @@ public class MainActivity extends ListActivity implements ChatEventListener {
 	////
 	
 	private void displayMessageUser(DisplayMessage message){
-		displayMessages.add(message);
+		//displayMessages.add(message);
+		adapter.insertItem(message);
 		adapter.notifyDataSetChanged();
-		textInput.setText("");
 		getListView().smoothScrollToPosition(adapter.getCount()-1);
 	}
 	
 	private void setTryToSendToSend(int id){
-		displayMessages.get(id).setSending(false);
+		//displayMessages.get(id);//.setSending(false);
+		//((DisplayMessage)adapter.getItem(id)).setSending(false);
+		//TODO Resolve the issue of Index out of bound
+		Log.v("", "Message correctly send");
 	}
 	
 	private void setTryToSendToFailure(int id, ChatFailureReason reason){
-		displayMessages.get(id).setSending(false);
+		/*displayMessages.get(id).setSending(false);
 		displayMessages.get(id).setHasFailed(true);
-		displayMessages.get(id).setReasonFailure(reason.getReasonString());
+		displayMessages.get(id).setReasonFailure(reason.getReasonString());*/
+		/*
+		DisplayMessage message = adapter.getItem(id);
+		message.setSending(false);
+		message.setHasFailed(true);
+		message.setReasonFailure(reason.getReasonString());*/
+		//TODO Resolve the issue of Index out of bound
+		Log.v("", "Message NOT correctly send");
 	}
 	
 	private void displayMessageSystem(DisplayMessage message){
-		displayMessages.add(message);
+		//displayMessages.add(message);
+		adapter.insertItem(message);
 		adapter.notifyDataSetChanged();
-		textInput.setText("");
 		getListView().smoothScrollToPosition(adapter.getCount()-1);
 	}
 

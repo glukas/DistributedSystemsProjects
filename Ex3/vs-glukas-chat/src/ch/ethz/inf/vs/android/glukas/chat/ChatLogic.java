@@ -1,23 +1,14 @@
 package ch.ethz.inf.vs.android.glukas.chat;
 
-import java.io.IOException;
-import java.io.ObjectStreamException;
-import java.io.Serializable;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.Map;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.os.Handler;
 import android.util.Log;
 import ch.ethz.inf.vs.android.glukas.chat.AsyncNetwork;
 import ch.ethz.inf.vs.android.glukas.chat.MessageRequest.MessageRequestType;
 import ch.ethz.inf.vs.android.glukas.chat.Utils;
-import ch.ethz.inf.vs.android.glukas.chat.Utils.ChatEventType;
 import ch.ethz.inf.vs.android.glukas.chat.Utils.SyncType;
 
 @SuppressLint("UseSparseArrays")
@@ -28,45 +19,39 @@ import ch.ethz.inf.vs.android.glukas.chat.Utils.SyncType;
  * @author hong-an
  *
  */
-public class ChatLogic extends ChatEventSource implements ChatClientRequestInterface, ChatServerRawResponseInterface, AsyncNetworkDelegate, Serializable {
+public class ChatLogic extends ChatEventSource implements ChatClientRequestInterface, ChatServerRawResponseInterface, AsyncNetworkDelegate {
 	
+	//networking
 	private static final long RECEIVE_TIMEOUT_MILLIS = 2000;
-	
-	private transient AsyncNetwork asyncNetwork;
-	private transient Handler asyncNetworkCallbackHandler;
-
-	private transient SyncType syncType;
-	
-	private transient ResponseParser parser;
-	
-	private transient Deque<MessageRequest> outgoingMessages;
-	
+	private AsyncNetwork asyncNetwork;
+	private Handler asyncNetworkCallbackHandler;
 	private boolean sending = false;
-	
-	private transient Runnable timeout = new Runnable() {
+	private Runnable timeout = new Runnable() {
 		@Override
 		public void run() {
 			onResponseTimedOut();
 		}
 	};
+
+	//protocol
+	private SyncType syncType;
+	private ResponseParser parser;
+	
+	//messages
+	private Deque<MessageRequest> outgoingMessages;
 	
 	/**
 	 * Constructor
 	 * @param vectorClockSync 
 	 * @param context The calling activity
 	 */
-	public ChatLogic(SyncType syncType) {
-		
+	public ChatLogic(SyncType syncType, String username) {
 		this.syncType = syncType;
 		asyncNetworkCallbackHandler = new Handler();
 		asyncNetwork = new AsyncNetwork(Utils.SERVER_ADDRESS,Utils.SERVER_PORT_CHAT_TEST, this);
 		parser = new ResponseParser();
 		parser.setDelegate(this);
 		outgoingMessages = new LinkedList<MessageRequest>();
-	}
-	
-	public void setSyncType(SyncType syncType) {
-		this.syncType = syncType;
 	}
 	
 	public void close() {
@@ -104,22 +89,7 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 	private void inconsistentResponse() {
 		Log.e(this.getClass().toString(), "inconsistent request/response pair");
 	}
-	
-	////
-	//SERIALIZATION
-	////
-	
-	private void writeObject(java.io.ObjectOutputStream out) throws IOException {
-	}
-	
-	private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
-		asyncNetworkCallbackHandler = new Handler();//TODO can we be sure that this is called on the UI thread?
-		asyncNetwork = new AsyncNetwork(Utils.SERVER_ADDRESS,Utils.SERVER_PORT_CHAT_TEST, this);
-		parser = new ResponseParser();
-		parser.setDelegate(this);
-		outgoingMessages = new LinkedList<MessageRequest>();
-		this.sending = false;
-	}
+
 	////
 	//ASYNC NETWORK DELEGATE
 	////
@@ -167,7 +137,7 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 
 	@Override
 	public void sendMessage(String message, int messageId) {
-		String messageString = 	parser.getsendMessageRequest(message, messageId);
+		String messageString = 	parser.getsendMessageRequest(message, messageId, null, null);
 		outgoingMessages.add(new MessageRequest(messageId, messageString, MessageRequestType.sendMessage));
 		asyncSendNext();
 	}
@@ -237,7 +207,7 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 
 	@Override
 	public void onMessageDeliverySucceeded() {
-		if (!outgoingMessages.isEmpty() && outgoingMessages.pollFirst().type == MessageRequestType.sendMessage) {
+		if (!outgoingMessages.isEmpty() && outgoingMessages.peekFirst().type == MessageRequestType.sendMessage) {
 			int id = outgoingMessages.pollFirst().id;
 			for (ChatEventListener l : eventListenerList) {
 				l.onMessageDeliverySucceeded(id);
@@ -304,5 +274,4 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 			l.onClientRegistered(clientId, clientUsername);
 		}
 	}
-
 }

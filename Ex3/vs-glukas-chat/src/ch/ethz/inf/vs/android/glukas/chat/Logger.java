@@ -5,9 +5,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-
 import ch.ethz.inf.vs.android.glukas.chat.Utils;
 import android.content.Context;
 import android.content.ContextWrapper;

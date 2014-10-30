@@ -1,10 +1,5 @@
 package ch.ethz.inf.vs.android.glukas.chat;
 
-import java.util.EventListener;
-import java.util.Map;
-
-import ch.ethz.inf.vs.android.glukas.chat.ChatEventSource.ChatEvent;
-
 import android.os.Handler;
 
 /**

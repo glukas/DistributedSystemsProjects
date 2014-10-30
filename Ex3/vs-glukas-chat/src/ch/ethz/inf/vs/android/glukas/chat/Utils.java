@@ -1,5 +1,6 @@
 package ch.ethz.inf.vs.android.glukas.chat;
 
+import android.annotation.SuppressLint;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -12,6 +13,7 @@ import org.json.JSONObject;
  * @author hong-an
  *
  */
+@SuppressLint("UseSparseArrays")
 public class Utils {
 	/**
 	 * Path to the log file

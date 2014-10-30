@@ -121,12 +121,15 @@ public class RegisterActivity extends ListActivity implements ChatEventListener 
 		} else {
 			ChatLogicFactory.setSyncType(Utils.SyncType.VECTOR_CLOCK_SYNC);
 		}
+
+		username = usernameEditText.getText().toString() + numberUsername.getText().toString();
+		ChatLogicFactory.setUsername(username);
 		chatLogic = ChatLogicFactory.getInstance();
 		chatLogic.addChatEventListener(this);
-		username = usernameEditText.getText().toString() + numberUsername.getText().toString();
 		chatLogic.register(username);
 		
 		//don't need to wait
+		//TODO : DEBUG, REMOVE ME WHEN NOT NEEDED ANYMORE
 		this.onRegistrationSucceeded();
 	}
 	
@@ -232,8 +235,8 @@ public class RegisterActivity extends ListActivity implements ChatEventListener 
 
 	@Override
 	public void onRegistrationFailed(ChatFailureReason reason) {
-		Log.e(this.getClass().toString(), reason.getReasonString());
 		//call back from the network, server rejected connection
+		Log.e(this.getClass().toString(), reason.getReasonString());
 		onLoginError(reason.getReasonString());
 	}
 	

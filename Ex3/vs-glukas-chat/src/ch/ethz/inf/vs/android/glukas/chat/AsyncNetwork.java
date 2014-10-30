@@ -1,8 +1,6 @@
 package ch.ethz.inf.vs.android.glukas.chat;
 
 import java.io.IOException;
-import java.util.Date;
-
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.util.Log;
