@@ -2,6 +2,8 @@ package ch.ethz.inf.vs.android.glukas.chat;
 
 import org.json.JSONObject;
 
+import android.util.Log;
+
 import ch.ethz.inf.vs.android.glukas.chat.Utils.ChatEventType;
 import ch.ethz.inf.vs.android.glukas.chat.Utils.SyncType;
 
@@ -54,6 +56,23 @@ public class ChatMessage extends ChatInteraction {
 	 * @param sync Method for determining if deliverable
 	 * @return
 	 */
+	
+	public boolean isNextMessage(ChatMessage message){
+		Integer difference = Integer.valueOf(message.lamportTime.toString()) - Integer.valueOf(this.lamportTime.toString());
+		Log.v("Differece :" , difference.toString());
+		if (difference > 1){
+			return false;
+		} 
+		else {
+			return true;}
+	}
+	
+	
+	public Lamport getLamport(){
+		return this.lamportTime;
+	}
+	
+	
 	public boolean isDeliverable(ChatMessage previous, SyncType sync) {
 		// TODO Fill me depending on sync...
 		return false;

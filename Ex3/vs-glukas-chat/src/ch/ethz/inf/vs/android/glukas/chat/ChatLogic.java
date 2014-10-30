@@ -176,14 +176,14 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 		} else {
 			inconsistentResponse();
 		}
-		
-		if (syncType.equals(SyncType.LAMPORT_SYNC)){
+		lampSorter = new LamportSorting(true, lamportClock, this);
+		/*if (syncType.equals(SyncType.LAMPORT_SYNC)){
 			lampSorter = new LamportSorting(true, lamportClock, this);
 			vecClockSorter = new VectorClockSorting(false, vectorClock, this);
 		} else if (syncType.equals(SyncType.VECTOR_CLOCK_SYNC)){
 			vecClockSorter = new VectorClockSorting(true, vectorClock, this);
 			lampSorter = new LamportSorting(false, lamportClock, this);
-		}
+		}*/
 	}
 
 	@Override
@@ -254,7 +254,7 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 		// TODO see if deliverable, if so deliver, otherwise enqueue
 		Log.i(this.getClass().toString(), "onMessageReceived");
 		lampSorter.onMessageReceived(message);
-		vecClockSorter.onMessageReceived(message);
+		//vecClockSorter.onMessageReceived(message);
 	}
 	
 	public void onDisplayMessage(ChatMessage message) {
