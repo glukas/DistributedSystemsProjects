@@ -145,7 +145,7 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 	@Override
 	public void getClients() {
 		String getClientsString = parser.getClientsRequest();
-		outgoingMessages.add(new MessageRequest(0, getClientsString, MessageRequestType.register));
+		outgoingMessages.add(new MessageRequest(0, getClientsString, MessageRequestType.getClients));
 		asyncSendNext();
 	}
 
