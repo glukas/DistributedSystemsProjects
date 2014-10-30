@@ -190,10 +190,8 @@ public class RegisterActivity extends ListActivity implements ChatEventListener 
 			String arg1 = usernameEditText.getText().toString();
 			String arg2 = numberUsername.getText().toString();
 			if (lamportRadio.isChecked()){
-				Log.v("","Lamport radio checked");
 				onRememberMe(arg1, arg2, false);
 			} else {
-				Log.v("","Lamport radio NOT checked");
 				onRememberMe(arg1, arg2, true);
 			}
 		} else {

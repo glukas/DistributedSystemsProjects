@@ -47,9 +47,7 @@ public class AsyncNetwork {
 			public void run() {
 				try {
 					while(alive){
-						Log.v("", "Waiting to receive");
 						final String reply = comm.receiveReply();
-						Log.v(this.getClass().toString(), reply);
 						postResponseToDelegate(reply);
 					}
 				} catch (IOException e) {

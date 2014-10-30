@@ -167,6 +167,8 @@ public class ResponseParser {
 	}
 	
 	private void onNotification(JSONObject jObject) throws JSONException {
+		//TODO : call onClientRegister();
+		//TODO : call onClientDeregister();
 		ChatMessage notificationMessage = new ChatMessage(
 				ChatEventType.SOME_STATE, 0, jObject.getString(Cmd.TEXT.getStr()), null, null, 0,
 				null);
