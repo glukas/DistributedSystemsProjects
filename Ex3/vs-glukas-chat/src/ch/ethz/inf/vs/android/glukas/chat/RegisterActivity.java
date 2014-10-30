@@ -127,10 +127,6 @@ public class RegisterActivity extends ListActivity implements ChatEventListener 
 		chatLogic = ChatLogicFactory.getInstance();
 		chatLogic.addChatEventListener(this);
 		chatLogic.register(username);
-		
-		//don't need to wait
-		//TODO : DEBUG, REMOVE ME WHEN NOT NEEDED ANYMORE
-		this.onRegistrationSucceeded();
 	}
 	
 	private boolean haveNetworkConnection() {
@@ -154,7 +150,7 @@ public class RegisterActivity extends ListActivity implements ChatEventListener 
 			usernameEditText.setText(preferences.getString(Settings.USERNAME, ""));
 			numberUsername.setText(preferences.getString(Settings.NUMBER_USERNAME, ""));
 			checkBox.setChecked(true);
-			if (preferences.getBoolean(Settings.SYNC_TYPE, false)){
+			if (preferences.getBoolean(Settings.SYNC_TYPE, true)){
 				lamportRadio.setChecked(false);
 				vectorClockRadio.setChecked(true);
 			} else {
@@ -171,9 +167,9 @@ public class RegisterActivity extends ListActivity implements ChatEventListener 
 		preferencesEditor.putString(Settings.NUMBER_USERNAME, numberUsernameArg);
 		preferencesEditor.putBoolean(Settings.REMEMBER_ME_STR, true);
 		if (syncTypeArg) {
-			preferencesEditor.putBoolean(Settings.SYNC_TYPE, false);
-		} else {
 			preferencesEditor.putBoolean(Settings.SYNC_TYPE, true);
+		} else {
+			preferencesEditor.putBoolean(Settings.SYNC_TYPE, false);
 		}
 		preferencesEditor.apply();
 	}
@@ -194,8 +190,10 @@ public class RegisterActivity extends ListActivity implements ChatEventListener 
 			String arg1 = usernameEditText.getText().toString();
 			String arg2 = numberUsername.getText().toString();
 			if (lamportRadio.isChecked()){
+				Log.v("","Lamport radio checked");
 				onRememberMe(arg1, arg2, false);
 			} else {
+				Log.v("","Lamport radio NOT checked");
 				onRememberMe(arg1, arg2, true);
 			}
 		} else {
@@ -227,7 +225,6 @@ public class RegisterActivity extends ListActivity implements ChatEventListener 
 	@Override
 	public void onRegistrationSucceeded() {
 		//call back from the network, server accepted connection
-		Log.d(this.getClass().toString(), "registration succeeded");
 		Intent intent = new Intent(this, MainActivity.class);
 		intent.putExtra(Utils.INTENT_ARG_USERNAME, username);
 		startActivity(intent);

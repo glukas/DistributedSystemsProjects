@@ -40,7 +40,7 @@ public class MainActivity extends ListActivity implements ChatEventListener {
 	
 	//Logger
 	//TODO : use the logger to log messages
-	private Logger logger;
+	//private Logger logger;
 	
 	////
 	//Life cycle
@@ -73,7 +73,8 @@ public class MainActivity extends ListActivity implements ChatEventListener {
 		setListAdapter(adapter);
 		
 		//Logger
-		logger = new Logger(username, this);
+		//TODO : Use logger
+		//logger = new Logger(username, this);
 		
 		//display greetings
 		this.displayMessageSystem(new DisplayMessage(true, getResources().getString(R.string.enter_chat_greetings),
@@ -105,8 +106,8 @@ public class MainActivity extends ListActivity implements ChatEventListener {
 				String message = textInput.getText().toString();
 				DisplayMessage messageToSend = new DisplayMessage(textInput.getText().toString(), username, true, true);
 				displayMessageUser(messageToSend);
-				chat.sendMessage(message, adapter.getPosition(messageToSend));
-				Log.v("", "Id of the message is : "+adapter.getPosition(messageToSend) +" and size of the list : "+adapter.getCount());
+				chat.sendMessage(message, displayMessages.indexOf(messageToSend));
+				Log.v("", "Id of the message is : "+adapter.getPosition(messageToSend) +" and size of the list : "+displayMessages.indexOf(messageToSend));
 				textInput.setText("");
 			}
 		}
@@ -117,40 +118,31 @@ public class MainActivity extends ListActivity implements ChatEventListener {
 	////
 	
 	private void displayMessageUser(DisplayMessage message){
-		//displayMessages.add(message);
-		adapter.insertItem(message);
+		displayMessages.add(message);
 		adapter.notifyDataSetChanged();
 		getListView().smoothScrollToPosition(adapter.getCount()-1);
 	}
 	
 	private void setTryToSendToSend(int id){
-		//displayMessages.get(id);//.setSending(false);
-		//((DisplayMessage)adapter.getItem(id)).setSending(false);
-		//TODO Resolve the issue of Index out of bound
 		Log.v("", "Message correctly send");
+		displayMessages.get(id).setSending(false);
 	}
 	
 	private void setTryToSendToFailure(int id, ChatFailureReason reason){
-		/*displayMessages.get(id).setSending(false);
-		displayMessages.get(id).setHasFailed(true);
-		displayMessages.get(id).setReasonFailure(reason.getReasonString());*/
-		/*
-		DisplayMessage message = adapter.getItem(id);
-		message.setSending(false);
-		message.setHasFailed(true);
-		message.setReasonFailure(reason.getReasonString());*/
-		//TODO Resolve the issue of Index out of bound
 		Log.v("", "Message NOT correctly send");
+		displayMessages.get(id).setSending(false);
+		displayMessages.get(id).setHasFailed(true);
+		displayMessages.get(id).setReasonFailure(reason.getReasonString());
 	}
 	
 	private void displayMessageSystem(DisplayMessage message){
-		//displayMessages.add(message);
-		adapter.insertItem(message);
+		displayMessages.add(message);
 		adapter.notifyDataSetChanged();
 		getListView().smoothScrollToPosition(adapter.getCount()-1);
 	}
 
 	private String getUsernameById(int id){
+		Log.v("","MAP : "+clientIdToUsernameMap.toString());
 		String name = clientIdToUsernameMap.get(id);
 		return name != null ? name : getResources().getString(R.string.unknown);
 	}
@@ -166,6 +158,7 @@ public class MainActivity extends ListActivity implements ChatEventListener {
 
 	@Override
 	public void onGetClientMapping(Map<Integer, String> clientIdToUsernameMap) {
+		Log.v("","Get client mapping : "+clientIdToUsernameMap.toString());
 		this.clientIdToUsernameMap = clientIdToUsernameMap;
 	}
 

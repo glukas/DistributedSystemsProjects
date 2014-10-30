@@ -15,7 +15,7 @@ public class Lamport implements Comparable<Lamport> {
 	 * Constructor
 	 */
 	public Lamport() {
-		this.value = -1;
+		this.value = 0;
 	}
 
 	/**
@@ -54,5 +54,9 @@ public class Lamport implements Comparable<Lamport> {
 	public String toString() {
 		// TODO Fill me
 		return String.valueOf(this.value);
+	}
+	
+	public int getTimestamp(){
+		return this.value;
 	}
 }

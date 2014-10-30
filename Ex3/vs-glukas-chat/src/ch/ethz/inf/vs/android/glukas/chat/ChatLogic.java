@@ -49,8 +49,7 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 		this.syncType = syncType;
 		asyncNetworkCallbackHandler = new Handler();
 		asyncNetwork = new AsyncNetwork(Utils.SERVER_ADDRESS,Utils.SERVER_PORT_CHAT_TEST, this);
-		parser = new ResponseParser();
-		parser.setDelegate(this);
+		parser = new ResponseParser(this);
 		outgoingMessages = new LinkedList<MessageRequest>();
 	}
 	
@@ -105,7 +104,7 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 		Log.d(this.getClass().toString(), "onReceive : " + message);
 		this.sending = false;
 		parser.parseResponse(message);
-		//asyncSendNext();
+		asyncSendNext();
 	}
 	
 	@Override
@@ -113,7 +112,7 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 		this.getCallbackHandler().removeCallbacks(timeout);
 		this.sending = false;
 		this.onMessageDeliveryFailed(ChatFailureReason.noNetwork);
-		//asyncSendNext();
+		asyncSendNext();
 	}
 	
 	////
@@ -130,6 +129,7 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 
 	@Override
 	public void deregister() {
+		//TODO : deregister should be immediate
 		String deregisterString = parser.getderegisterRequest();
 		outgoingMessages.add(new MessageRequest(0, deregisterString, MessageRequestType.deregister));
 		asyncSendNext();
@@ -137,7 +137,7 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 
 	@Override
 	public void sendMessage(String message, int messageId) {
-		String messageString = 	parser.getsendMessageRequest(message, messageId, null, null);
+		String messageString = 	parser.getsendMessageRequest(message, new Lamport(), new VectorClock());
 		outgoingMessages.add(new MessageRequest(messageId, messageString, MessageRequestType.sendMessage));
 		asyncSendNext();
 	}
@@ -185,6 +185,7 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 
 	@Override
 	public void onGetClientMapping(Map<Integer, String> clientIdToUsernameMap) {
+		Log.d(this.getClass().toString(), "onGetClientMapping");
 		if (!outgoingMessages.isEmpty() && outgoingMessages.pollFirst().type == MessageRequestType.getClients) {
 			for (ChatEventListener l : eventListenerList) {
 				l.onGetClientMapping(clientIdToUsernameMap);
@@ -219,7 +220,7 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 
 	@Override
 	public void onMessageDeliveryFailed(ChatFailureReason reason) {
-		if (!outgoingMessages.isEmpty() && outgoingMessages.pollFirst().type == MessageRequestType.sendMessage) {
+		if (!outgoingMessages.isEmpty() && outgoingMessages.peekFirst().type == MessageRequestType.sendMessage) {
 			int id = outgoingMessages.pollFirst().id;
 			for (ChatEventListener l : eventListenerList) {
 				l.onMessageDeliveryFailed(reason, id);
@@ -240,7 +241,7 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 
 	@Override
 	public void onDeregistrarionSucceeded() {
-		if (!outgoingMessages.isEmpty() && outgoingMessages.pollFirst().type == MessageRequestType.deregister) {
+		if (!outgoingMessages.isEmpty() && outgoingMessages.peekFirst().type == MessageRequestType.deregister) {
 			for (ChatEventListener l : eventListenerList) {
 				l.onDeregistrarionSucceeded();
 			}
@@ -252,7 +253,7 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 
 	@Override
 	public void onDeregistrationFailed() {
-		if (!outgoingMessages.isEmpty() && outgoingMessages.pollFirst().type == MessageRequestType.deregister) {
+		if (!outgoingMessages.isEmpty() && outgoingMessages.peekFirst().type == MessageRequestType.deregister) {
 			for (ChatEventListener l : eventListenerList) {
 				l.onDeregistrationFailed();
 			}

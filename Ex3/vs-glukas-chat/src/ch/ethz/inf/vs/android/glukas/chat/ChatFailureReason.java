@@ -9,7 +9,8 @@ public enum ChatFailureReason {
 	notOnETHSubnet("not on ETH subnet"),
 	timeout("timeout"),
 	unknownCommand("unknown command"),
-	noNetwork("no network");
+	noNetwork("no network"),
+	unknown("unknown failure");
 		
 	private final String reasonString;
 	
@@ -19,5 +20,18 @@ public enum ChatFailureReason {
 	
 	public String getReasonString(){
 		return this.reasonString;
+	}
+	
+	public static ChatFailureReason getReasonFromString(String reason){
+		try{
+			for (ChatFailureReason r : ChatFailureReason.values()){
+				if (reason.startsWith(r.getReasonString())){
+					return r;
+				}
+			}
+			return ChatFailureReason.unknown;
+		} catch (Exception ex){
+			return ChatFailureReason.unknown;
+		}
 	}
 };

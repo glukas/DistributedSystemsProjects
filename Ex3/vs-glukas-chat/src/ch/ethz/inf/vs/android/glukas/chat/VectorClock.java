@@ -31,6 +31,11 @@ public class VectorClock implements Comparable<VectorClock>{
 		this.ownIndex = -1;
 	}
 	
+	public VectorClock(HashMap<Integer, Integer> initClock) {
+		this.clock = initClock;
+		this.ownIndex = -1;
+	}
+	
 	/**
 	 * Constructor
 	 * @param initClock
