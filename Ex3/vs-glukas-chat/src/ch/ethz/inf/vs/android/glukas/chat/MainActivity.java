@@ -12,7 +12,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.StrictMode;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -107,7 +106,6 @@ public class MainActivity extends ListActivity implements ChatEventListener {
 				DisplayMessage messageToSend = new DisplayMessage(textInput.getText().toString(), username, true, true);
 				displayMessageUser(messageToSend);
 				chat.sendMessage(message, displayMessages.indexOf(messageToSend));
-				Log.v("", "Id of the message is : "+adapter.getPosition(messageToSend) +" and size of the list : "+displayMessages.indexOf(messageToSend));
 				textInput.setText("");
 			}
 		}
@@ -124,15 +122,15 @@ public class MainActivity extends ListActivity implements ChatEventListener {
 	}
 	
 	private void setTryToSendToSend(int id){
-		Log.v("", "Message correctly send");
 		displayMessages.get(id).setSending(false);
+		adapter.notifyDataSetChanged();
 	}
 	
 	private void setTryToSendToFailure(int id, ChatFailureReason reason){
-		Log.v("", "Message NOT correctly send");
 		displayMessages.get(id).setSending(false);
 		displayMessages.get(id).setHasFailed(true);
 		displayMessages.get(id).setReasonFailure(reason.getReasonString());
+		adapter.notifyDataSetChanged();
 	}
 	
 	private void displayMessageSystem(DisplayMessage message){
@@ -142,7 +140,6 @@ public class MainActivity extends ListActivity implements ChatEventListener {
 	}
 
 	private String getUsernameById(int id){
-		Log.v("","MAP : "+clientIdToUsernameMap.toString());
 		String name = clientIdToUsernameMap.get(id);
 		return name != null ? name : getResources().getString(R.string.unknown);
 	}
@@ -158,7 +155,6 @@ public class MainActivity extends ListActivity implements ChatEventListener {
 
 	@Override
 	public void onGetClientMapping(Map<Integer, String> clientIdToUsernameMap) {
-		Log.v("","Get client mapping : "+clientIdToUsernameMap.toString());
 		this.clientIdToUsernameMap = clientIdToUsernameMap;
 	}
 

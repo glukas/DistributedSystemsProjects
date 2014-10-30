@@ -250,7 +250,6 @@ public class ResponseParser {
 	private Map<Integer, String> getClients(JSONObject jObject) throws JSONException {
 		Map<Integer, String> clientMap = new HashMap<Integer, String>();
 		String clientString = jObject.getString(Cmd.CLIENTS.getStr());
-		Log.v("", "Has client string : "+clientString);
 		JSONObject clientJSON = new JSONObject(clientString);
 		Iterator<?> keys = clientJSON.keys();
 		while (keys.hasNext()) {
@@ -258,7 +257,6 @@ public class ResponseParser {
 			Integer keyInteger = Integer.valueOf(keyString);
 			clientMap.put(keyInteger, clientJSON.getString(keyString));
 		}
-		Log.v("", "Return the map : "+clientMap.toString());
 		return clientMap;
 	}
 }
