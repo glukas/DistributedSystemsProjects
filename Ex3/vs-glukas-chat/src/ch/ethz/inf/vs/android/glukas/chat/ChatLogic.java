@@ -72,17 +72,21 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 	private void onResponseTimedOut() {
 		this.sending = false;
 		Log.d(this.getClass().toString(), "timed out " + this.outgoingMessages.peekFirst().message);
-		switch(this.outgoingMessages.peek().type) {
-		case register : this.onRegistrationFailed(ChatFailureReason.timeout);
+		dispatchFailure(ChatFailureReason.timeout);
+		asyncSendNext();
+	}
+	
+	private void dispatchFailure(ChatFailureReason reason) {
+		switch(this.outgoingMessages.pollFirst().type) {
+		case register : this.onRegistrationFailed(reason);
 			break;
 		case deregister: this.onDeregistrationFailed();
 			break;
-		case getClients: this.onGetClientMappingFailed(ChatFailureReason.timeout);
+		case getClients: this.onGetClientMappingFailed(reason);
 			break;
-		case sendMessage: this.onMessageDeliveryFailed(ChatFailureReason.timeout);
+		case sendMessage: this.onMessageDeliveryFailed(reason);
 			break;
 		}
-		asyncSendNext();
 	}
 	
 	private void inconsistentResponse() {
@@ -111,7 +115,7 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 	public void onDeliveryFailed() {
 		this.getCallbackHandler().removeCallbacks(timeout);
 		this.sending = false;
-		this.onMessageDeliveryFailed(ChatFailureReason.noNetwork);
+		dispatchFailure(ChatFailureReason.noNetwork);
 		asyncSendNext();
 	}
 	
