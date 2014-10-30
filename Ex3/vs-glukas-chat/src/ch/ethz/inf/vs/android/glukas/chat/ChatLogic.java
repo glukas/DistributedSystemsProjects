@@ -77,7 +77,7 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 	}
 	
 	private void dispatchFailure(ChatFailureReason reason) {
-		switch(this.outgoingMessages.pollFirst().type) {
+		switch(this.outgoingMessages.peekFirst().type) {
 		case register : this.onRegistrationFailed(reason);
 			break;
 		case deregister: this.onDeregistrationFailed();
