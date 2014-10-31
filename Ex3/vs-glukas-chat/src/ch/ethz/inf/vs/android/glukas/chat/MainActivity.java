@@ -6,6 +6,12 @@ import java.util.Map;
 import ch.ethz.inf.vs.android.glukas.chat.DisplayMessage;
 import ch.ethz.inf.vs.android.glukas.chat.DisplayMessageAdapter;
 import ch.ethz.inf.vs.android.glukas.chat.R;
+import ch.ethz.inf.vs.android.glukas.protocol.ChatEventListener;
+import ch.ethz.inf.vs.android.glukas.protocol.ChatFailureReason;
+import ch.ethz.inf.vs.android.glukas.protocol.ChatLogic;
+import ch.ethz.inf.vs.android.glukas.protocol.ChatLogicFactory;
+import ch.ethz.inf.vs.android.glukas.protocol.ChatMessage;
+import ch.ethz.inf.vs.android.glukas.protocol.Utils;
 import android.annotation.SuppressLint;
 import android.app.ListActivity;
 import android.content.Intent;
@@ -147,11 +153,6 @@ public class MainActivity extends ListActivity implements ChatEventListener {
 	////
 	//Chat event listener
 	////
-	
-	@Override
-	public Handler getCallbackHandler() {
-		return this.callbackHandler;
-	}
 
 	@Override
 	public void onGetClientMapping(Map<Integer, String> clientIdToUsernameMap) {
@@ -169,8 +170,8 @@ public class MainActivity extends ListActivity implements ChatEventListener {
 	}
 
 	@Override
-	public void onMessageReceived(ChatMessage message) {
-		displayMessageUser(new DisplayMessage(message.getText(), getUsernameById(message.getSenderId()), false));
+	public void onMessageReceived(String text, int userId) {
+		displayMessageUser(new DisplayMessage(text, getUsernameById(userId), false));
 	}
 
 	@Override

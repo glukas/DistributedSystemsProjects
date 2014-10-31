@@ -2,6 +2,8 @@ package ch.ethz.inf.vs.android.glukas.chat;
 
 import java.io.Serializable;
 
+import ch.ethz.inf.vs.android.glukas.protocol.Utils;
+
 /**
  * Message is a Custom Object to encapsulate message information/fields
  * 

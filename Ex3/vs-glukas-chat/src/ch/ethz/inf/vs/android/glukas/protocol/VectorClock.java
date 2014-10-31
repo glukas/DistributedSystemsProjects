@@ -1,4 +1,4 @@
-package ch.ethz.inf.vs.android.glukas.chat;
+package ch.ethz.inf.vs.android.glukas.protocol;
 
 import android.annotation.SuppressLint;
 import java.util.HashMap;
@@ -78,7 +78,30 @@ public class VectorClock implements SyntheticClock<VectorClock> {
 		this.clock = toCompare.clock;
 	}
 
+
+	//TODO does this belong in the parser?
 	@Override
+	/**
+	 * This function should return a String representation of the
+	 * VectorClock
+	 * @return String that represents tha VectorClock
+	 */
+	public String toString(){
+		// TODO Fill me
+		
+		String result = "{";
+		for(Map.Entry<Integer, Integer> entry : clock.entrySet()){
+			result += "\""+ String.valueOf(entry.getKey()) + "\" : "  + String.valueOf(entry.getValue())+  ","; 
+		}
+		result += "}";
+		result = result.replace (",}", "}");
+		return result;
+	}
+	
+	////
+	//SYNTHETIC CLOCK
+	////
+	
 	/**
 	 * This function allows to compare VectorClocks
 	 * @param another The VectorClock that ours should be compared to
@@ -125,28 +148,18 @@ public class VectorClock implements SyntheticClock<VectorClock> {
 
 	}
 
-	@Override
-	/**
-	 * This function should return a String representation of the
-	 * VectorClock
-	 * @return String that represents tha VectorClock
-	 */
-	public String toString() {
-		// TODO Fill me
 
-		String result = "{";
-		for (Map.Entry<Integer, Integer> entry : clock.entrySet()) {
-			result += "\"" + String.valueOf(entry.getKey()) + "\" : "
-					+ String.valueOf(entry.getValue()) + ",";
-		}
-		result += "}";
-		result = result.replace(",}", "}");
-		return result;
-	}
+
+
 
 	@Override
 	public boolean isDeliverable(VectorClock lastDeliveredMessage) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	public VectorClock getClock() {
+		return this;
 	}
 }

@@ -1,15 +1,22 @@
-package ch.ethz.inf.vs.android.glukas.chat;
+package ch.ethz.inf.vs.android.glukas.protocol;
 
-import java.util.EventListener;
 import java.util.Map;
 
-public interface ChatServerRawResponseInterface extends EventListener {
+
+import android.os.Handler;
+
+/**
+ * This class is intercepting events triggered by the logic.
+ * @author hong-an
+ *
+ */
+public interface ChatEventListener {
 
 	////
 	//CALLBACKS FOR RESPONSES BY THE SERVER
 	////
 	
-	void onRegistrationSucceeded(int ownId, Lamport lamportClock, VectorClock vectorClock);
+	void onRegistrationSucceeded();
 	
 	void onRegistrationFailed(ChatFailureReason reason);
 	
@@ -19,12 +26,12 @@ public interface ChatServerRawResponseInterface extends EventListener {
 	void onGetClientMappingFailed(ChatFailureReason reason);
 	
 	
-	void onMessageDeliverySucceeded();
+	void onMessageDeliverySucceeded(int id);
 	
-	void onMessageDeliveryFailed(ChatFailureReason reason);
+	void onMessageDeliveryFailed(ChatFailureReason reason, int id);
 	
 	
-	void onMessageReceived(ChatMessage message);
+	void onMessageReceived(String message, int userId);
 
 	
 	void onDeregistrarionSucceeded();
@@ -35,6 +42,5 @@ public interface ChatServerRawResponseInterface extends EventListener {
 	void onClientDeregistered(Integer clientId, String clientUsername);
 	
 	void onClientRegistered(Integer clientId, String clientUsername);
-	
 	
 }

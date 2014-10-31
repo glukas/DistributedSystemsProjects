@@ -1,6 +1,7 @@
-package ch.ethz.inf.vs.android.glukas.chat;
+package ch.ethz.inf.vs.android.glukas.protocol;
 
-import ch.ethz.inf.vs.android.glukas.chat.Utils.SyncType;
+import ch.ethz.inf.vs.android.glukas.protocol.SyncType;
+
 
 public class ChatLogicFactory {
 	
@@ -12,7 +13,7 @@ public class ChatLogicFactory {
 			if (syncType != null){
 				instance = new ChatLogic(syncType);
 			} else {
-				instance = new ChatLogic(Utils.SyncType.LAMPORT_SYNC);
+				instance = new ChatLogic(SyncType.LAMPORT_SYNC);
 			}
 		}
 		return instance;

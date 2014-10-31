@@ -1,15 +1,15 @@
-package ch.ethz.inf.vs.android.glukas.chat;
+package ch.ethz.inf.vs.android.glukas.protocol;
 
+import java.util.Date;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.Map;
 import android.annotation.SuppressLint;
 import android.os.Handler;
 import android.util.Log;
-import ch.ethz.inf.vs.android.glukas.chat.AsyncNetwork;
-import ch.ethz.inf.vs.android.glukas.chat.MessageRequest.MessageRequestType;
-import ch.ethz.inf.vs.android.glukas.chat.Utils;
-import ch.ethz.inf.vs.android.glukas.chat.Utils.SyncType;
+import ch.ethz.inf.vs.android.glukas.chat.network.AsyncNetwork;
+import ch.ethz.inf.vs.android.glukas.chat.network.AsyncNetworkDelegate;
+import ch.ethz.inf.vs.android.glukas.protocol.MessageRequest.MessageRequestType;
 
 @SuppressLint("UseSparseArrays")
 /**
@@ -19,7 +19,7 @@ import ch.ethz.inf.vs.android.glukas.chat.Utils.SyncType;
  * @author hong-an
  *
  */
-public class ChatLogic extends ChatEventSource implements ChatClientRequestInterface, ChatServerRawResponseInterface, ChatDisplayMessageInterface, AsyncNetworkDelegate {
+public class ChatLogic extends ChatEventSource implements ChatClientRequestInterface, ChatServerRawResponseInterface, MessageSequencerDelegate, AsyncNetworkDelegate {
 	
 	//networking
 	private static final long RECEIVE_TIMEOUT_MILLIS = 2000;
@@ -41,8 +41,8 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 	private Deque<MessageRequest> outgoingMessages = new LinkedList<MessageRequest>();
 	
 	//sorting
-	private MessageSequencerInterface lampSorter;
-	private MessageSequencerInterface vecClockSorter;
+	private MessageSequencerInterface<Lamport> lampSorter;
+	private MessageSequencerInterface<VectorClock> vecClockSorter;
 	
 	/**
 	 * Constructor
@@ -140,9 +140,8 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 
 	@Override
 	public void sendMessage(String message, int messageId) {
-		//TODO
-		//String messageString = 	parser.getsendMessageRequest(message, lampSorter.getLastDeliveredMessage()., vecClockSorter.getClock());
-		//outgoingMessages.add(new MessageRequest(messageId, messageString, MessageRequestType.sendMessage));
+		String messageString = 	parser.getsendMessageRequest(message, lampSorter.getLastDeliveredMessage().clock.getClock(), vecClockSorter.getLastDeliveredMessage().clock.getClock());
+		outgoingMessages.add(new MessageRequest(messageId, messageString, MessageRequestType.sendMessage));
 		asyncSendNext();
 	}
 
@@ -159,9 +158,9 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 	////
 	
 	@Override
-	public void onDisplayMessage(ChatMessage message) {
+	public void onDisplayMessage(String message, int userId) {
 		for (ChatEventListener l : eventListenerList) {
-			l.onMessageReceived(message);
+			l.onMessageReceived(message, userId);
 		}
 	}
 
@@ -172,25 +171,32 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 	
 	@Override
 	public void onRegistrationSucceeded(int ownId, Lamport lamportClock, VectorClock vectorClock) {
-		//TODO (Lukas) some housekeeping (keep track of ownId, lamportClock, vectorClock)
+		//TODO (Lukas) some housekeeping (keep track of ownId?)
 		Log.i(this.getClass().toString(), "onRegistrationSucceeded");
 		//remove the first message from the queue and check if it has the right type (it should!)
 		if (!outgoingMessages.isEmpty() && outgoingMessages.pollFirst().type == MessageRequestType.register) {
 			for (ChatEventListener l : eventListenerList) {
 				l.onRegistrationSucceeded();
 			}
+			
+			//create initial messages
+			long timestamp = new Date().getTime();
+			ChatMessage<Lamport> lamportMessage = new ChatMessage<Lamport>(-1, "", lamportClock, timestamp);
+			ChatMessage<VectorClock> vectorClockMessage = new ChatMessage<VectorClock>(-1, "", vectorClock, timestamp);
+			
+			//initialize the sorting
+			if (syncType.equals(SyncType.LAMPORT_SYNC)){
+				lampSorter = new MessageSequencer<Lamport>(this, lamportMessage);
+				vecClockSorter = new MessageSequencer<VectorClock>(null, vectorClockMessage);
+			} else if (syncType.equals(SyncType.VECTOR_CLOCK_SYNC)){
+				lampSorter = new MessageSequencer<Lamport>(null, lamportMessage);
+				vecClockSorter = new MessageSequencer<VectorClock>(this, vectorClockMessage);
+			}
+			
 		} else {
 			inconsistentResponse();
 		}
-		
-		//initialize the sorting TODO
-		/*if (syncType.equals(SyncType.LAMPORT_SYNC)){
-			lampSorter = new MessageSequencer<Lamport>(true, this, lamportClock);
-			vecClockSorter = new MessageSequencer<VectorClock>(false, this, vectorClock);
-		} else if (syncType.equals(SyncType.VECTOR_CLOCK_SYNC)){
-			lampSorter = new MessageSequencer<Lamport>(false, this, lamportClock);
-			vecClockSorter = new MessageSequencer<VectorClock>(true, this, vectorClock);
-		}*/
+
 	}
 
 	@Override
@@ -256,13 +262,10 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 		}
 	}
 
-	@Override
+	/*@Override
 	public void onMessageReceived(ChatMessage message) {
-		Log.i(this.getClass().toString(), "onMessageReceived");
-		//enqueue the message on the sequencers
-		lampSorter.onMessageReceived(message);
-		vecClockSorter.onMessageReceived(message);
-	}
+
+	}*/
 
 	@Override
 	public void onDeregistrarionSucceeded() {
@@ -303,5 +306,14 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 		for (ChatEventListener l : eventListenerList) {
 			l.onClientRegistered(clientId, clientUsername);
 		}
+	}
+
+	@Override
+	public void onMessageReceived(String message, int userId, Lamport lamportClock, VectorClock vectorClock) {
+		Log.i(this.getClass().toString(), "onMessageReceived");
+		//enqueue the message on the sequencers
+		long timestamp = new Date().getTime();
+		lampSorter.onMessageReceived(new ChatMessage<Lamport>(userId, message, lamportClock, timestamp));
+		vecClockSorter.onMessageReceived(new ChatMessage<VectorClock>(userId, message, vectorClock, timestamp));
 	}
 }

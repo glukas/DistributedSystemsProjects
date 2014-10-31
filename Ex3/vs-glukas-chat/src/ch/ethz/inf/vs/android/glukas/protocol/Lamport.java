@@ -1,4 +1,5 @@
-package ch.ethz.inf.vs.android.glukas.chat;
+package ch.ethz.inf.vs.android.glukas.protocol;
+
 
 /**
  * This class should be used for abstracting Lamport timestamps
@@ -36,7 +37,26 @@ public class Lamport implements SyntheticClock<Lamport> {
 		this.value = toCompare.value;
 	}
 
+	//TODO does this belong in the parser?
 	@Override
+	/**
+	 * This function returns the String representation of the
+	 * class
+	 * @return String representation of Lamport timestamps
+	 */
+	public String toString() {
+		// TODO Fill me
+		return String.valueOf(this.value);
+	}
+	
+	public int getTimestamp(){
+		return this.value;
+	}
+	
+	////
+	//SYNTHETIC CLOCK
+	////
+
 	/**
 	 * This function compares two Lamport timestamps.
 	 * @param toCompare The newly received Lamport timestamp
@@ -52,30 +72,18 @@ public class Lamport implements SyntheticClock<Lamport> {
 		else if (this.value == toCompare.value){
 			return 0;
 		}
-		
-		
-		
 		return 0;
 	}
-
-	@Override
-	/**
-	 * This function returns the String representation of the
-	 * class
-	 * @return String representation of Lamport timestamps
-	 */
-	public String toString() {
-		// TODO Fill me
-		return String.valueOf(this.value);
-	}
 	
-	public int getTimestamp(){
-		return this.value;
-	}
 
 	@Override
 	public boolean isDeliverable(Lamport lastDeliveredMessage) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	public Lamport getClock() {
+		return this;
 	}
 }

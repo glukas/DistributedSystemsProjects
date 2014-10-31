@@ -5,7 +5,9 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Serializable;
-import ch.ethz.inf.vs.android.glukas.chat.Utils;
+
+import ch.ethz.inf.vs.android.glukas.protocol.ChatMessage;
+import ch.ethz.inf.vs.android.glukas.protocol.Utils;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.util.Log;
