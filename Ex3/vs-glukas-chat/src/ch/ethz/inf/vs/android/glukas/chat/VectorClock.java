@@ -72,8 +72,47 @@ public class VectorClock implements SyntheticClock<VectorClock> {
 	 * @param another The VectorClock that ours should be compared to
 	 */
 	public int compareTo(VectorClock toCompare) {
-		// TODO Auto-generated method stub
-		return 0;
+		// VectorClock Comparison by element 
+		
+		Integer isSmaller = 0;
+		for (Integer element : this.clock.keySet()){
+			if (this.clock.get(element) < toCompare.clock.get(element))
+			{
+				if (isSmaller == 1){
+					return this.IndexcompareTo(toCompare);
+				}
+				isSmaller = -1;
+			}
+			else if (this.clock.get(element) > toCompare.clock.get(element))
+			{
+				if (isSmaller == -1){
+					return this.IndexcompareTo(toCompare);
+				}
+				isSmaller = 1;
+			}
+			else if (this.clock.get(element) == toCompare.clock.get(element))
+			{
+				// Do nothing
+			}
+		}	
+		
+		// TODO : Can two vectorclocks actually be the same?
+		return isSmaller;
+			
+	}
+	
+	public int IndexcompareTo (VectorClock toCompare){
+		// Just compare the the two values located at their own indexes
+		if (this.clock.get(this.ownIndex) < toCompare.clock.get(this.ownIndex) && this.clock.get(toCompare.ownIndex) < toCompare.clock.get(toCompare.ownIndex)){
+			return -1;
+		}
+		else if (this.clock.get(this.ownIndex) > toCompare.clock.get(this.ownIndex) && this.clock.get(toCompare.ownIndex) > toCompare.clock.get(toCompare.ownIndex)){
+			return 1;
+		}
+		else {
+			return 0;
+		}
+		
 	}
 	
 	@Override

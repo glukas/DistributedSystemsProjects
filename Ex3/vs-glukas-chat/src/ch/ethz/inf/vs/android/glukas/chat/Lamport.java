@@ -41,7 +41,19 @@ public class Lamport implements SyntheticClock<Lamport> {
 	 * @param toCompare The newly received Lamport timestamp
 	 */
 	public int compareTo(Lamport toCompare) {
-		// TODO Auto-generated method stub
+		// Lamport Integer Comparison
+		if (this.value < toCompare.value) {
+			return -1;
+		}
+		else if (this.value > toCompare.value){
+			return 1;
+		}
+		else if (this.value == toCompare.value){
+			return 0;
+		}
+		
+		
+		
 		return 0;
 	}
 

@@ -226,7 +226,16 @@ public class ResponseParser {
 	
 	private VectorClock getVectorClock(JSONObject jObject) throws JSONException{
 		//TODO : give own index
+		if (jObject.getString(Cmd.CMD.getStr()).equals("register"))
 		return new VectorClock(getVectorClockMap(jObject));
+		
+		// So that we know which VectorClock was from which sender
+		else if (jObject.getString(Cmd.CMD.getStr()).equals("message")){
+			Integer indexSender = Integer.valueOf(jObject.getString((Cmd.SENDER.getStr()))) ;
+			return  new VectorClock(getVectorClockMap(jObject) , indexSender);
+			}
+		else 
+			return new VectorClock(getVectorClockMap(jObject));
 	}
 	
 	private HashMap<Integer, Integer> getVectorClockMap(JSONObject jObject) throws JSONException{
