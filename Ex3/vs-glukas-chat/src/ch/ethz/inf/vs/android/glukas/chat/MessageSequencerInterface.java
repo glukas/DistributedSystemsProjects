@@ -5,7 +5,7 @@ package ch.ethz.inf.vs.android.glukas.chat;
  *
  * @param <T> the type of clock used
  */
-public interface DisplayLogicInterface<T extends Comparable<T>> {	
+public interface MessageSequencerInterface {	
 	
 	/**
 	 * Give the message which just arrived to the sorting
@@ -17,5 +17,5 @@ public interface DisplayLogicInterface<T extends Comparable<T>> {
 	 * Get the actual clock
 	 * @return the current clock
 	 */
-	public abstract T getClock();
+	public abstract ChatMessage getLastDeliveredMessage();
 }

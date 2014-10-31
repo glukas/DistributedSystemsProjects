@@ -41,8 +41,8 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 	private Deque<MessageRequest> outgoingMessages = new LinkedList<MessageRequest>();
 	
 	//sorting
-	private DisplayLogicInterface<Lamport> lampSorter;
-	private DisplayLogicInterface<VectorClock> vecClockSorter;
+	private MessageSequencerInterface lampSorter;
+	private MessageSequencerInterface vecClockSorter;
 	
 	/**
 	 * Constructor
@@ -140,8 +140,9 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 
 	@Override
 	public void sendMessage(String message, int messageId) {
-		String messageString = 	parser.getsendMessageRequest(message, lampSorter.getClock(), vecClockSorter.getClock());
-		outgoingMessages.add(new MessageRequest(messageId, messageString, MessageRequestType.sendMessage));
+		//TODO
+		//String messageString = 	parser.getsendMessageRequest(message, lampSorter.getLastDeliveredMessage()., vecClockSorter.getClock());
+		//outgoingMessages.add(new MessageRequest(messageId, messageString, MessageRequestType.sendMessage));
 		asyncSendNext();
 	}
 
@@ -182,14 +183,14 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 			inconsistentResponse();
 		}
 		
-		//initialize the sorting
-		if (syncType.equals(SyncType.LAMPORT_SYNC)){
-			lampSorter = new DisplayLogic<Lamport>(true, this, lamportClock);
-			vecClockSorter = new DisplayLogic<VectorClock>(false, this, vectorClock);
+		//initialize the sorting TODO
+		/*if (syncType.equals(SyncType.LAMPORT_SYNC)){
+			lampSorter = new MessageSequencer<Lamport>(true, this, lamportClock);
+			vecClockSorter = new MessageSequencer<VectorClock>(false, this, vectorClock);
 		} else if (syncType.equals(SyncType.VECTOR_CLOCK_SYNC)){
-			lampSorter = new DisplayLogic<Lamport>(false, this, lamportClock);
-			vecClockSorter = new DisplayLogic<VectorClock>(true, this, vectorClock);
-		}
+			lampSorter = new MessageSequencer<Lamport>(false, this, lamportClock);
+			vecClockSorter = new MessageSequencer<VectorClock>(true, this, vectorClock);
+		}*/
 	}
 
 	@Override

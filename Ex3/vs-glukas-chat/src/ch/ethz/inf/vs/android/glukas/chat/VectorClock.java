@@ -12,7 +12,7 @@ import org.json.JSONObject;
  *
  */
 @SuppressLint("UseSparseArrays")
-public class VectorClock implements Comparable<VectorClock>{
+public class VectorClock implements SyntheticClock<VectorClock> {
 	/**
 	 * This should contain the vector clock
 	 */
@@ -65,10 +65,6 @@ public class VectorClock implements Comparable<VectorClock>{
 
 		// TODO Fill me
 	}
-	
-	public boolean isConsecutive(VectorClock toCompare){
-		return false;
-	}
 
 	@Override
 	/**
@@ -96,5 +92,11 @@ public class VectorClock implements Comparable<VectorClock>{
 		result += "}";
 		result = result.replace (",}", "}");
 		return result;
+	}
+
+	@Override
+	public boolean isDeliverable(VectorClock lastDeliveredMessage) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }

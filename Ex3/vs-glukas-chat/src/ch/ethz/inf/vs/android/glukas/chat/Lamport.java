@@ -5,7 +5,7 @@ package ch.ethz.inf.vs.android.glukas.chat;
  * @author hong-an
  *
  */
-public class Lamport implements Comparable<Lamport> {
+public class Lamport implements SyntheticClock<Lamport> {
 	/**
 	 * The timestamp
 	 */
@@ -44,10 +44,6 @@ public class Lamport implements Comparable<Lamport> {
 		// TODO Auto-generated method stub
 		return 0;
 	}
-	
-	public boolean isConsecutive(Lamport toCompare){
-		return false;
-	}
 
 	@Override
 	/**
@@ -62,5 +58,11 @@ public class Lamport implements Comparable<Lamport> {
 	
 	public int getTimestamp(){
 		return this.value;
+	}
+
+	@Override
+	public boolean isDeliverable(Lamport lastDeliveredMessage) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }
