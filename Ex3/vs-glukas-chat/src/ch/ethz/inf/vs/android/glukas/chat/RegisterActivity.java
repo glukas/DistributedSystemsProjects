@@ -94,9 +94,6 @@ public class RegisterActivity extends ListActivity implements ChatEventListener 
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		if (chatLogic != null){
-			chatLogic.deregister();
-		}
 	}
 	
 	public void onClickLogin(View v) {
@@ -112,6 +109,12 @@ public class RegisterActivity extends ListActivity implements ChatEventListener 
 		logMessage = DialogFactory.createDialogNonErasable(getResources().getString(R.string.please_wait),
 				getResources().getString(R.string.login), this);
 		logMessage.show();
+	}
+	
+	@Override
+	public void onStop() {
+		super.onStop();
+		if (chatLogic != null) chatLogic.removeChatEventListener(this);
 	}
 	
 	////
