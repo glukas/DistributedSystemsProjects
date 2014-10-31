@@ -13,9 +13,9 @@ public class MessageSequencer<T extends SyntheticClock<T>> implements MessageSeq
 	
 	//sorting & timeout
 	private ChatMessage<T> lastDelivered;
-	private static final long TIMEOUT_MILLIS = 2000;
+	private static final long TIMEOUT_MILLIS = 20000;
 	private Handler timeoutHandler = new Handler();
-	private SortedSet<ChatMessage<T>> sortedSet;
+	private SortedSet<ChatMessage<T>> messageQueue;
 	private Runnable timeout = new Runnable() {
 		@Override
 		public void run() {
@@ -31,13 +31,20 @@ public class MessageSequencer<T extends SyntheticClock<T>> implements MessageSeq
 	public MessageSequencer(MessageSequencerDelegate chat, ChatMessage<T> initialMessage){
 		this.chat = chat;
 		this.lastDelivered = initialMessage;
-		this.sortedSet = new TreeSet<ChatMessage<T>>();
+		this.messageQueue = new TreeSet<ChatMessage<T>>();
 	}	
 	
 	@Override
 	public void onMessageReceived(ChatMessage<T> message){
-		//TODO : timeout and sorting
-		deliverMessage(message);
+		messageQueue.add(message);
+		
+		//if (messageQueue.first().isDeliverable(lastDelivered)) {
+		//	timeoutHandler.removeCallbacks(timeout);
+		//}
+		//while(!messageQueue.isEmpty() && messageQueue.first().isDeliverable(lastDelivered)) {
+		popMessage();
+		//}
+		//postTimeoutIfNonempty();
 	}
 
 	@Override
@@ -50,9 +57,21 @@ public class MessageSequencer<T extends SyntheticClock<T>> implements MessageSeq
 		return chat;
 	}
 	
+	private void popMessage() {
+		lastDelivered = messageQueue.first();
+		messageQueue.remove(lastDelivered);
+		deliverMessage(lastDelivered);
+	}
+	
+	private void postTimeoutIfNonempty() {
+		if (!messageQueue.isEmpty()) {
+			timeoutHandler.postDelayed(timeout, TIMEOUT_MILLIS);
+		}
+	}
 	
 	private void onTimedOut(){
-		//TODO
+		popMessage();
+		postTimeoutIfNonempty();
 	}
 
 	//asks the delegate to deliver the message
