@@ -38,13 +38,16 @@ class MessageSequencer<T extends SyntheticClock<T>> implements MessageSequencerI
 	public void onMessageReceived(ChatMessage<T> message){
 		messageQueue.add(message);
 		
-		//if (messageQueue.first().isDeliverable(lastDelivered)) {
-		//	timeoutHandler.removeCallbacks(timeout);
-		//}
-		//while(!messageQueue.isEmpty() && messageQueue.first().isDeliverable(lastDelivered)) {
+		/* TODO this is the actual implementation
+		
+		if (messageQueue.first().isDeliverable(lastDelivered)) {
+			timeoutHandler.removeCallbacks(timeout);
+		}
+		popAllDeliverables();
+		postTimeoutIfNonempty();*/
+		
+		//TODO remove this
 		popMessage();
-		//}
-		//postTimeoutIfNonempty();
 	}
 
 	@Override
@@ -55,6 +58,12 @@ class MessageSequencer<T extends SyntheticClock<T>> implements MessageSequencerI
 	@Override
 	public MessageSequencerDelegate getDelegate() {
 		return chat;
+	}
+	
+	private void popAllDeliverables() {
+		while(!messageQueue.isEmpty() && messageQueue.first().isDeliverable(lastDelivered)) {
+			popMessage();
+		}
 	}
 	
 	private void popMessage() {
@@ -70,7 +79,8 @@ class MessageSequencer<T extends SyntheticClock<T>> implements MessageSequencerI
 	}
 	
 	private void onTimedOut(){
-		popMessage();
+		if (!messageQueue.isEmpty()) popMessage();
+		popAllDeliverables();
 		postTimeoutIfNonempty();
 	}
 
