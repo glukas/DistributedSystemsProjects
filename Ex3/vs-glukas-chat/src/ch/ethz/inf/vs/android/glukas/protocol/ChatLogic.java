@@ -325,7 +325,7 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 	@Override
 	public void onInfoReceived(String message) {
 		Log.i(this.getClass().toString(), "onInfoReceived");
-		for (ChatEventListener l : eventListenerList) {
+		for (ChatEventListener l : getEventListeners()) {
 			l.onInfoReceived(message);
 		}
 	}
