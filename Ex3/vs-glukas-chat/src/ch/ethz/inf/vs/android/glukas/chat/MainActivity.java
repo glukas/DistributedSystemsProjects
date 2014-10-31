@@ -188,9 +188,9 @@ public class MainActivity extends ListActivity implements ChatEventListener {
 
 		if (logoutDialog != null && logoutDialog.isShowing()) {
 			logoutDialog.dismiss();
+			DialogFactory.createDialogMessage(getResources().getString(R.string.deregistration_failed), 
+					getResources().getString(R.string.error), this).show();
 		}
-		DialogFactory.createDialogMessage(getResources().getString(R.string.deregistration_failed), 
-				getResources().getString(R.string.error), this).show();
 	}
 
 	@Override
