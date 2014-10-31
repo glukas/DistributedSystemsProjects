@@ -5,7 +5,7 @@ package ch.ethz.inf.vs.android.glukas.chat;
  *
  * @param <T> the type of clock used
  */
-public interface SyntheticClockInterface<T extends Comparable<T>> {	
+public interface DisplayLogicInterface<T extends Comparable<T>> {	
 	
 	/**
 	 * Give the message which just arrived to the sorting

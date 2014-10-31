@@ -1,7 +1,5 @@
 package ch.ethz.inf.vs.android.glukas.chat;
 
-import org.json.JSONObject;
-
 import ch.ethz.inf.vs.android.glukas.chat.Utils.ChatEventType;
 import ch.ethz.inf.vs.android.glukas.chat.Utils.SyncType;
 
@@ -11,7 +9,7 @@ import ch.ethz.inf.vs.android.glukas.chat.Utils.SyncType;
  * @author hong-an
  *
  */
-public class ChatMessage extends ChatInteraction {
+public class ChatMessage extends ChatInteraction implements Comparable<ChatMessage> {
 	private String text;
 	private int sender;
 	private long timestamp;
@@ -86,5 +84,17 @@ public class ChatMessage extends ChatInteraction {
 	public int getSenderId(){
 		return sender;
 	}
+	
+	public boolean isConsecutive(ChatMessage another){
+		return false;
+	}
 
+	@Override
+	public int compareTo(ChatMessage another) {
+		if (syncMethod.equals(Utils.SyncType.LAMPORT_SYNC)){
+			return lamportTime.compareTo(another.lamportTime);
+		} else {
+			return vectorTime.compareTo(another.vectorTime);
+		}
+	}
 }

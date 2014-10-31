@@ -44,6 +44,10 @@ public class Lamport implements Comparable<Lamport> {
 		// TODO Auto-generated method stub
 		return 0;
 	}
+	
+	public boolean isConsecutive(Lamport toCompare){
+		return false;
+	}
 
 	@Override
 	/**

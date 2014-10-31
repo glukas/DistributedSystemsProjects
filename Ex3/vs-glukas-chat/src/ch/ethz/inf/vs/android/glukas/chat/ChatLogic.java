@@ -41,8 +41,8 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 	private Deque<MessageRequest> outgoingMessages = new LinkedList<MessageRequest>();
 	
 	//sorting
-	private SyntheticClockInterface<Lamport> lampSorter;
-	private SyntheticClockInterface<VectorClock> vecClockSorter;
+	private DisplayLogicInterface<Lamport> lampSorter;
+	private DisplayLogicInterface<VectorClock> vecClockSorter;
 	
 	/**
 	 * Constructor
@@ -184,11 +184,11 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 		
 		//initialize the sorting
 		if (syncType.equals(SyncType.LAMPORT_SYNC)){
-			lampSorter = new SyntheticClock<Lamport>(true, this, lamportClock);
-			vecClockSorter = new SyntheticClock<VectorClock>(false, this, vectorClock);
+			lampSorter = new DisplayLogic<Lamport>(true, this, lamportClock);
+			vecClockSorter = new DisplayLogic<VectorClock>(false, this, vectorClock);
 		} else if (syncType.equals(SyncType.VECTOR_CLOCK_SYNC)){
-			lampSorter = new SyntheticClock<Lamport>(false, this, lamportClock);
-			vecClockSorter = new SyntheticClock<VectorClock>(true, this, vectorClock);
+			lampSorter = new DisplayLogic<Lamport>(false, this, lamportClock);
+			vecClockSorter = new DisplayLogic<VectorClock>(true, this, vectorClock);
 		}
 	}
 

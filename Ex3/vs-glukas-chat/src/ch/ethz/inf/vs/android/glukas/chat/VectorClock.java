@@ -65,6 +65,10 @@ public class VectorClock implements Comparable<VectorClock>{
 
 		// TODO Fill me
 	}
+	
+	public boolean isConsecutive(VectorClock toCompare){
+		return false;
+	}
 
 	@Override
 	/**
