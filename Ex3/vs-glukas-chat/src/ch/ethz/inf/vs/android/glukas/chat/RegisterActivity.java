@@ -123,7 +123,6 @@ public class RegisterActivity extends ListActivity implements ChatEventListener 
 		}
 
 		username = usernameEditText.getText().toString() + numberUsername.getText().toString();
-		ChatLogicFactory.setUsername(username);
 		chatLogic = ChatLogicFactory.getInstance();
 		chatLogic.addChatEventListener(this);
 		chatLogic.register(username);

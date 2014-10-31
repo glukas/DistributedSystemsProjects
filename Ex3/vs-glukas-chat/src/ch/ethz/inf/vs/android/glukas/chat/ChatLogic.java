@@ -19,7 +19,7 @@ import ch.ethz.inf.vs.android.glukas.chat.Utils.SyncType;
  * @author hong-an
  *
  */
-public class ChatLogic extends ChatEventSource implements ChatClientRequestInterface, ChatServerRawResponseInterface, AsyncNetworkDelegate {
+public class ChatLogic extends ChatEventSource implements ChatClientRequestInterface, ChatServerRawResponseInterface, ChatDisplayMessageInterface, AsyncNetworkDelegate {
 	
 	//networking
 	private static final long RECEIVE_TIMEOUT_MILLIS = 2000;
@@ -41,16 +41,15 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 	private Deque<MessageRequest> outgoingMessages = new LinkedList<MessageRequest>();
 	
 	//sorting
-	private LamportSorting lampSorter;
-	private VectorClockSorting vecClockSorter;
+	private SyntheticClockInterface<Lamport> lampSorter;
+	private SyntheticClockInterface<VectorClock> vecClockSorter;
 	
 	/**
 	 * Constructor
 	 * @param vectorClockSync 
 	 * @param context The calling activity
 	 */
-	//TODO why do why need the username here?
-	public ChatLogic(SyncType syncType, String username) {
+	public ChatLogic(SyncType syncType) {
 		this.syncType = syncType;
 	}
 	
@@ -141,7 +140,7 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 
 	@Override
 	public void sendMessage(String message, int messageId) {
-		String messageString = 	parser.getsendMessageRequest(message, lampSorter.getLamport(), vecClockSorter.getVectorClock());
+		String messageString = 	parser.getsendMessageRequest(message, lampSorter.getClock(), vecClockSorter.getClock());
 		outgoingMessages.add(new MessageRequest(messageId, messageString, MessageRequestType.sendMessage));
 		asyncSendNext();
 	}
@@ -158,6 +157,7 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 	//Called when the message should be forwarded to the listeners (UI)
 	////
 	
+	@Override
 	public void onDisplayMessage(ChatMessage message) {
 		for (ChatEventListener l : eventListenerList) {
 			l.onMessageReceived(message);
@@ -181,13 +181,14 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 		} else {
 			inconsistentResponse();
 		}
-		//TODO use new implementations (that are to come)
+		
+		//initialize the sorting
 		if (syncType.equals(SyncType.LAMPORT_SYNC)){
-			lampSorter = new LamportSorting(true, lamportClock, this);
-			vecClockSorter = new VectorClockSorting(false, vectorClock, this);
+			lampSorter = new SyntheticClock<Lamport>(true, this, lamportClock);
+			vecClockSorter = new SyntheticClock<VectorClock>(false, this, vectorClock);
 		} else if (syncType.equals(SyncType.VECTOR_CLOCK_SYNC)){
-			vecClockSorter = new VectorClockSorting(true, vectorClock, this);
-			lampSorter = new LamportSorting(false, lamportClock, this);
+			lampSorter = new SyntheticClock<Lamport>(false, this, lamportClock);
+			vecClockSorter = new SyntheticClock<VectorClock>(true, this, vectorClock);
 		}
 	}
 

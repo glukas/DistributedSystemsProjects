@@ -6,14 +6,13 @@ public class ChatLogicFactory {
 	
 	private static ChatLogic instance;
 	private static SyncType syncType;
-	private static String username = "";
 	
 	public static ChatLogic getInstance(){
 		if (instance == null){
 			if (syncType != null){
-				instance = new ChatLogic(syncType, username);
+				instance = new ChatLogic(syncType);
 			} else {
-				instance = new ChatLogic(Utils.SyncType.LAMPORT_SYNC, username);
+				instance = new ChatLogic(Utils.SyncType.LAMPORT_SYNC);
 			}
 		}
 		return instance;
@@ -21,9 +20,5 @@ public class ChatLogicFactory {
 	
 	public static void setSyncType(SyncType syncTypeArg){
 		syncType = syncTypeArg;
-	}
-	
-	public static void setUsername(String usernameArg){
-		username = usernameArg;
 	}
 }
