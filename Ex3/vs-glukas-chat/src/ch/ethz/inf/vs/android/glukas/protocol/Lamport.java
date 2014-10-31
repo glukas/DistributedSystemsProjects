@@ -36,7 +36,6 @@ public class Lamport implements SyntheticClock<Lamport> {
 		// TODO Fill me
 	}
 
-	//TODO does this belong in the parser?
 	@Override
 	/**
 	 * This function returns the String representation of the
@@ -55,16 +54,26 @@ public class Lamport implements SyntheticClock<Lamport> {
 	////
 	//SYNTHETIC CLOCK
 	////
-	
-	@Override
+
+	//TODO does this belong in the parser?
 	/**
 	 * This function compares two Lamport timestamps.
 	 * @param toCompare The newly received Lamport timestamp
 	 */
 	public int compareTo(Lamport toCompare) {
-		// TODO Auto-generated method stub
+		// Lamport Integer Comparison
+		if (this.value < toCompare.value) {
+			return -1;
+		}
+		else if (this.value > toCompare.value){
+			return 1;
+		}
+		else if (this.value == toCompare.value){
+			return 0;
+		}
 		return 0;
 	}
+	
 
 	@Override
 	public boolean isDeliverable(Lamport lastDeliveredMessage) {

@@ -219,10 +219,18 @@ public class ResponseParser {
 	}
 	
 	private VectorClock getVectorClock(JSONObject jObject) throws JSONException{
-		//TODO : give own index
-		return new VectorClock(getVectorClockMap(jObject));
+		//TODO : think about vector clock ownId
+		//TODO : the initial vector clock should have the ownId passed during registration
+		if (jObject.getString(Cmd.CMD.getStr()).equals("register")) {
+			return new VectorClock(getVectorClockMap(jObject));
+		} else if (jObject.getString(Cmd.CMD.getStr()).equals("message")){ // So that we know which VectorClock was from which sender
+			Integer indexSender = Integer.valueOf(jObject.getString((Cmd.SENDER.getStr())));
+			return  new VectorClock(getVectorClockMap(jObject) , indexSender);
+		} else { 
+			return new VectorClock(getVectorClockMap(jObject));
+		}
 	}
-	
+
 	private HashMap<Integer, Integer> getVectorClockMap(JSONObject jObject) throws JSONException{
 		HashMap<Integer, Integer> vectorMap = new HashMap<Integer, Integer>();
 		String vectorString = null;
