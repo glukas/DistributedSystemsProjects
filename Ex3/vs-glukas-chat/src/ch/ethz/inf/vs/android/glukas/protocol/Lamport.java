@@ -34,6 +34,7 @@ public class Lamport implements SyntheticClock<Lamport> {
 	 */
 	public void update(Lamport toCompare) {
 		// TODO Fill me
+		this.value = toCompare.value;
 	}
 
 	//TODO does this belong in the parser?

@@ -1,13 +1,7 @@
 package ch.ethz.inf.vs.android.glukas.protocol;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.EventObject;
-import java.util.List;
-
-import org.json.JSONObject;
-
-import ch.ethz.inf.vs.android.glukas.protocol.Utils.ChatEventType;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * This class provides a wrapper for events to be triggered
@@ -19,7 +13,7 @@ public class ChatEventSource {
 	/**
 	 * Listeners of events
 	 */
-	protected List<ChatEventListener> eventListenerList = new ArrayList<ChatEventListener>();
+	protected Set<ChatEventListener> eventListenerList = new HashSet<ChatEventListener>();
 	
 	/**
 	 * Adding listeners

@@ -2,9 +2,6 @@ package ch.ethz.inf.vs.android.glukas.protocol;
 
 import java.util.Map;
 
-
-import android.os.Handler;
-
 /**
  * This class is intercepting events triggered by the logic.
  * @author hong-an
