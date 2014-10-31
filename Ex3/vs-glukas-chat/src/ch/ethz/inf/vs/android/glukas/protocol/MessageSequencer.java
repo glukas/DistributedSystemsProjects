@@ -6,7 +6,7 @@ import java.util.TreeSet;
 
 import android.os.Handler;
 
-public class MessageSequencer<T extends SyntheticClock<T>> implements MessageSequencerInterface<T> {
+class MessageSequencer<T extends SyntheticClock<T>> implements MessageSequencerInterface<T> {
 	
 	//call back to display
 	private MessageSequencerDelegate chat;

@@ -237,6 +237,7 @@ public class RegisterActivity extends ListActivity implements ChatEventListener 
 		//call back from the network, server rejected connection
 		Log.e(this.getClass().toString(), reason.getReasonString());
 		onLoginError(reason.getReasonString());
+		this.chatLogic.removeChatEventListener(this);
 	}
 	
 	////

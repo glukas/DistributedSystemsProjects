@@ -53,7 +53,15 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 		this.syncType = syncType;
 	}
 	
-	public void close() {
+	/**
+	 * Removes all event listeners, and stops accepting messages.
+	 * All pending messages are dropped.
+	 * This is not the same as deregisteration. No message is sent to the server.
+	 * If any of the ChatClientRequestInterface methods is used at a later point, the connection will resume automatically.
+	 */
+	public void pause() {
+		removeAllListeners();
+		outgoingMessages.clear();
 		asyncNetwork.close();
 	}
 	
@@ -70,7 +78,7 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 
 	private void onResponseTimedOut() {
 		this.sending = false;
-		Log.d(this.getClass().toString(), "timed out " + this.outgoingMessages.peekFirst().message);
+		Log.v(this.getClass().toString(), "timed out " + this.outgoingMessages.peekFirst().message);
 		dispatchFailure(ChatFailureReason.timeout);
 		asyncSendNext();
 	}
@@ -159,7 +167,7 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 	
 	@Override
 	public void onDisplayMessage(String message, int userId) {
-		for (ChatEventListener l : eventListenerList) {
+		for (ChatEventListener l : getEventListeners()) {
 			l.onMessageReceived(message, userId);
 		}
 	}
@@ -175,7 +183,7 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 		Log.i(this.getClass().toString(), "onRegistrationSucceeded");
 		//remove the first message from the queue and check if it has the right type (it should!)
 		if (!outgoingMessages.isEmpty() && outgoingMessages.pollFirst().type == MessageRequestType.register) {
-			for (ChatEventListener l : eventListenerList) {
+			for (ChatEventListener l : getEventListeners()) {
 				l.onRegistrationSucceeded();
 			}
 			
@@ -202,9 +210,12 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 	@Override
 	public void onRegistrationFailed(ChatFailureReason reason) {
 		Log.i(this.getClass().toString(), "onRegistrationFailed");
-		//remove the first message from the queue and check if it has the right type (it should!)
-		if (!outgoingMessages.isEmpty() && outgoingMessages.pollFirst().type == MessageRequestType.register) {
-			for (ChatEventListener l : eventListenerList) {
+		//here, we do not check if the first message has the right type, since the server responds
+		//with the "register" command to any message if the user is not registered
+		if (!outgoingMessages.isEmpty()) {
+			//remove the first message from the queue
+			 outgoingMessages.pollFirst();
+			for (ChatEventListener l : getEventListeners()) {
 				l.onRegistrationFailed(reason);
 			}
 		} else {
@@ -216,7 +227,7 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 	public void onGetClientMapping(Map<Integer, String> clientIdToUsernameMap) {
 		Log.i(this.getClass().toString(), "onGetClientMapping");
 		if (!outgoingMessages.isEmpty() && outgoingMessages.pollFirst().type == MessageRequestType.getClients) {
-			for (ChatEventListener l : eventListenerList) {
+			for (ChatEventListener l : getEventListeners()) {
 				l.onGetClientMapping(clientIdToUsernameMap);
 			}
 		} else {
@@ -228,7 +239,7 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 	public void onGetClientMappingFailed(ChatFailureReason reason) {
 		Log.i(this.getClass().toString(), "onGetClientMapping failed");
 		if (!outgoingMessages.isEmpty() && outgoingMessages.pollFirst().type == MessageRequestType.getClients) {
-			for (ChatEventListener l : eventListenerList) {
+			for (ChatEventListener l : getEventListeners()) {
 				l.onGetClientMappingFailed(reason);
 			}
 		} else {
@@ -241,7 +252,7 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 		Log.i(this.getClass().toString(), "onMessageDelivery Success");
 		if (!outgoingMessages.isEmpty() && outgoingMessages.peekFirst().type == MessageRequestType.sendMessage) {
 			int id = outgoingMessages.pollFirst().id;
-			for (ChatEventListener l : eventListenerList) {
+			for (ChatEventListener l : getEventListeners()) {
 				l.onMessageDeliverySucceeded(id);
 			}
 		} else {
@@ -254,7 +265,7 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 		Log.i(this.getClass().toString(), "onMessageDelivery Failed");
 		if (!outgoingMessages.isEmpty() && outgoingMessages.peekFirst().type == MessageRequestType.sendMessage) {
 			int id = outgoingMessages.pollFirst().id;
-			for (ChatEventListener l : eventListenerList) {
+			for (ChatEventListener l : getEventListeners()) {
 				l.onMessageDeliveryFailed(reason, id);
 			}
 		} else {
@@ -262,16 +273,11 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 		}
 	}
 
-	/*@Override
-	public void onMessageReceived(ChatMessage message) {
-
-	}*/
-
 	@Override
 	public void onDeregistrarionSucceeded() {
 		Log.i(this.getClass().toString(), "onDeregistration Success");
-		if (!outgoingMessages.isEmpty() && outgoingMessages.peekFirst().type == MessageRequestType.deregister) {
-			for (ChatEventListener l : eventListenerList) {
+		if (!outgoingMessages.isEmpty() && outgoingMessages.pollFirst().type == MessageRequestType.deregister) {
+			for (ChatEventListener l : getEventListeners()) {
 				l.onDeregistrarionSucceeded();
 			}
 		} else {
@@ -279,12 +285,11 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 		}
 	}
 
-
 	@Override
 	public void onDeregistrationFailed() {
 		Log.i(this.getClass().toString(), "onDeregistration Failure");
-		if (!outgoingMessages.isEmpty() && outgoingMessages.peekFirst().type == MessageRequestType.deregister) {
-			for (ChatEventListener l : eventListenerList) {
+		if (!outgoingMessages.isEmpty() && outgoingMessages.pollFirst().type == MessageRequestType.deregister) {
+			for (ChatEventListener l : getEventListeners()) {
 				l.onDeregistrationFailed();
 			}
 		} else {
@@ -295,7 +300,7 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 	@Override
 	public void onClientDeregistered(Integer clientId, String clientUsername) {
 		Log.i(this.getClass().toString(), "onClientDeregister");
-		for (ChatEventListener l : eventListenerList) {
+		for (ChatEventListener l : getEventListeners()) {
 			l.onClientDeregistered(clientId, clientUsername);
 		}
 	}
@@ -303,7 +308,7 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 	@Override
 	public void onClientRegistered(Integer clientId, String clientUsername) {
 		Log.i(this.getClass().toString(), "onClientRegister");
-		for (ChatEventListener l : eventListenerList) {
+		for (ChatEventListener l : getEventListeners()) {
 			l.onClientRegistered(clientId, clientUsername);
 		}
 	}

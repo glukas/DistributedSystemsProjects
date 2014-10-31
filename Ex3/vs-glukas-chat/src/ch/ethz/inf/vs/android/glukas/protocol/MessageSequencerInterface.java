@@ -6,7 +6,7 @@ package ch.ethz.inf.vs.android.glukas.protocol;
  *
  * @param <T> the type of clock used
  */
-public interface MessageSequencerInterface<T extends SyntheticClock<T>> {	
+interface MessageSequencerInterface<T extends SyntheticClock<T>> {	
 	
 	/**
 	 * Add a new message to the sequencer. The message may be delivered right away, or at a later point if the message is "from the future".

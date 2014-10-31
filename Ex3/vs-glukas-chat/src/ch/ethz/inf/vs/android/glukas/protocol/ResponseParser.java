@@ -12,7 +12,7 @@ import android.annotation.SuppressLint;
 import android.util.Log;
 
 @SuppressLint("UseSparseArrays")
-public class ResponseParser {
+class ResponseParser {
 
 	private ChatServerRawResponseInterface delegate;
 	

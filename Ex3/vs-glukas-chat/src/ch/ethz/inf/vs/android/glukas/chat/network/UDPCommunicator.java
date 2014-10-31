@@ -19,7 +19,7 @@ import android.util.Log;
  * @author hong-an
  *
  */
-public class UDPCommunicator {
+class UDPCommunicator {
 	
 	private final int port;
 	private final String address;
@@ -27,7 +27,7 @@ public class UDPCommunicator {
 	private DatagramChannel channel;
 	private volatile boolean  socketBounded;
 	private volatile boolean channelOpen;
-	private int timeout;
+	private int receiveTimeout = 0;
 	private int receiveBufSize;
 
 	/**
@@ -97,7 +97,7 @@ public class UDPCommunicator {
 			socket.connect(InetAddress.getByName(address), port);
 			return true;
 		} catch (IOException ex){
-			Log.e("UDPCommunicator", ex.getLocalizedMessage());
+			Log.e(this.getClass().toString(), ex.getLocalizedMessage());
 			return false;
 		}
 	}
@@ -108,7 +108,7 @@ public class UDPCommunicator {
 			socket = channel.socket();
 			return true;
 		} catch (IOException ex){
-			Log.e("UDPCommunicator", ex.getLocalizedMessage());
+			Log.e(this.getClass().toString(), ex.getLocalizedMessage());
 			return false;
 		}
 	}
@@ -147,7 +147,7 @@ public class UDPCommunicator {
 		//TODO : fix the issue of empty packets
 		do {
 			socket.receive(packet);
-			Log.v("","Received something");
+			Log.v(this.getClass().toString(),"Received something");
 		} while (packet.getLength() == 0);//ignore empty packets. (Why do we get those?)
 		
 		
@@ -211,11 +211,11 @@ public class UDPCommunicator {
 	}
 	
 	public void setTimeout(int timeout) throws SocketException{
-		this.timeout = timeout;
-		socket.setSoTimeout(this.timeout);
+		this.receiveTimeout = timeout;
+		socket.setSoTimeout(this.receiveTimeout);
 	}
 	
 	public int getTimeout(){
-		return timeout;
+		return receiveTimeout;
 	}
 }

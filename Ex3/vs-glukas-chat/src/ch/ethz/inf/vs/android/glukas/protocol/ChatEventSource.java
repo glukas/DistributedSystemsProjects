@@ -1,5 +1,6 @@
 package ch.ethz.inf.vs.android.glukas.protocol;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -13,14 +14,15 @@ public class ChatEventSource {
 	/**
 	 * Listeners of events
 	 */
-	protected Set<ChatEventListener> eventListenerList = new HashSet<ChatEventListener>();
+	private Set<ChatEventListener> eventListeners = new HashSet<ChatEventListener>();
+	
 	
 	/**
 	 * Adding listeners
 	 * @param listener
 	 */
 	public void addChatEventListener(ChatEventListener listener) {
-		eventListenerList.add(listener);
+		eventListeners.add(listener);
 	}
 	
 	/**
@@ -28,7 +30,21 @@ public class ChatEventSource {
 	 * @param listener
 	 */
 	public void removeChatEventListener(ChatEventListener listener) {
-		eventListenerList.remove(listener);
+		eventListeners.remove(listener);
 	}
 	
+	protected void removeAllListeners() {
+		this.eventListeners.clear();
+	}
+	
+	/**
+	 * Returns an fresh array of the current event listeners.
+	 * It is safe to call removeChatEventListener while iterating over this array.
+	 * When dispatching events to listeners, you do not want to iterate directly over the set of listeners,
+	 * as it would produce concurrent modification exceptions in case they would call removeChatEventListener
+	 * @return
+	 */
+	protected ChatEventListener[] getEventListeners() {
+		return eventListeners.toArray(new ChatEventListener[eventListeners.size()]);
+	}
 }

@@ -10,12 +10,12 @@ public class AsyncNetwork {
 
 	private Handler requestHandler;
 
-	private volatile boolean alive = true;
+	private volatile boolean alive;
 	private HandlerThread requestThread;
 	private Thread receiveThread;
 	private UDPCommunicator comm;
 	private final AsyncNetworkDelegate delegate;
-	private volatile boolean noConnection = false;
+	private volatile boolean noConnection;
 	private final String address;
 	private final int port;
 

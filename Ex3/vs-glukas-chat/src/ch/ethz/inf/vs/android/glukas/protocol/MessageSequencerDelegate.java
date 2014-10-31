@@ -1,7 +1,7 @@
 package ch.ethz.inf.vs.android.glukas.protocol;
 
 
-public interface MessageSequencerDelegate {
+interface MessageSequencerDelegate {
 	
 	/**
 	 * Called when a message is ready to be displayed

@@ -12,6 +12,7 @@ import ch.ethz.inf.vs.android.glukas.protocol.ChatLogic;
 import ch.ethz.inf.vs.android.glukas.protocol.ChatLogicFactory;
 import ch.ethz.inf.vs.android.glukas.protocol.Utils;
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -36,6 +37,9 @@ public class MainActivity extends ListActivity implements ChatEventListener {
 	private volatile ArrayList<DisplayMessage> displayMessages;
 	private DisplayMessageAdapter adapter;
 	private Map<Integer, String> clientIdToUsernameMap;
+	
+	//dialogs
+	private Dialog logoutDialog;
 	
 	//user
 	private String username;
@@ -94,8 +98,9 @@ public class MainActivity extends ListActivity implements ChatEventListener {
 	
 	public void onBackPressed() {
 		chat.deregister();
-		DialogFactory.createDialogNonErasable(getResources().getString(R.string.please_wait),
-				getResources().getString(R.string.unLogin), this).show();
+		logoutDialog = DialogFactory.createDialogNonErasable(getResources().getString(R.string.please_wait),
+				getResources().getString(R.string.unLogin), this);
+		logoutDialog.show();
 	}
 	
 	////
@@ -173,12 +178,17 @@ public class MainActivity extends ListActivity implements ChatEventListener {
 
 	@Override
 	public void onDeregistrarionSucceeded() {
+		chat.removeChatEventListener(this);
 		Intent intent = new Intent(this, RegisterActivity.class);
 		startActivity(intent);
 	}
 
 	@Override
 	public void onDeregistrationFailed() {
+
+		if (logoutDialog != null && logoutDialog.isShowing()) {
+			logoutDialog.dismiss();
+		}
 		DialogFactory.createDialogMessage(getResources().getString(R.string.deregistration_failed), 
 				getResources().getString(R.string.error), this).show();
 	}
@@ -212,6 +222,11 @@ public class MainActivity extends ListActivity implements ChatEventListener {
 	
 	@Override
 	public void onRegistrationFailed(ChatFailureReason reason) {
+		if (reason.equals(ChatFailureReason.notRegistered)) {
+			//the user tried to send a message, but he has been already kicked out by the server
+			this.onDeregistrationFailed();
+			chat.register(this.username);
+		}
 	}
 
 	@Override

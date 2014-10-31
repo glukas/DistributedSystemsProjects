@@ -1,5 +1,7 @@
 package ch.ethz.inf.vs.android.glukas.protocol;
 
+import android.annotation.SuppressLint;
+
 public enum ChatFailureReason {
 	notRegistered("not registered"),
 	alreadyRegistered("already registered"),
@@ -22,10 +24,11 @@ public enum ChatFailureReason {
 		return this.reasonString;
 	}
 	
+	@SuppressLint("DefaultLocale")
 	public static ChatFailureReason getReasonFromString(String reason){
 		try{
 			for (ChatFailureReason r : ChatFailureReason.values()){
-				if (reason.startsWith(r.getReasonString())){
+				if (reason.toLowerCase().startsWith(r.getReasonString())){
 					return r;
 				}
 			}
