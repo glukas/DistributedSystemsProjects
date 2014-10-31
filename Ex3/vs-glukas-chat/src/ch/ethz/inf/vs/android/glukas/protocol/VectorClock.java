@@ -66,6 +66,8 @@ public class VectorClock implements SyntheticClock<VectorClock> {
 		// TODO Fill me
 	}
 
+
+	//TODO does this belong in the parser?
 	@Override
 	/**
 	 * This function should return a String representation of the
@@ -88,7 +90,6 @@ public class VectorClock implements SyntheticClock<VectorClock> {
 	//SYNTHETIC CLOCK
 	////
 	
-//TODO does this belong in the parser?
 	/**
 	 * This function allows to compare VectorClocks
 	 * @param another The VectorClock that ours should be compared to
