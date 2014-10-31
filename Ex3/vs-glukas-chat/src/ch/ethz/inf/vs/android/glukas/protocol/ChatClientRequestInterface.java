@@ -1,4 +1,4 @@
-package ch.ethz.inf.vs.android.glukas.chat;
+package ch.ethz.inf.vs.android.glukas.protocol;
 
 /**
  * Interface for posting asynchronous requests to the server.

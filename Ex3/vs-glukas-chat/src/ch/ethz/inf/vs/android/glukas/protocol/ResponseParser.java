@@ -1,4 +1,4 @@
-package ch.ethz.inf.vs.android.glukas.chat;
+package ch.ethz.inf.vs.android.glukas.protocol;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -7,7 +7,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import android.annotation.SuppressLint;
 import android.util.Log;
-import ch.ethz.inf.vs.android.glukas.chat.Utils.ChatEventType;
+import ch.ethz.inf.vs.android.glukas.protocol.Utils.ChatEventType;
 
 @SuppressLint("UseSparseArrays")
 public class ResponseParser {
@@ -100,6 +100,9 @@ public class ResponseParser {
 		return getSingleCmd(Arg.DEREGISTER.getStr());
 	}
 	
+	////
+	////
+	
 	private String getSingleCmd(String cmdArg){
 		return parO + getCmd(Cmd.CMD.getStr(), cmdArg) + parC;
 	}
@@ -145,6 +148,9 @@ public class ResponseParser {
 		}
 	}
 	
+	////
+	////
+	
 	private void onGetClients(JSONObject jObject) throws JSONException {
 		if (jObject.has(Cmd.STATUS.getStr()) && jObject.getString(Cmd.STATUS.getStr()).equals(Arg.FAILURE.getStr())) {
 			delegate.onGetClientMappingFailed(ChatFailureReason.getReasonFromString(jObject.getString(Cmd.TEXT.getStr())));
@@ -169,16 +175,12 @@ public class ResponseParser {
 	private void onNotification(JSONObject jObject) throws JSONException {
 		//TODO : call onClientRegister();
 		//TODO : call onClientDeregister();
-		ChatMessage notificationMessage = new ChatMessage(
-				ChatEventType.SOME_STATE, 0, jObject.getString(Cmd.TEXT.getStr()), null, null, 0,
-				null);
-		delegate.onMessageReceived(notificationMessage);
 	}
 	
 	private void onInfo(JSONObject jObject) throws JSONException {
-		ChatMessage infoMessage = new ChatMessage(ChatEventType.SOME_STATE,
-				0, jObject.getString(Cmd.TEXT.getStr()), null, null, 0, null);
-		delegate.onMessageReceived(infoMessage);
+		//TODO
+		//ChatMessage infoMessage = new ChatMessage(0, jObject.getString(Cmd.TEXT.getStr()), null, null, 0, null);
+		//delegate.onMessageReceived(infoMessage);
 	}
 	
 	private void onMessage(JSONObject jObject) throws JSONException {
@@ -189,16 +191,7 @@ public class ResponseParser {
 				delegate.onMessageDeliveryFailed(ChatFailureReason.getReasonFromString(jObject.getString(Cmd.TEXT.getStr())));
 			}
 		} else {
-			//TODO : TIMESTAMP AND SYNC_TYPE
-			ChatMessage notificationMessage = new ChatMessage(
-					ChatEventType.SOME_STATE, 
-					jObject.getInt(Cmd.SENDER.getStr()), 
-					jObject.getString(Cmd.TEXT.getStr()), 
-					getLamport(jObject), 
-					getVectorClock(jObject), 
-					0,
-					null);
-			delegate.onMessageReceived(notificationMessage);
+			delegate.onMessageReceived(jObject.getString(Cmd.TEXT.getStr()), jObject.getInt(Cmd.SENDER.getStr()), getLamport(jObject), getVectorClock(jObject));
 		}
 	}
 	
@@ -213,7 +206,8 @@ public class ResponseParser {
 	}
 	
 	private void onUnknown(JSONObject jObject) throws JSONException {
-		delegate.onMessageDeliveryFailed(ChatFailureReason.unknownCommand);
+		//TODO
+		Log.e(this.getClass().toString(), "unkown command");
 	}
 	
 	private Lamport getLamport(JSONObject jObject) throws JSONException {

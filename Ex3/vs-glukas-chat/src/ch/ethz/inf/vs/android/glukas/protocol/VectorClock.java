@@ -1,4 +1,4 @@
-package ch.ethz.inf.vs.android.glukas.chat;
+package ch.ethz.inf.vs.android.glukas.protocol;
 
 import android.annotation.SuppressLint;
 import java.util.HashMap;
@@ -66,16 +66,7 @@ public class VectorClock implements SyntheticClock<VectorClock> {
 		// TODO Fill me
 	}
 
-	@Override
-	/**
-	 * This function allows to compare VectorClocks
-	 * @param another The VectorClock that ours should be compared to
-	 */
-	public int compareTo(VectorClock toCompare) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-	
+	//TODO does this belong in the parser?
 	@Override
 	/**
 	 * This function should return a String representation of the
@@ -93,10 +84,30 @@ public class VectorClock implements SyntheticClock<VectorClock> {
 		result = result.replace (",}", "}");
 		return result;
 	}
+	
+	////
+	//SYNTHETIC CLOCK
+	////
+	
+	@Override
+	/**
+	 * This function allows to compare VectorClocks
+	 * @param another The VectorClock that ours should be compared to
+	 */
+	public int compareTo(VectorClock toCompare) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+	
 
 	@Override
 	public boolean isDeliverable(VectorClock lastDeliveredMessage) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	public VectorClock getClock() {
+		return this;
 	}
 }

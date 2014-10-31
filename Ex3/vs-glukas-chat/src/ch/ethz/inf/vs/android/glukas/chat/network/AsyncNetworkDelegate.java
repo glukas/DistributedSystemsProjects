@@ -1,4 +1,4 @@
-package ch.ethz.inf.vs.android.glukas.chat;
+package ch.ethz.inf.vs.android.glukas.chat.network;
 
 import android.os.Handler;
 

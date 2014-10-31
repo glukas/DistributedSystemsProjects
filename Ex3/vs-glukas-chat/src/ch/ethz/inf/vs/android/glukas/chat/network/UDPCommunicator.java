@@ -1,4 +1,4 @@
-package ch.ethz.inf.vs.android.glukas.chat;
+package ch.ethz.inf.vs.android.glukas.chat.network;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -9,6 +9,8 @@ import java.net.SocketAddress;
 import java.net.SocketException;
 import java.nio.channels.DatagramChannel;
 import org.json.JSONObject;
+
+import ch.ethz.inf.vs.android.glukas.protocol.Utils;
 import android.util.Log;
 
 /**

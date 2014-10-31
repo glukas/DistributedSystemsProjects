@@ -1,4 +1,4 @@
-package ch.ethz.inf.vs.android.glukas.chat;
+package ch.ethz.inf.vs.android.glukas.protocol;
 
 import android.annotation.SuppressLint;
 import java.text.SimpleDateFormat;
@@ -20,29 +20,6 @@ public class Utils {
 	 */
 	public final static String LOG_PATH = "chat_log.txt";
 
-	/**
-	 * Useful for differentiating between selecting
-	 * Lamport timestamps and vector clocks
-	 * @author hong-an
-	 *
-	 */
-	public enum SyncType {
-		LAMPORT_SYNC(1), VECTOR_CLOCK_SYNC(2);
-		private int type;
-		
-		private SyncType(int t){
-			type = t;
-		}
-		
-		public int getTypeId(){
-			return type;
-		}
-		
-		public static SyncType getSyncTypeById(int id){
-			return id == 1 ? SyncType.LAMPORT_SYNC : SyncType.VECTOR_CLOCK_SYNC;
-		}
-	}
-
 	/*
 	 * Change me... Some useful constants
 	 */
@@ -54,7 +31,7 @@ public class Utils {
 	public final static int SOCKET_TIMEOUT = -1;
 	public final static int RESPONSE_TIMEOUT = -1;
 	public final static int MESSAGE_TIMEOUT = -1;
-	public final static String INTENT_ARG_CHAT = "IntentChatLogic";
+	//public final static String INTENT_ARG_CHAT = "IntentChatLogic";
 	public final static String INTENT_ARG_SYNCTYPEID = "IntentSyncTypeId";
 	//public final static String INTENT_ARG_OWNID = "IntentOwnId";
 	public final static String INTENT_ARG_USERNAME = "IntentUsername";

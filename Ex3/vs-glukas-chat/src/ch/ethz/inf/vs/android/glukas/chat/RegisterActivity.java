@@ -2,7 +2,13 @@ package ch.ethz.inf.vs.android.glukas.chat;
 
 import java.util.Map;
 import ch.ethz.inf.vs.android.glukas.chat.R;
-import ch.ethz.inf.vs.android.glukas.chat.Utils.SyncType;
+import ch.ethz.inf.vs.android.glukas.protocol.ChatEventListener;
+import ch.ethz.inf.vs.android.glukas.protocol.ChatFailureReason;
+import ch.ethz.inf.vs.android.glukas.protocol.ChatLogic;
+import ch.ethz.inf.vs.android.glukas.protocol.ChatLogicFactory;
+import ch.ethz.inf.vs.android.glukas.protocol.ChatMessage;
+import ch.ethz.inf.vs.android.glukas.protocol.Utils;
+import ch.ethz.inf.vs.android.glukas.protocol.SyncType;
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.Context;
@@ -115,11 +121,11 @@ public class RegisterActivity extends ListActivity implements ChatEventListener 
 	
 	private void tryLogin() {
 		//get all informations provided by the user and try to register to the chat
-		syncType = lamportRadio.isChecked() ? Utils.SyncType.LAMPORT_SYNC : Utils.SyncType.VECTOR_CLOCK_SYNC;
-		if (syncType.equals(Utils.SyncType.LAMPORT_SYNC)){
-			ChatLogicFactory.setSyncType(Utils.SyncType.LAMPORT_SYNC);
+		syncType = lamportRadio.isChecked() ? SyncType.LAMPORT_SYNC : SyncType.VECTOR_CLOCK_SYNC;
+		if (syncType.equals(SyncType.LAMPORT_SYNC)){
+			ChatLogicFactory.setSyncType(SyncType.LAMPORT_SYNC);
 		} else {
-			ChatLogicFactory.setSyncType(Utils.SyncType.VECTOR_CLOCK_SYNC);
+			ChatLogicFactory.setSyncType(SyncType.VECTOR_CLOCK_SYNC);
 		}
 
 		username = usernameEditText.getText().toString() + numberUsername.getText().toString();
@@ -234,11 +240,6 @@ public class RegisterActivity extends ListActivity implements ChatEventListener 
 		onLoginError(reason.getReasonString());
 	}
 	
-	@Override
-	public Handler getCallbackHandler() {
-		return callbackHandler;
-	}
-	
 	////
 	//Not used by this activity
 	////
@@ -264,7 +265,7 @@ public class RegisterActivity extends ListActivity implements ChatEventListener 
 	}
 
 	@Override
-	public void onMessageReceived(ChatMessage message) {
+	public void onMessageReceived(String text, int userId) {
 	}
 
 	@Override
