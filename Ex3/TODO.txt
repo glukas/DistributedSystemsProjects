@@ -1,0 +1,36 @@
+Project 3 - to do and deadlines
+
+There's the proposition of to-do, deadlines and assignments. Hope everything is in there and you agree with the splitting. Else, just say!
+
+
+TODO : 
+
+-1- Log messages with Logger
+
+-2- Bug if connection fails : multiple calls onRegistrationFailed
+
+-3- Parse onNotification "user joined" / "user left"
+
+-4- Theoretical Exercises
+
+-5- Implement compareTo and isDeliverable for VectorClock and Lamport (seems to have already code in it, does it work?)
+
+-6- Implement MessageSequencer
+
+-7- Test thoroughly
+
+DEADLINES : 
+
+-Saturday evening : 
+
+3, 5, 6
+
+-Sunday afternoon (about 4 - 5 pm) : 
+
+1, 2, 4, 7
+
+PROPOSITION OF ASSIGNMENT  : 
+
+3, 4, 7 : Vincent
+2, 6, 7 : Lukas
+1, 5, 7 : Young
