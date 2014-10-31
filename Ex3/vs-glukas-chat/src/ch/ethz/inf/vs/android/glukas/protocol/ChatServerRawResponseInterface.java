@@ -37,4 +37,7 @@ public interface ChatServerRawResponseInterface extends EventListener {
 	
 	void onClientRegistered(Integer clientId, String clientUsername);
 	
+	
+	void onInfoReceived(String message);
+	
 }

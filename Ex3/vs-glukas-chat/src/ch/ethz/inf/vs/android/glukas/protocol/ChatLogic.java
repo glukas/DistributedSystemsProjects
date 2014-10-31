@@ -316,4 +316,12 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 		lampSorter.onMessageReceived(new ChatMessage<Lamport>(userId, message, lamportClock, timestamp));
 		vecClockSorter.onMessageReceived(new ChatMessage<VectorClock>(userId, message, vectorClock, timestamp));
 	}
+
+	@Override
+	public void onInfoReceived(String message) {
+		Log.i(this.getClass().toString(), "onInfoReceived");
+		for (ChatEventListener l : eventListenerList) {
+			l.onInfoReceived(message);
+		}
+	}
 }

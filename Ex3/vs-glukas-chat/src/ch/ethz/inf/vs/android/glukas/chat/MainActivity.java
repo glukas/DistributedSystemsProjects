@@ -10,13 +10,11 @@ import ch.ethz.inf.vs.android.glukas.protocol.ChatEventListener;
 import ch.ethz.inf.vs.android.glukas.protocol.ChatFailureReason;
 import ch.ethz.inf.vs.android.glukas.protocol.ChatLogic;
 import ch.ethz.inf.vs.android.glukas.protocol.ChatLogicFactory;
-import ch.ethz.inf.vs.android.glukas.protocol.ChatMessage;
 import ch.ethz.inf.vs.android.glukas.protocol.Utils;
 import android.annotation.SuppressLint;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.StrictMode;
 import android.view.View;
 import android.widget.Button;
@@ -33,7 +31,6 @@ public class MainActivity extends ListActivity implements ChatEventListener {
 	
 	//networking
 	private ChatLogic chat;
-	private final Handler callbackHandler = new Handler();
 	
 	//messages
 	private volatile ArrayList<DisplayMessage> displayMessages;
@@ -204,6 +201,10 @@ public class MainActivity extends ListActivity implements ChatEventListener {
 				getResources().getString(R.string.system)));
 	}
 	
+	@Override
+	public void onInfoReceived(String message) {
+		displayMessageSystem(new DisplayMessage(true, message, getResources().getString(R.string.system)));
+	}
 	
 	////
 	//Not used by this activity

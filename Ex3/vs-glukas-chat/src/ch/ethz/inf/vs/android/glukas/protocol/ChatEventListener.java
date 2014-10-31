@@ -40,4 +40,6 @@ public interface ChatEventListener {
 	
 	void onClientRegistered(Integer clientId, String clientUsername);
 	
+	
+	void onInfoReceived(String message);
 }

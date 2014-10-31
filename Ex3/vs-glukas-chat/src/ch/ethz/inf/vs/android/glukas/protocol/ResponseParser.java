@@ -3,11 +3,13 @@ package ch.ethz.inf.vs.android.glukas.protocol;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import android.annotation.SuppressLint;
 import android.util.Log;
-import ch.ethz.inf.vs.android.glukas.protocol.Utils.ChatEventType;
 
 @SuppressLint("UseSparseArrays")
 public class ResponseParser {
@@ -16,12 +18,15 @@ public class ResponseParser {
 	
 	private final String msgNoStatus = "message with no status : ";
 	private final String parseError = "Unable to parse : ";
+	private final String unknownNotif = "Notification unknown";
 	private final String parO = "{";
 	private final String parC = "}";
 	private final String col = ":";
 	private final String quo = "\"";
 	private final String com = ",";
 	private final String spa = " ";
+	private final String patternUsername = "[^\\s]+";
+	private final String patternUserId = ".*\\(index\\s(.*)\\)";
 	
 	private enum Cmd{
 		CMD("cmd"), 
@@ -58,7 +63,9 @@ public class ResponseParser {
 		UNKNOWN("unknown"),
 		NOTIFICATION("notification"),
 		SUCCESS("success"),
-		FAILURE("failure");
+		FAILURE("failure"),
+		LEFT("left"),
+		JOINED("joined");
 		
 		private Arg(String s){
 			name = s;
@@ -173,14 +180,30 @@ public class ResponseParser {
 	}
 	
 	private void onNotification(JSONObject jObject) throws JSONException {
-		//TODO : call onClientRegister();
-		//TODO : call onClientDeregister();
+		String notification = jObject.getString(Cmd.TEXT.getStr());
+		
+		//match user name
+		Matcher matcherName = Pattern.compile(patternUsername).matcher(notification);
+		matcherName.find();
+		String username = matcherName.group();
+		
+		//match user id 
+		Matcher matcherId = Pattern.compile(patternUserId).matcher(notification);
+		matcherId.find();
+		int userId = Integer.valueOf(matcherId.group(1));
+		
+		
+		if (notification.contains(Arg.JOINED.getStr())){
+			delegate.onClientRegistered(userId, username);
+		} else if (notification.contains(Arg.LEFT.getStr())){
+			delegate.onClientDeregistered(userId, username);
+		} else {
+			Log.e(getClass().toString(), unknownNotif);
+		}
 	}
 	
 	private void onInfo(JSONObject jObject) throws JSONException {
-		//TODO
-		//ChatMessage infoMessage = new ChatMessage(0, jObject.getString(Cmd.TEXT.getStr()), null, null, 0, null);
-		//delegate.onMessageReceived(infoMessage);
+		delegate.onInfoReceived(jObject.getString(Cmd.TEXT.getStr()));
 	}
 	
 	private void onMessage(JSONObject jObject) throws JSONException {
@@ -206,7 +229,6 @@ public class ResponseParser {
 	}
 	
 	private void onUnknown(JSONObject jObject) throws JSONException {
-		//TODO
 		Log.e(this.getClass().toString(), "unkown command");
 	}
 	
@@ -219,11 +241,9 @@ public class ResponseParser {
 	}
 	
 	private VectorClock getVectorClock(JSONObject jObject) throws JSONException{
-		//TODO : think about vector clock ownId
-		//TODO : the initial vector clock should have the ownId passed during registration
-		if (jObject.getString(Cmd.CMD.getStr()).equals("register")) {
+		if (jObject.getString(Cmd.CMD.getStr()).equals(Arg.REGISTER.getStr())) {
 			return new VectorClock(getVectorClockMap(jObject));
-		} else if (jObject.getString(Cmd.CMD.getStr()).equals("message")){ // So that we know which VectorClock was from which sender
+		} else if (jObject.getString(Cmd.CMD.getStr()).equals(Arg.MESSAGE.getStr())){ 
 			Integer indexSender = Integer.valueOf(jObject.getString((Cmd.SENDER.getStr())));
 			return  new VectorClock(getVectorClockMap(jObject) , indexSender);
 		} else { 

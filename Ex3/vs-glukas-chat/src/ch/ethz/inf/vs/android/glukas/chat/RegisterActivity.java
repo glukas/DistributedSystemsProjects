@@ -6,7 +6,6 @@ import ch.ethz.inf.vs.android.glukas.protocol.ChatEventListener;
 import ch.ethz.inf.vs.android.glukas.protocol.ChatFailureReason;
 import ch.ethz.inf.vs.android.glukas.protocol.ChatLogic;
 import ch.ethz.inf.vs.android.glukas.protocol.ChatLogicFactory;
-import ch.ethz.inf.vs.android.glukas.protocol.ChatMessage;
 import ch.ethz.inf.vs.android.glukas.protocol.Utils;
 import ch.ethz.inf.vs.android.glukas.protocol.SyncType;
 import android.app.AlertDialog;
@@ -278,5 +277,9 @@ public class RegisterActivity extends ListActivity implements ChatEventListener 
 
 	@Override
 	public void onClientDeregistered(Integer clientId, String clientUsername) {
+	}
+
+	@Override
+	public void onInfoReceived(String message) {
 	}
 }
