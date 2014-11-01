@@ -1,10 +1,10 @@
 package ch.ethz.inf.vs.android.glukas.protocol;
 
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.PriorityQueue;
 
 
 import android.os.Handler;
+import android.util.Pair;
 
 class MessageSequencer<T extends SyntheticClock<T>> implements MessageSequencerInterface<T> {
 	
@@ -15,7 +15,7 @@ class MessageSequencer<T extends SyntheticClock<T>> implements MessageSequencerI
 	private SyntheticClock<T> clockOfLastDeliveredMessage;
 	private static final long TIMEOUT_MILLIS = 20000;
 	private Handler timeoutHandler = new Handler();
-	private SortedSet<ChatMessage<T>> messageQueue;
+	private PriorityQueue<Pair<SyntheticClock<T>, ChatMessage>> messageQueue;
 	private Runnable timeout = new Runnable() {
 		@Override
 		public void run() {
@@ -31,14 +31,14 @@ class MessageSequencer<T extends SyntheticClock<T>> implements MessageSequencerI
 	public MessageSequencer(MessageSequencerDelegate chat, SyntheticClock<T> initialClock){
 		this.chat = chat;
 		clockOfLastDeliveredMessage = initialClock;
-		this.messageQueue = new TreeSet<ChatMessage<T>>();
+		this.messageQueue = new PriorityQueue<Pair<SyntheticClock<T>, ChatMessage>>();
 	}	
 	
 	@Override
-	public void onMessageReceived(ChatMessage<T> message){
-		messageQueue.add(message);
+	public void onMessageReceived(SyntheticClock<T> clock, ChatMessage message){
+		messageQueue.add(new Pair<SyntheticClock<T>, ChatMessage>(clock,message));
 		
-		if (messageQueue.first().clock.isDeliverable(clockOfLastDeliveredMessage.getClock())) {
+		if (messageQueue.peek().first.isDeliverable(clockOfLastDeliveredMessage.getClock())) {
 			timeoutHandler.removeCallbacks(timeout);
 		}
 		popAllDeliverables();
@@ -52,15 +52,15 @@ class MessageSequencer<T extends SyntheticClock<T>> implements MessageSequencerI
 	}
 	
 	private void popAllDeliverables() {
-		while(!messageQueue.isEmpty() && messageQueue.first().clock.isDeliverable(clockOfLastDeliveredMessage.getClock())) {
+		while(!messageQueue.isEmpty() && messageQueue.peek().first.isDeliverable(clockOfLastDeliveredMessage.getClock())) {
 			popMessage();
 		}
 	}
 	
 	private void popMessage() {
-		ChatMessage<T> nextMessage = messageQueue.first();
-		SyntheticClock<T> nextClock = nextMessage.clock;
-		messageQueue.remove(nextMessage);
+		ChatMessage nextMessage = messageQueue.peek().second;
+		SyntheticClock<T> nextClock = messageQueue.peek().first;
+		messageQueue.poll();
 		clockOfLastDeliveredMessage.update(nextClock.getClock());
 		deliverMessage(nextMessage);
 	}
@@ -78,9 +78,9 @@ class MessageSequencer<T extends SyntheticClock<T>> implements MessageSequencerI
 	}
 
 	//asks the delegate to deliver the message
-	private void deliverMessage(ChatMessage<T> message){
+	private void deliverMessage(ChatMessage message){
 		if (chat != null){
-			chat.onDisplayMessage(message.text, message.sender);
+			chat.onDisplayMessage(message);
 		}
 	}
 }

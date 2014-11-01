@@ -13,7 +13,7 @@ interface MessageSequencerInterface<T extends SyntheticClock<T>> {
 	 * The message clock is used to determine the ordering of the messages.
 	 * @param message
 	 */
-	public abstract void onMessageReceived(ChatMessage<T> message);
+	public abstract void onMessageReceived(SyntheticClock<T> clock, ChatMessage message);
 	
 	/**
 	 * @return the delegate that handles the callbacks from this sequencer. Can be null, in which case no callbacks are made.

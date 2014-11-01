@@ -6,27 +6,30 @@ package ch.ethz.inf.vs.android.glukas.protocol;
  * @author hong-an
  *
  */
-public class ChatMessage<T extends SyntheticClock<T>> implements Comparable<ChatMessage<T>> {
+public class ChatMessage {
 	public final String text;
 	public final Integer sender;
 	public final long timestamp;
-	public final SyntheticClock<T> clock;
-
-	public ChatMessage(int sender, String text, SyntheticClock<T> clock, long timestamp) {
+	public final Lamport lamportTime;
+	public final VectorClock vectorTime;
+ 	
+	public ChatMessage(int sender, String text, Lamport lamport, VectorClock vectorClock, long timestamp) {
 		this.sender = sender;
 		this.text = text;
-		this.clock = clock;
+		this.lamportTime = lamport;
 		this.timestamp = timestamp;
+		this.vectorTime = vectorClock;
 	}
 	
-	@Override
-	public int compareTo(ChatMessage<T> another) {
-		int clockComparison = this.clock.getClock().compareTo(another.clock.getClock());
-		if (clockComparison == 0) {
-			return sender.compareTo(another.sender);
-		} else {
-			return clockComparison;
-		}
-	}
+	/**
+	 * String representation of the object. Used for debugging;
+	 */
+	public String toString() {
+		return "{\"cmd\": \"message\"" + ", \"time_vector\": "
+				+ this.vectorTime.toString() + ", \"lamport\": "
+				+ this.lamportTime.toString() + ", \"text\": " + this.text
+				+ ", \"sender\": " + this.sender + "}";
 
+	}
+	
 }

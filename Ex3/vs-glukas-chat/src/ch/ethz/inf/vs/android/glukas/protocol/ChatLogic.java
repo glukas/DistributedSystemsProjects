@@ -115,8 +115,9 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 	//add a message to the sequencers
 	private void enqueForSequencing(String message, int userId, Lamport lamportClock, VectorClock vectorClock) {
 		long timestamp = new Date().getTime();//TODO does this belong here?
-		lampSorter.onMessageReceived(new ChatMessage<Lamport>(userId, message, lamportClock, timestamp));
-		vecClockSorter.onMessageReceived(new ChatMessage<VectorClock>(userId, message, vectorClock, timestamp));
+		ChatMessage chatMessage = new ChatMessage(userId, message, lamportClock, vectorClock, timestamp);
+		lampSorter.onMessageReceived(lamportClock, chatMessage);
+		vecClockSorter.onMessageReceived(vectorClock, chatMessage);
 	}
 	
 	////
@@ -189,12 +190,13 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 	////
 	
 	@Override
-	public void onDisplayMessage(String message, int userId) {
-		
+	public void onDisplayMessage(ChatMessage message) {
+		int userId = message.sender;
+		String messageText = message.text;
 		if (userId != ownId) {//Ignore messages that we sent out ourselves
 			logger.logReadyMsg(message, true);
 			for (ChatEventListener l : getEventListeners()) {
-				l.onMessageReceived(message, userId);
+				l.onMessageReceived(messageText, userId);
 			}
 		}
 		else {
