@@ -5,6 +5,7 @@ import android.util.Log;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -110,9 +111,11 @@ public class VectorClock implements SyntheticClock<VectorClock> {
 	 */
 	public int compareTo(VectorClock toCompare) {
 		// VectorClock Comparison by element
-
 		Integer isSmaller = 0;
+		
 		for (Integer element : this.clock.keySet()) {
+			if (toCompare.clock.get(element) == null)
+				continue;
 			if (this.clock.get(element) < toCompare.clock.get(element)) {
 				if (isSmaller == 1) {
 					return this.IndexcompareTo(toCompare);
