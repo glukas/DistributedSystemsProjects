@@ -242,8 +242,9 @@ class ResponseParser {
 	
 	private VectorClock getVectorClock(JSONObject jObject) throws JSONException{
 		if (jObject.getString(Cmd.CMD.getStr()).equals(Arg.REGISTER.getStr())) {
-			return new VectorClock(getVectorClockMap(jObject));
-		} else if (jObject.getString(Cmd.CMD.getStr()).equals(Arg.MESSAGE.getStr())){ 
+			Integer ownIndex = jObject.getInt(Cmd.INDEX.getStr());
+			return new VectorClock(getVectorClockMap(jObject), ownIndex);
+		} else if (jObject.getString(Cmd.CMD.getStr()).equals(Arg.MESSAGE.getStr())){
 			Integer indexSender = Integer.valueOf(jObject.getString((Cmd.SENDER.getStr())));
 			return  new VectorClock(getVectorClockMap(jObject) , indexSender);
 		} else { 

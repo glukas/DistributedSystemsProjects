@@ -114,7 +114,7 @@ public class VectorClock implements SyntheticClock<VectorClock> {
 		Integer isSmaller = 0;
 		
 		for (Integer element : this.clock.keySet()) {
-			if (toCompare.clock.get(element) == null)
+			if (toCompare.clock.get(element) == null)//TODO maybe set to 0 by default instead of ignoring?
 				continue;
 			if (this.clock.get(element) < toCompare.clock.get(element)) {
 				if (isSmaller == 1) {
