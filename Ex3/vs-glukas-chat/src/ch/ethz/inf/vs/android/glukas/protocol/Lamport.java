@@ -37,7 +37,11 @@ public class Lamport implements SyntheticClock<Lamport> {
 	 */
 	public void update(Lamport toCompare) {
 		// TODO Fill me
+		if (this.value < toCompare.value)
 		this.value = toCompare.value;
+		else {
+			//do nothing
+			}	
 	}
 
 	// TODO does this belong in the parser?
@@ -100,6 +104,7 @@ public class Lamport implements SyntheticClock<Lamport> {
 
 	@Override
 	public void tick() {
+		this.value++;
 		// TODO (YOUNG) Auto-generated method stub
 		
 	}

@@ -75,8 +75,51 @@ public class VectorClock implements SyntheticClock<VectorClock> {
 	 *            The VectorClock that ours should be compared to
 	 */
 	public void update(VectorClock toCompare) {
-		// TODO Fill me
-		this.clock = toCompare.clock;
+		// TODO Fill me			
+		for (Integer element : toCompare.clock.keySet())
+		{
+			if (this.clock.containsKey(element)){
+				this.replaceWithMaximum(element, toCompare);
+			}
+			else {
+				this.clock.put(element, toCompare.clock.get(element));
+			}
+			
+			
+		}
+		
+		//Not sure if the below part is needed
+		// Remove all keys + values which the newMessage does not have
+		for (Integer element : this.clock.keySet()){
+			if (!toCompare.clock.containsKey(element)){
+				this.clock.remove(element);
+			}
+		}
+		
+		
+		Log.e("Updated VectorClock if usDeliverable: ",  this.toString());
+		
+		
+		
+
+		
+		
+	}
+	
+	public void replaceWithMaximum(Integer element, VectorClock toCompare){
+		Integer maximum = this.getMaximum(this.clock.get(element), toCompare.clock.get(element));
+		this.clock.remove(element);
+		this.clock.put(element, maximum);
+		
+		
+	}
+	public Integer getMaximum(Integer thisValue, Integer otherValue){
+		if (thisValue < otherValue){
+			return otherValue;
+		}
+		else {
+			return thisValue;
+		}
 	}
 
 	// TODO does this belong in the parser?
@@ -181,6 +224,9 @@ public class VectorClock implements SyntheticClock<VectorClock> {
 
 	@Override
 	public void tick() {
+		Integer newvalue = this.clock.get(this.ownIndex) +1;
+		this.clock.remove(this.ownIndex);
+		this.clock.put(this.ownIndex, newvalue);
 		// TODO (YOUNG) Auto-generated method stub
 		
 	}
