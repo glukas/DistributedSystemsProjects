@@ -95,7 +95,7 @@ public class VectorClock implements SyntheticClock<VectorClock> {
 		Iterator<Map.Entry<Integer,Integer>> iter = this.clock.entrySet().iterator();
 		while (iter.hasNext()) {
 		    Map.Entry<Integer,Integer> entry = iter.next();
-		    if(!toCompare.clock.containsKey(entry.getKey())){
+		    if(!toCompare.clock.containsKey(entry.getKey()) && (entry.getKey() != this.ownIndex)){
 		        iter.remove();
 		    }
 		}
@@ -257,8 +257,10 @@ public class VectorClock implements SyntheticClock<VectorClock> {
 
 	@Override
 	public void tick() {
+		Log.d("own Index: ", String.valueOf(this.ownIndex));
+		if (this.clock == null)
+			Log.d("This clock is null", "!!");
 		Integer newvalue = this.clock.get(this.ownIndex) +1;
-		this.clock.remove(this.ownIndex);
 		this.clock.put(this.ownIndex, newvalue);
 		// TODO (YOUNG) Auto-generated method stub
 		
