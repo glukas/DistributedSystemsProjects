@@ -29,7 +29,6 @@ public class ChatMessage {
 				+ this.vectorTime.toString() + ", \"lamport\": "
 				+ this.lamportTime.toString() + ", \"text\": " + this.text
 				+ ", \"sender\": " + this.sender + "}";
-
 	}
 	
 }

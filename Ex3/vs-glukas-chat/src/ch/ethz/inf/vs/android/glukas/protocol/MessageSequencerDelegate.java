@@ -8,4 +8,5 @@ interface MessageSequencerDelegate {
 	 * @param message to display
 	 */
 	abstract void onDisplayMessage(ChatMessage message);
+
 }
