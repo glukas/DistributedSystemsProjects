@@ -38,16 +38,16 @@ class MessageSequencer<T extends SyntheticClock<T>> implements MessageSequencerI
 	public void onMessageReceived(ChatMessage<T> message){
 		messageQueue.add(message);
 		
-		/* TODO this is the actual implementation
+		// TODO this is the actual implementation
 		
 		if (messageQueue.first().isDeliverable(lastDelivered)) {
 			timeoutHandler.removeCallbacks(timeout);
 		}
 		popAllDeliverables();
-		postTimeoutIfNonempty();*/
+		postTimeoutIfNonempty();
 		
 		//TODO remove this
-		popMessage();
+		//popMessage();
 	}
 
 	@Override

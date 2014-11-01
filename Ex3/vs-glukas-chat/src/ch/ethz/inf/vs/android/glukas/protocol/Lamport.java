@@ -1,10 +1,10 @@
 package ch.ethz.inf.vs.android.glukas.protocol;
 
-
 /**
  * This class should be used for abstracting Lamport timestamps
+ * 
  * @author hong-an
- *
+ * 
  */
 public class Lamport implements SyntheticClock<Lamport> {
 	/**
@@ -21,23 +21,26 @@ public class Lamport implements SyntheticClock<Lamport> {
 
 	/**
 	 * Setter for the timestamp
-	 * @param initValue The value
+	 * 
+	 * @param initValue
+	 *            The value
 	 */
 	public Lamport(int initValue) {
 		this.value = initValue;
 	}
 
 	/**
-	 * This function updates our own timestamp
-	 * to the newly received one
-	 * @param toCompare The newly received Lamport timestamp
+	 * This function updates our own timestamp to the newly received one
+	 * 
+	 * @param toCompare
+	 *            The newly received Lamport timestamp
 	 */
 	public void update(Lamport toCompare) {
 		// TODO Fill me
 		this.value = toCompare.value;
 	}
 
-	//TODO does this belong in the parser?
+	// TODO does this belong in the parser?
 	@Override
 	/**
 	 * This function returns the String representation of the
@@ -48,38 +51,46 @@ public class Lamport implements SyntheticClock<Lamport> {
 		// TODO Fill me
 		return String.valueOf(this.value);
 	}
-	
-	public int getTimestamp(){
+
+	public int getTimestamp() {
 		return this.value;
 	}
-	
-	////
-	//SYNTHETIC CLOCK
-	////
+
+	// //
+	// SYNTHETIC CLOCK
+	// //
 
 	/**
 	 * This function compares two Lamport timestamps.
-	 * @param toCompare The newly received Lamport timestamp
+	 * 
+	 * @param toCompare
+	 *            The newly received Lamport timestamp
 	 */
 	public int compareTo(Lamport toCompare) {
 		// Lamport Integer Comparison
 		if (this.value < toCompare.value) {
 			return -1;
-		}
-		else if (this.value > toCompare.value){
+		} else if (this.value > toCompare.value) {
 			return 1;
-		}
-		else if (this.value == toCompare.value){
+		} else if (this.value == toCompare.value) {
 			return 0;
 		}
 		return 0;
 	}
-	
 
 	@Override
 	public boolean isDeliverable(Lamport lastDeliveredMessage) {
-		// TODO Auto-generated method stub
-		return false;
+		Integer difference = this.value - lastDeliveredMessage.value;
+		if (difference == 1) {
+			return true;
+		} else if (difference > 1) {
+			return false;
+		} else {
+			// If its an earlier message just display directly
+			return true;
+		}
+
+
 	}
 
 	@Override

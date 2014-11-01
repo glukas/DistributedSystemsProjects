@@ -1,6 +1,8 @@
 package ch.ethz.inf.vs.android.glukas.protocol;
 
 import android.annotation.SuppressLint;
+import android.util.Log;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -53,17 +55,15 @@ public class VectorClock implements SyntheticClock<VectorClock> {
 	 * This converts the VectorClock to the appropriate JSON format
 	 * 
 	 * @return
-	 * @throws JSONException 
+	 * @throws JSONException
 	 */
 	public JSONObject convertToJSON() throws JSONException {
 		// TODO Fill me
 		JSONObject returnJSON = new JSONObject();
-		for (Integer key : clock.keySet()){
+		for (Integer key : clock.keySet()) {
 			returnJSON.put(key.toString(), clock.get(key));
 		}
-		
-		
-		
+
 		return returnJSON;
 	}
 
@@ -78,33 +78,35 @@ public class VectorClock implements SyntheticClock<VectorClock> {
 		this.clock = toCompare.clock;
 	}
 
-
-	//TODO does this belong in the parser?
+	// TODO does this belong in the parser?
 	@Override
 	/**
 	 * This function should return a String representation of the
 	 * VectorClock
 	 * @return String that represents tha VectorClock
 	 */
-	public String toString(){
+	public String toString() {
 		// TODO Fill me
-		
+
 		String result = "{";
-		for(Map.Entry<Integer, Integer> entry : clock.entrySet()){
-			result += "\""+ String.valueOf(entry.getKey()) + "\" : "  + String.valueOf(entry.getValue())+  ","; 
+		for (Map.Entry<Integer, Integer> entry : clock.entrySet()) {
+			result += "\"" + String.valueOf(entry.getKey()) + "\" : "
+					+ String.valueOf(entry.getValue()) + ",";
 		}
 		result += "}";
-		result = result.replace (",}", "}");
+		result = result.replace(",}", "}");
 		return result;
 	}
-	
-	////
-	//SYNTHETIC CLOCK
-	////
-	
+
+	// //
+	// SYNTHETIC CLOCK
+	// //
+
 	/**
 	 * This function allows to compare VectorClocks
-	 * @param another The VectorClock that ours should be compared to
+	 * 
+	 * @param another
+	 *            The VectorClock that ours should be compared to
 	 */
 	public int compareTo(VectorClock toCompare) {
 		// VectorClock Comparison by element
@@ -136,26 +138,37 @@ public class VectorClock implements SyntheticClock<VectorClock> {
 		if (this.clock.get(this.ownIndex) < toCompare.clock.get(this.ownIndex)
 				&& this.clock.get(toCompare.ownIndex) < toCompare.clock
 						.get(toCompare.ownIndex)) {
+			Log.v("IndexcompareTo: ", "previous after this");
 			return -1;
 		} else if (this.clock.get(this.ownIndex) > toCompare.clock
 				.get(this.ownIndex)
 				&& this.clock.get(toCompare.ownIndex) > toCompare.clock
 						.get(toCompare.ownIndex)) {
+
+			Log.v("IndexcompareTo: ", "this after previous");
 			return 1;
 		} else {
+			Log.v("IndexcompareTo:", "couldnt decide!");
 			return 0;
 		}
 
 	}
 
-
-
-
-
 	@Override
 	public boolean isDeliverable(VectorClock lastDeliveredMessage) {
-		// TODO Auto-generated method stub
-		return false;
+		Integer difference = 0;
+		if (lastDeliveredMessage.clock.get(this.ownIndex) != null)
+			difference = this.clock.get(this.ownIndex)
+					- lastDeliveredMessage.clock.get(this.ownIndex);
+		if (difference == 1) {
+			return true;
+		} else if (difference > 1) {
+			return false;
+		} else {
+			// If its an earlier message just display directly
+			return true;
+		}
+
 	}
 
 	@Override
