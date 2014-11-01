@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.util.Log;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -90,12 +91,14 @@ public class VectorClock implements SyntheticClock<VectorClock> {
 		
 		//Not sure if the below part is needed
 		// Remove all keys + values which the newMessage does not have
-		for (Integer element : this.clock.keySet()){
-			if (!toCompare.clock.containsKey(element)){
-				this.clock.remove(element);
-			}
-		}
 		
+		Iterator<Map.Entry<Integer,Integer>> iter = this.clock.entrySet().iterator();
+		while (iter.hasNext()) {
+		    Map.Entry<Integer,Integer> entry = iter.next();
+		    if(!toCompare.clock.containsKey(entry.getKey())){
+		        iter.remove();
+		    }
+		}
 		
 		Log.e("Updated VectorClock if usDeliverable: ",  this.toString());
 		
@@ -108,7 +111,6 @@ public class VectorClock implements SyntheticClock<VectorClock> {
 	
 	public void replaceWithMaximum(Integer element, VectorClock toCompare){
 		Integer maximum = this.getMaximum(this.clock.get(element), toCompare.clock.get(element));
-		this.clock.remove(element);
 		this.clock.put(element, maximum);
 		
 		
@@ -157,7 +159,7 @@ public class VectorClock implements SyntheticClock<VectorClock> {
 		Integer isSmaller = 0;
 		
 		for (Integer element : this.clock.keySet()) {
-			if (toCompare.clock.get(element) == null)//TODO maybe set to 0 by default instead of ignoring?
+			if (!toCompare.clock.containsKey(element))//TODO maybe set to 0 by default instead of ignoring?
 				continue;
 			if (this.clock.get(element) < toCompare.clock.get(element)) {
 				if (isSmaller == 1) {
@@ -202,21 +204,52 @@ public class VectorClock implements SyntheticClock<VectorClock> {
 
 	@Override
 	public boolean isDeliverable(VectorClock lastDeliveredMessage) {
-		Integer difference = 0;
-		if (lastDeliveredMessage.clock.get(this.ownIndex) != null)
-			difference = this.clock.get(this.ownIndex)
-					- lastDeliveredMessage.clock.get(this.ownIndex);
-		if (difference == 1) {
-			return true;
-		} else if (difference > 1) {
-			return false;
-		} else {
-			// If its an earlier message just display directly
-			return true;
+		
+		for (Integer element : this.clock.keySet())	
+		{	 
+			
+			// Calculating differences for each index
+			Integer difference = 0;
+			if (lastDeliveredMessage.clock.containsKey(element)){
+			difference = this.clock.get(element) - lastDeliveredMessage.clock.get(element);
+			}
+			else {
+				difference = this.clock.get(element);
+			}
+			
+			
+			
+			// If its the index of the sender the difference is allowed to be 1
+			if (element == this.ownIndex)
+			{
+				if (difference <= 1){
+					continue;
+				}
+				else {
+					return false;
+				}
+				
+			}
+			// If its an index different from the sender there should be difference <= 0
+			else{
+				if (difference <= 0){
+					continue;
+				}
+				else {
+					return false;
+				}
+					
+			}
+			
 		}
-
-	}
-
+		
+			
+		return true;	
+	}	
+			
+			
+			
+	
 	@Override
 	public VectorClock getClock() {
 		return this;
