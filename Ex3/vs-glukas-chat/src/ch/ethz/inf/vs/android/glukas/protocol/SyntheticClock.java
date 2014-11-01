@@ -13,4 +13,15 @@ public interface SyntheticClock<T> extends Comparable<T> {
 	 */
 	T getClock();
 	
+	/**
+	 * Update the current clock using the new clock
+	 * @param nextClock
+	 */
+	void update(T nextClock);
+	
+	/**
+	 * Increments the clock by one time unit.
+	 */
+	void tick();
+	
 }

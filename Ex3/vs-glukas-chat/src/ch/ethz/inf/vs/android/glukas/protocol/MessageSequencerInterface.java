@@ -16,12 +16,6 @@ interface MessageSequencerInterface<T extends SyntheticClock<T>> {
 	public abstract void onMessageReceived(ChatMessage<T> message);
 	
 	/**
-	 * Get the actual clock
-	 * @return the current clock
-	 */
-	public abstract ChatMessage<T> getLastDeliveredMessage();
-	
-	/**
 	 * @return the delegate that handles the callbacks from this sequencer. Can be null, in which case no callbacks are made.
 	 */
 	public abstract MessageSequencerDelegate getDelegate();

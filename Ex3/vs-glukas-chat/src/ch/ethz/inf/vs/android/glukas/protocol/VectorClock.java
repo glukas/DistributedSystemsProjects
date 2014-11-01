@@ -178,4 +178,10 @@ public class VectorClock implements SyntheticClock<VectorClock> {
 	public VectorClock getClock() {
 		return this;
 	}
+
+	@Override
+	public void tick() {
+		// TODO (YOUNG) Auto-generated method stub
+		
+	}
 }

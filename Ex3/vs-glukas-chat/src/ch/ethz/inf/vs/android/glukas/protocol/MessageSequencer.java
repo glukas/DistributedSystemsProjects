@@ -12,7 +12,7 @@ class MessageSequencer<T extends SyntheticClock<T>> implements MessageSequencerI
 	private MessageSequencerDelegate chat;
 	
 	//sorting & timeout
-	private ChatMessage<T> lastDelivered;
+	private SyntheticClock<T> clockOfLastDeliveredMessage;
 	private static final long TIMEOUT_MILLIS = 20000;
 	private Handler timeoutHandler = new Handler();
 	private SortedSet<ChatMessage<T>> messageQueue;
@@ -28,9 +28,9 @@ class MessageSequencer<T extends SyntheticClock<T>> implements MessageSequencerI
 	 * @param chat where to send messages to be displayed, if this is null, no one will be notified, but the lastDelivered message is still kept current
 	 * @param initialMessage
 	 */
-	public MessageSequencer(MessageSequencerDelegate chat, ChatMessage<T> initialMessage){
+	public MessageSequencer(MessageSequencerDelegate chat, SyntheticClock<T> initialClock){
 		this.chat = chat;
-		this.lastDelivered = initialMessage;
+		clockOfLastDeliveredMessage = initialClock;
 		this.messageQueue = new TreeSet<ChatMessage<T>>();
 	}	
 	
@@ -38,38 +38,31 @@ class MessageSequencer<T extends SyntheticClock<T>> implements MessageSequencerI
 	public void onMessageReceived(ChatMessage<T> message){
 		messageQueue.add(message);
 		
-		// TODO this is the actual implementation
-		
-		if (messageQueue.first().isDeliverable(lastDelivered)) {
+		if (messageQueue.first().clock.isDeliverable(clockOfLastDeliveredMessage.getClock())) {
 			timeoutHandler.removeCallbacks(timeout);
 		}
 		popAllDeliverables();
 		postTimeoutIfNonempty();
 		
-		//TODO remove this
-		//popMessage();
 	}
-
-	@Override
-	public ChatMessage<T> getLastDeliveredMessage() {
-		return lastDelivered;
-	}
-
+	
 	@Override
 	public MessageSequencerDelegate getDelegate() {
 		return chat;
 	}
 	
 	private void popAllDeliverables() {
-		while(!messageQueue.isEmpty() && messageQueue.first().isDeliverable(lastDelivered)) {
+		while(!messageQueue.isEmpty() && messageQueue.first().clock.isDeliverable(clockOfLastDeliveredMessage.getClock())) {
 			popMessage();
 		}
 	}
 	
 	private void popMessage() {
-		lastDelivered = messageQueue.first();
-		messageQueue.remove(lastDelivered);
-		deliverMessage(lastDelivered);
+		ChatMessage<T> nextMessage = messageQueue.first();
+		SyntheticClock<T> nextClock = nextMessage.clock;
+		messageQueue.remove(nextMessage);
+		clockOfLastDeliveredMessage.update(nextClock.getClock());
+		deliverMessage(nextMessage);
 	}
 	
 	private void postTimeoutIfNonempty() {

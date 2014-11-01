@@ -97,4 +97,10 @@ public class Lamport implements SyntheticClock<Lamport> {
 	public Lamport getClock() {
 		return this;
 	}
+
+	@Override
+	public void tick() {
+		// TODO (YOUNG) Auto-generated method stub
+		
+	}
 }

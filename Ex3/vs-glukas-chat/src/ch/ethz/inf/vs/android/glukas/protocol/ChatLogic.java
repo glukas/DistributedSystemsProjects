@@ -43,6 +43,9 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 	//sorting
 	private MessageSequencerInterface<Lamport> lampSorter;
 	private MessageSequencerInterface<VectorClock> vecClockSorter;
+	private int ownId;
+	private Lamport lamportClock;
+	private VectorClock vectorClock;
 	
 	/**
 	 * Constructor
@@ -100,6 +103,13 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 		Log.e(this.getClass().toString(), "inconsistent request/response pair");
 	}
 	
+	//add a message to the sequencers
+	private void enqueForSequencing(String message, int userId, Lamport lamportClock, VectorClock vectorClock) {
+		long timestamp = new Date().getTime();//TODO does this belong here?
+		lampSorter.onMessageReceived(new ChatMessage<Lamport>(userId, message, lamportClock, timestamp));
+		vecClockSorter.onMessageReceived(new ChatMessage<VectorClock>(userId, message, vectorClock, timestamp));
+	}
+	
 	////
 	//ASYNC NETWORK DELEGATE
 	////
@@ -148,8 +158,11 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 
 	@Override
 	public void sendMessage(String message, int messageId) {
-		String messageString = 	parser.getsendMessageRequest(message, lampSorter.getLastDeliveredMessage().clock.getClock(), vecClockSorter.getLastDeliveredMessage().clock.getClock());
+		lamportClock.tick();
+		vectorClock.tick();
+		String messageString = 	parser.getsendMessageRequest(message, lamportClock, vectorClock);
 		outgoingMessages.add(new MessageRequest(messageId, messageString, MessageRequestType.sendMessage));
+		enqueForSequencing(message, ownId, lamportClock, vectorClock);
 		asyncSendNext();
 	}
 
@@ -167,8 +180,10 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 	
 	@Override
 	public void onDisplayMessage(String message, int userId) {
-		for (ChatEventListener l : getEventListeners()) {
-			l.onMessageReceived(message, userId);
+		if (userId != ownId) {//Ignore messages that we sent out ourselves
+			for (ChatEventListener l : getEventListeners()) {
+				l.onMessageReceived(message, userId);
+			}
 		}
 	}
 
@@ -179,26 +194,24 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 	
 	@Override
 	public void onRegistrationSucceeded(int ownId, Lamport lamportClock, VectorClock vectorClock) {
-		//TODO (Lukas) some housekeeping (keep track of ownId?)
-		Log.i(this.getClass().toString(), "onRegistrationSucceeded");
+		Log.i(this.getClass().toString(), "onRegistrationSucceeded, ownId : " + ownId);
+		//initialize clocks
+		this.ownId = ownId;
+		this.lamportClock = lamportClock;
+		this.vectorClock = vectorClock;
 		//remove the first message from the queue and check if it has the right type (it should!)
 		if (!outgoingMessages.isEmpty() && outgoingMessages.pollFirst().type == MessageRequestType.register) {
 			for (ChatEventListener l : getEventListeners()) {
 				l.onRegistrationSucceeded();
 			}
 			
-			//create initial messages
-			long timestamp = new Date().getTime();
-			ChatMessage<Lamport> lamportMessage = new ChatMessage<Lamport>(-1, "", lamportClock, timestamp);
-			ChatMessage<VectorClock> vectorClockMessage = new ChatMessage<VectorClock>(-1, "", vectorClock, timestamp);
-			
 			//initialize the sorting
 			if (syncType.equals(SyncType.LAMPORT_SYNC)){
-				lampSorter = new MessageSequencer<Lamport>(this, lamportMessage);
-				vecClockSorter = new MessageSequencer<VectorClock>(null, vectorClockMessage);
+				lampSorter = new MessageSequencer<Lamport>(this, lamportClock);
+				vecClockSorter = new MessageSequencer<VectorClock>(null, vectorClock);
 			} else if (syncType.equals(SyncType.VECTOR_CLOCK_SYNC)){
-				lampSorter = new MessageSequencer<Lamport>(null, lamportMessage);
-				vecClockSorter = new MessageSequencer<VectorClock>(this, vectorClockMessage);
+				lampSorter = new MessageSequencer<Lamport>(null, lamportClock);
+				vecClockSorter = new MessageSequencer<VectorClock>(this, vectorClock);
 			}
 			
 		} else {
@@ -317,9 +330,9 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 	public void onMessageReceived(String message, int userId, Lamport lamportClock, VectorClock vectorClock) {
 		Log.i(this.getClass().toString(), "onMessageReceived");
 		//enqueue the message on the sequencers
-		long timestamp = new Date().getTime();
-		lampSorter.onMessageReceived(new ChatMessage<Lamport>(userId, message, lamportClock, timestamp));
-		vecClockSorter.onMessageReceived(new ChatMessage<VectorClock>(userId, message, vectorClock, timestamp));
+		this.lamportClock.update(lamportClock);
+		this.vectorClock.update(vectorClock);
+		enqueForSequencing(message, userId, lamportClock, vectorClock);
 	}
 
 	@Override

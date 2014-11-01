@@ -6,7 +6,7 @@ package ch.ethz.inf.vs.android.glukas.protocol;
  * @author hong-an
  *
  */
-public class ChatMessage<T extends SyntheticClock<T>> implements SyntheticClock<ChatMessage<T>> {
+public class ChatMessage<T extends SyntheticClock<T>> implements Comparable<ChatMessage<T>> {
 	public final String text;
 	public final Integer sender;
 	public final long timestamp;
@@ -19,15 +19,6 @@ public class ChatMessage<T extends SyntheticClock<T>> implements SyntheticClock<
 		this.timestamp = timestamp;
 	}
 	
-	////
-	//SYNTHETIC CLOCK
-	////
-
-	@Override
-	public boolean isDeliverable(ChatMessage<T> lastMessageDelivered) {
-		return this.clock.getClock().isDeliverable(lastMessageDelivered.clock.getClock());
-	}
-	
 	@Override
 	public int compareTo(ChatMessage<T> another) {
 		int clockComparison = this.clock.getClock().compareTo(another.clock.getClock());
@@ -36,11 +27,6 @@ public class ChatMessage<T extends SyntheticClock<T>> implements SyntheticClock<
 		} else {
 			return clockComparison;
 		}
-	}
-
-	@Override
-	public ChatMessage<T> getClock() {
-		return this;
 	}
 
 }
