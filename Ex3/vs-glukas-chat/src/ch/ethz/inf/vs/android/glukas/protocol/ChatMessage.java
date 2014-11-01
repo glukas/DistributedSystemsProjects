@@ -11,13 +11,30 @@ public class ChatMessage<T extends SyntheticClock<T>> implements Comparable<Chat
 	public final Integer sender;
 	public final long timestamp;
 	public final SyntheticClock<T> clock;
+	private String clockType;
 
 	public ChatMessage(int sender, String text, SyntheticClock<T> clock, long timestamp) {
 		this.sender = sender;
 		this.text = text;
 		this.clock = clock;
 		this.timestamp = timestamp;
+		if (clock instanceof VectorClock){
+			this.clockType = "time_vector";
+		}
+		else if (clock instanceof Lamport)
+			this.clockType = "lamport";
+		}
+	
+	
+	
+	public String toString() {
+		return "{\"cmd\": \"message\"" + ", \""+ clockType +"\": "
+				+ this.clock.toString() + ", \"text\": " + this.text
+				+ ", \"sender\": " + this.sender + "}";
+
 	}
+	
+	
 	
 	@Override
 	public int compareTo(ChatMessage<T> another) {

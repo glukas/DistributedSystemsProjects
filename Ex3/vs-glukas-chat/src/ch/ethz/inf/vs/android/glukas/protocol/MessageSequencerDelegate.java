@@ -7,5 +7,5 @@ interface MessageSequencerDelegate {
 	 * Called when a message is ready to be displayed
 	 * @param message to display
 	 */
-	abstract void onDisplayMessage(String message, int senderId);
+	abstract void onDisplayMessage(ChatMessage<?> message, int senderId);
 }

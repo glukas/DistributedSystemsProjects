@@ -189,12 +189,12 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 	////
 	
 	@Override
-	public void onDisplayMessage(String message, int userId) {
+	public void onDisplayMessage(ChatMessage<?> message, int userId) {
 		
 		if (userId != ownId) {//Ignore messages that we sent out ourselves
 			logger.logReadyMsg(message, true);
 			for (ChatEventListener l : getEventListeners()) {
-				l.onMessageReceived(message, userId);
+				l.onMessageReceived(message.text, userId);
 			}
 		}
 		else {

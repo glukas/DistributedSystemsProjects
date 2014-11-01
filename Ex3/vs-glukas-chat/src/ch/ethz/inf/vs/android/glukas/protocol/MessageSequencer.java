@@ -80,7 +80,7 @@ class MessageSequencer<T extends SyntheticClock<T>> implements MessageSequencerI
 	//asks the delegate to deliver the message
 	private void deliverMessage(ChatMessage<T> message){
 		if (chat != null){
-			chat.onDisplayMessage(message.text, message.sender);
+			chat.onDisplayMessage(message, message.sender);
 		}
 	}
 }
