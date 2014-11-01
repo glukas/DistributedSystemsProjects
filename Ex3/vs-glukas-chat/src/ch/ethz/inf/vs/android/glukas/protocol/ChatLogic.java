@@ -5,8 +5,11 @@ import java.util.Deque;
 import java.util.LinkedList;
 import java.util.Map;
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.Handler;
 import android.util.Log;
+import ch.ethz.inf.vs.android.glukas.chat.Logger;
+import ch.ethz.inf.vs.android.glukas.chat.MainActivity;
 import ch.ethz.inf.vs.android.glukas.chat.network.AsyncNetwork;
 import ch.ethz.inf.vs.android.glukas.chat.network.AsyncNetworkDelegate;
 import ch.ethz.inf.vs.android.glukas.protocol.MessageRequest.MessageRequestType;
@@ -21,6 +24,8 @@ import ch.ethz.inf.vs.android.glukas.protocol.MessageRequest.MessageRequestType;
  */
 public class ChatLogic extends ChatEventSource implements ChatClientRequestInterface, ChatServerRawResponseInterface, MessageSequencerDelegate, AsyncNetworkDelegate {
 	
+	
+	
 	//networking
 	private static final long RECEIVE_TIMEOUT_MILLIS = 2000;
 	private AsyncNetwork asyncNetwork = new AsyncNetwork(Utils.SERVER_ADDRESS, Utils.SERVER_PORT_CHAT_TEST, this);
@@ -34,6 +39,8 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 	};
 
 	//protocol
+	private Context context;
+	private Logger logger;
 	private SyncType syncType;
 	private ResponseParser parser = new ResponseParser(this);
 	
@@ -47,12 +54,14 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 	private Lamport lamportClock;
 	private VectorClock vectorClock;
 	
+	
 	/**
 	 * Constructor
 	 * @param vectorClockSync 
 	 * @param context The calling activity
 	 */
-	public ChatLogic(SyncType syncType) {
+	public ChatLogic(SyncType syncType, Context context) {
+		this.context = context;
 		this.syncType = syncType;
 	}
 	
@@ -142,6 +151,7 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 	
 	@Override
 	public void register(String username) {
+		logger = new Logger(username , this.context);
 		String registerString = parser.getRegisterRequest(username);
 		Log.e(this.getClass().toString(), registerString);
 		outgoingMessages.add(new MessageRequest(0, registerString, MessageRequestType.register));
@@ -180,10 +190,16 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 	
 	@Override
 	public void onDisplayMessage(String message, int userId) {
+		
 		if (userId != ownId) {//Ignore messages that we sent out ourselves
+			logger.logReadyMsg(message, true);
 			for (ChatEventListener l : getEventListeners()) {
 				l.onMessageReceived(message, userId);
 			}
+		}
+		else {
+			logger.logReadyMsg(message, false);
+			
 		}
 	}
 

@@ -73,7 +73,7 @@ public class Logger implements Serializable{
 	 * @param msg The message
 	 * @param isIncoming Whether the message is an incoming message or not.
 	 */
-    public void logReadyMsg(ChatMessage msg, boolean isIncoming){
+    public void logReadyMsg(String msg, boolean isIncoming){
     	String time = Utils.getTime();
     	String line;
     	if(isIncoming){

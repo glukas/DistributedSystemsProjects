@@ -131,7 +131,7 @@ public class RegisterActivity extends ListActivity implements ChatEventListener 
 		}
 
 		username = usernameEditText.getText().toString() + numberUsername.getText().toString();
-		chatLogic = ChatLogicFactory.getInstance();
+		chatLogic = ChatLogicFactory.getInstance(this);
 		chatLogic.addChatEventListener(this);
 		chatLogic.register(username);
 	}

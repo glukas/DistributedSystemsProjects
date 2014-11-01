@@ -55,7 +55,6 @@ public class MainActivity extends ListActivity implements ChatEventListener {
 	@SuppressLint("UseSparseArrays")
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -65,7 +64,7 @@ public class MainActivity extends ListActivity implements ChatEventListener {
         this.textInput = (TextView) findViewById(R.id.text);
         
 		//Retrieve and restore ChatLogic
-		this.chat = ChatLogicFactory.getInstance();
+		this.chat = ChatLogicFactory.getInstance(this);
 		
 		//Get info from Intent
 		username = getIntent().getStringExtra(Utils.INTENT_ARG_USERNAME);
