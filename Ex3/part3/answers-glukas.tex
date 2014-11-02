@@ -20,6 +20,8 @@
 \question{3}{Mini-Test}
 
 \part{1}
+What are the main advantages of using Vector Clocks over Lamport timestamps?
+
 
 \begin{itemize}
 	\item Vector Clocks keep tracks of causal dependencies
@@ -27,6 +29,7 @@
 \end{itemize}
 
 \part{2}
+Give the conditions for two Vector Clocks to be causally dependent?
 
 \begin{itemize}
 \item$e^{x}_{i} \Rightarrow e^{x}_{j}$ iff $C_{i} (e^{x}_{i})[i] \leq C_{j} (e^{y}_{j})[i] \wedge 
@@ -36,6 +39,10 @@
 \clearpage
 
 \part{3}
+Draw the state machine for a successful registration. For this, identify the commands on top of
+arrows and link the states to your own naming in your implementation. (Hint: What if there is no
+network connection?)
+
 
 \includegraphics[scale=0.15]{registrationStates.jpg}
 
@@ -59,6 +66,7 @@
 \clearpage
 
 \part{4}
+Draw the state machine for sending a message.
 
 \includegraphics[scale=0.15]{sendMessageStates.jpg}
 
@@ -80,12 +88,18 @@
 \clearpage
 
 \part{5}
+We decided in the exercise that we would not let our applications trigger a tick when receiving a
+message. What would be the implications of ticking on receive?
+
 
 \begin{itemize}
 	\item It would be possible to sort receiving events.
 \end{itemize}
 
 \part{6}
+Does a clock tick happen before or after the sending of a message. What are the implications of
+changing this?
+
 
 \begin{itemize}
 	\item Before. Else it would be possible to violates clock consistency condition. For example, a client A receives a message m1 with timestamps 0. Client sends a message m2 with time 0 and then tick. Clearly, we have m1 $\rightarrow$ m2 and it should imply that C(m1) $<$ C(m2), but both have timestamps 0.
@@ -93,6 +107,11 @@
 \end{itemize}
 
 \part{7}
+Read the paper Dynamic Vector Clocks for Consistent Ordering of Events in Dynamic Distributed
+Applications by Tobias Landes 8
+that gives a good overview on the discussed methods. In particular,
+which problem of vector clocks is solved in the paper?
+
 
 \begin{itemize}
 	\item The problem with vector clocks is that one needs to know the number of processes in advance and this number has to be fix. The paper solves the problem in proposing a solution where one has possibilities to create dynamically processes at runtime.
