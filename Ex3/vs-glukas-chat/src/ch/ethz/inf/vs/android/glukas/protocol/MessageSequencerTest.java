@@ -1,9 +1,7 @@
 package ch.ethz.inf.vs.android.glukas.protocol;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
-
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.util.Log;

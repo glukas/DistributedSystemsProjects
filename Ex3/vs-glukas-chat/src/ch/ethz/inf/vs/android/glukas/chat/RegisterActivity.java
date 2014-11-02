@@ -6,7 +6,6 @@ import ch.ethz.inf.vs.android.glukas.protocol.ChatEventListener;
 import ch.ethz.inf.vs.android.glukas.protocol.ChatFailureReason;
 import ch.ethz.inf.vs.android.glukas.protocol.ChatLogic;
 import ch.ethz.inf.vs.android.glukas.protocol.ChatLogicFactory;
-import ch.ethz.inf.vs.android.glukas.protocol.MessageSequencerTest;
 import ch.ethz.inf.vs.android.glukas.protocol.Utils;
 import ch.ethz.inf.vs.android.glukas.protocol.SyncType;
 import android.app.AlertDialog;
@@ -58,8 +57,6 @@ public class RegisterActivity extends ListActivity implements ChatEventListener 
 	//dialog message
 	private volatile boolean isLogging = false;
 	private AlertDialog logMessage;
-
-	private MessageSequencerTest test = new MessageSequencerTest();
 	
 	////
 	//Life cycle
@@ -82,8 +79,6 @@ public class RegisterActivity extends ListActivity implements ChatEventListener 
 		//preferences
 		preferences = this.getSharedPreferences(Settings.SETTINGS_CHAT, MODE_PRIVATE);
 		restoreUserPreferences();
-		
-		//test.test();
 	}
 	
 	public void onBackPressed() {

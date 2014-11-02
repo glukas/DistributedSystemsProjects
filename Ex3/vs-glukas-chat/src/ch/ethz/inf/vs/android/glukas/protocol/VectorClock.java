@@ -1,7 +1,6 @@
 package ch.ethz.inf.vs.android.glukas.protocol;
 
 import android.annotation.SuppressLint;
-import android.util.Log;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;

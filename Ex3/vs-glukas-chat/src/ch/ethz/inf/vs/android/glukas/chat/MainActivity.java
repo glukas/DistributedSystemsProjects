@@ -15,11 +15,9 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.app.ListActivity;
 import android.content.Context;
-import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.StrictMode;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -205,9 +203,9 @@ import android.widget.TextView;
 	public void onDeregistrarionSucceeded() {
 		//deregistration failed, return to RegisterActivity
 		chat.removeChatEventListener(this);
-		Intent intent = new Intent(this, RegisterActivity.class);
+		//Intent intent = new Intent(this, RegisterActivity.class);
 		logoutDialog.dismiss();
-//		startActivity(intent);
+		//startActivity(intent);
 		finish();
 		chat.pause();
 	}
