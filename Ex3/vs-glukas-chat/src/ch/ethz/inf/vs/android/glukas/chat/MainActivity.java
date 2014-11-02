@@ -14,7 +14,9 @@ import ch.ethz.inf.vs.android.glukas.protocol.Utils;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.app.ListActivity;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.util.Log;
@@ -117,7 +119,17 @@ import android.widget.TextView;
 			}
 		}
 	}
-	
+	 //Check for Network
+	private boolean haveNetworkConnection() {
+		//check if the device is able to send and receive data from the Internet
+		ConnectivityManager connectivityManager = (ConnectivityManager) this
+	               .getSystemService(Context.CONNECTIVITY_SERVICE);
+		if (connectivityManager.getActiveNetworkInfo() != null){
+			return connectivityManager.getActiveNetworkInfo().isAvailable() && 
+					connectivityManager.getActiveNetworkInfo().isConnected();
+		}	
+		return false;
+	}
 	////
 	//Display Messages
 	////
@@ -199,15 +211,26 @@ import android.widget.TextView;
 		finish();
 		chat.pause();
 	}
+	
+	
+	
 
 	@Override
 	public void onDeregistrationFailed() {
 		//inform user deregistration failed
+		if (!this.haveNetworkConnection()){
+			chat.removeChatEventListener(this);
+			logoutDialog.dismiss();
+			finish();
+			chat.pause();
+		}
+		else { 
 		if (logoutDialog != null && logoutDialog.isShowing()) {
 			logoutDialog.dismiss();
 			DialogFactory.createDialogMessage(getResources().getString(R.string.deregistration_failed), 
 					getResources().getString(R.string.error), this).show();
 		}
+	}
 	}
 
 	@Override
