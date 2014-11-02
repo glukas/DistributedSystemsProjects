@@ -28,7 +28,7 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 	
 	//networking
 	private static final long RECEIVE_TIMEOUT_MILLIS = 2000;
-	private AsyncNetwork asyncNetwork = new AsyncNetwork(Utils.SERVER_ADDRESS, Utils.SERVER_PORT_CHAT_TEST, this);
+	private AsyncNetwork asyncNetwork = new AsyncNetwork(Utils.SERVER_ADDRESS, Utils.SERVER_PORT_CHAT, this);
 	private Handler asyncNetworkCallbackHandler = new Handler();
 	private boolean sending = false;
 	private Runnable timeout = new Runnable() {
@@ -134,7 +134,9 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 		this.getCallbackHandler().removeCallbacks(timeout);
 		Log.d(this.getClass().toString(), "onReceive : " + message);
 		this.sending = false;
+		//Log.v(this.getClass().toString(), "before parser : " + this.outgoingMessages.toString());
 		parser.parseResponse(message);
+		//Log.v(this.getClass().toString(), "after parser : " + this.outgoingMessages.toString());
 		asyncSendNext();
 	}
 	
@@ -152,7 +154,9 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 	
 	@Override
 	public void register(String username) {
-		logger = new Logger(username , this.context);
+		if (context != null) {
+			logger = new Logger(username , context);
+		}
 		String registerString = parser.getRegisterRequest(username);
 		Log.e(this.getClass().toString(), registerString);
 		outgoingMessages.add(new MessageRequest(0, registerString, MessageRequestType.register));
@@ -194,14 +198,13 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 		int userId = message.sender;
 		String messageText = message.text;
 		if (userId != ownId) {//Ignore messages that we sent out ourselves
-			logger.logReadyMsg(message, true);
+			if (logger != null) logger.logReadyMsg(message, true);
 			for (ChatEventListener l : getEventListeners()) {
 				l.onMessageReceived(messageText, userId);
 			}
 		}
 		else {
-			logger.logReadyMsg(message, false);
-			
+			if (logger != null) logger.logReadyMsg(message, false);
 		}
 	}
 
@@ -330,7 +333,7 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 
 	@Override
 	public void onClientDeregistered(Integer clientId, String clientUsername) {
-		Log.i(this.getClass().toString(), "onClientDeregister");
+		Log.i(this.getClass().toString(), "onClientDeregistered");
 		for (ChatEventListener l : getEventListeners()) {
 			l.onClientDeregistered(clientId, clientUsername);
 		}
@@ -338,7 +341,7 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 
 	@Override
 	public void onClientRegistered(Integer clientId, String clientUsername) {
-		Log.i(this.getClass().toString(), "onClientRegister");
+		Log.i(this.getClass().toString(), "onClientRegistered");
 		for (ChatEventListener l : getEventListeners()) {
 			l.onClientRegistered(clientId, clientUsername);
 		}

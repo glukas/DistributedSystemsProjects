@@ -23,4 +23,9 @@ public class MessageRequest implements Serializable {
 	public final int id;
 	public final String message;
 	
+	
+	@Override
+	public String toString() {
+		return message;
+	}
 }
