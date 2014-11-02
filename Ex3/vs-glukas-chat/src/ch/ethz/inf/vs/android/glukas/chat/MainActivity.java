@@ -150,9 +150,7 @@ import android.widget.TextView;
 		//get the name of an user name by the id
 		String name = clientIdToUsernameMap.get(id);
 		
-		if (name != null) return name;
-		return ""+id;
-		//return name != null ? name : getResources().getString(R.string.unknown);
+		return name != null ? name : getResources().getString(R.string.unknown);
 	}
 
 	////
@@ -212,7 +210,7 @@ import android.widget.TextView;
 		/*if (this.clientIdToUsernameMap != null) {
 			clientIdToUsernameMap.remove(clientId);
 		}*/
-		displayMessageSystem(new DisplayMessage(true, clientUsername+" (" + clientId + ") " +getResources().getString(R.string.left),
+		displayMessageSystem(new DisplayMessage(true, clientUsername+" " +getResources().getString(R.string.left),
 				getResources().getString(R.string.system)));
 	}
 
@@ -223,7 +221,7 @@ import android.widget.TextView;
 			clientIdToUsernameMap = new HashMap<Integer, String>();
 		}
 		clientIdToUsernameMap.put(clientId, clientUsername);
-		displayMessageSystem(new DisplayMessage(true, clientUsername+" (" + clientId + ") "+getResources().getString(R.string.joined),
+		displayMessageSystem(new DisplayMessage(true, clientUsername+" " +getResources().getString(R.string.joined),
 				getResources().getString(R.string.system)));
 	}
 	
