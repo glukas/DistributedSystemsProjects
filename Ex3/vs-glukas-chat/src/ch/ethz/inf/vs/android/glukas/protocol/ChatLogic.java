@@ -9,7 +9,6 @@ import android.content.Context;
 import android.os.Handler;
 import android.util.Log;
 import ch.ethz.inf.vs.android.glukas.chat.Logger;
-import ch.ethz.inf.vs.android.glukas.chat.MainActivity;
 import ch.ethz.inf.vs.android.glukas.chat.network.AsyncNetwork;
 import ch.ethz.inf.vs.android.glukas.chat.network.AsyncNetworkDelegate;
 import ch.ethz.inf.vs.android.glukas.protocol.MessageRequest.MessageRequestType;
@@ -81,7 +80,7 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 		if (!sending && !outgoingMessages.isEmpty()) {
 			sending = true;
 			
-			Log.d(this.getClass().toString(), "sending " + this.outgoingMessages.peekFirst().message);
+			//Log.d(this.getClass().toString(), "sending " + this.outgoingMessages.peekFirst().message);
 			
 			asyncNetwork.sendMessage(this.outgoingMessages.peekFirst().message);
 			this.getCallbackHandler().postDelayed(timeout, RECEIVE_TIMEOUT_MILLIS);
@@ -90,7 +89,7 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 
 	private void onResponseTimedOut() {
 		this.sending = false;
-		Log.v(this.getClass().toString(), "timed out " + this.outgoingMessages.peekFirst().message);
+		//Log.v(this.getClass().toString(), "timed out " + this.outgoingMessages.peekFirst().message);
 		dispatchFailure(ChatFailureReason.timeout);
 		asyncSendNext();
 	}
@@ -114,7 +113,7 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 	
 	//add a message to the sequencers
 	private void enqueForSequencing(String message, int userId, Lamport lamportClock, VectorClock vectorClock) {
-		long timestamp = new Date().getTime();//TODO does this belong here?
+		long timestamp = new Date().getTime();
 		ChatMessage chatMessage = new ChatMessage(userId, message, lamportClock, vectorClock, timestamp);
 		lampSorter.onMessageReceived(lamportClock, chatMessage);
 		vecClockSorter.onMessageReceived(vectorClock, chatMessage);
@@ -132,7 +131,7 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 	@Override
 	public void onReceive(String message) {
 		this.getCallbackHandler().removeCallbacks(timeout);
-		Log.d(this.getClass().toString(), "onReceive : " + message);
+		//Log.d(this.getClass().toString(), "onReceive : " + message);
 		this.sending = false;
 		//Log.v(this.getClass().toString(), "before parser : " + this.outgoingMessages.toString());
 		parser.parseResponse(message);
@@ -158,14 +157,13 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 			logger = new Logger(username , context);
 		}
 		String registerString = parser.getRegisterRequest(username);
-		Log.e(this.getClass().toString(), registerString);
+		//Log.e(this.getClass().toString(), registerString);
 		outgoingMessages.add(new MessageRequest(0, registerString, MessageRequestType.register));
 		asyncSendNext();
 	}
 
 	@Override
 	public void deregister() {
-		//TODO : should deregister be immediate?
 		String deregisterString = parser.getderegisterRequest();
 		outgoingMessages.add(new MessageRequest(0, deregisterString, MessageRequestType.deregister));
 		asyncSendNext();
@@ -215,7 +213,7 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 	
 	@Override
 	public void onRegistrationSucceeded(int ownId, Lamport lamportClock, VectorClock vectorClock) {
-		Log.i(this.getClass().toString(), "onRegistrationSucceeded, ownId : " + ownId);
+		//Log.i(this.getClass().toString(), "onRegistrationSucceeded, ownId : " + ownId);
 		//initialize clocks
 		this.ownId = ownId;
 		this.lamportClock = lamportClock;
@@ -243,7 +241,7 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 
 	@Override
 	public void onRegistrationFailed(ChatFailureReason reason) {
-		Log.i(this.getClass().toString(), "onRegistrationFailed");
+		//Log.i(this.getClass().toString(), "onRegistrationFailed");
 		//here, we do not check if the first message has the right type, since the server responds
 		//with the "register" command to any message if the user is not registered
 		if (!outgoingMessages.isEmpty()) {
@@ -259,7 +257,7 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 
 	@Override
 	public void onGetClientMapping(Map<Integer, String> clientIdToUsernameMap) {
-		Log.i(this.getClass().toString(), "onGetClientMapping");
+		//Log.i(this.getClass().toString(), "onGetClientMapping");
 		if (!outgoingMessages.isEmpty() && outgoingMessages.pollFirst().type == MessageRequestType.getClients) {
 			for (ChatEventListener l : getEventListeners()) {
 				l.onGetClientMapping(clientIdToUsernameMap);
@@ -271,7 +269,7 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 
 	@Override
 	public void onGetClientMappingFailed(ChatFailureReason reason) {
-		Log.i(this.getClass().toString(), "onGetClientMapping failed");
+		//Log.i(this.getClass().toString(), "onGetClientMapping failed");
 		if (!outgoingMessages.isEmpty() && outgoingMessages.pollFirst().type == MessageRequestType.getClients) {
 			for (ChatEventListener l : getEventListeners()) {
 				l.onGetClientMappingFailed(reason);
@@ -283,7 +281,7 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 
 	@Override
 	public void onMessageDeliverySucceeded() {
-		Log.i(this.getClass().toString(), "onMessageDelivery Success");
+		//Log.i(this.getClass().toString(), "onMessageDelivery Success");
 		if (!outgoingMessages.isEmpty() && outgoingMessages.peekFirst().type == MessageRequestType.sendMessage) {
 			int id = outgoingMessages.pollFirst().id;
 			for (ChatEventListener l : getEventListeners()) {
@@ -296,7 +294,7 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 
 	@Override
 	public void onMessageDeliveryFailed(ChatFailureReason reason) {
-		Log.i(this.getClass().toString(), "onMessageDelivery Failed");
+		//Log.i(this.getClass().toString(), "onMessageDelivery Failed");
 		if (!outgoingMessages.isEmpty() && outgoingMessages.peekFirst().type == MessageRequestType.sendMessage) {
 			int id = outgoingMessages.pollFirst().id;
 			for (ChatEventListener l : getEventListeners()) {
@@ -309,7 +307,7 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 
 	@Override
 	public void onDeregistrarionSucceeded() {
-		Log.i(this.getClass().toString(), "onDeregistration Success");
+		//Log.i(this.getClass().toString(), "onDeregistration Success");
 		if (!outgoingMessages.isEmpty() && outgoingMessages.pollFirst().type == MessageRequestType.deregister) {
 			for (ChatEventListener l : getEventListeners()) {
 				l.onDeregistrarionSucceeded();
@@ -321,7 +319,7 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 
 	@Override
 	public void onDeregistrationFailed() {
-		Log.i(this.getClass().toString(), "onDeregistration Failure");
+		//Log.i(this.getClass().toString(), "onDeregistration Failure");
 		if (!outgoingMessages.isEmpty() && outgoingMessages.pollFirst().type == MessageRequestType.deregister) {
 			for (ChatEventListener l : getEventListeners()) {
 				l.onDeregistrationFailed();
@@ -333,7 +331,7 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 
 	@Override
 	public void onClientDeregistered(Integer clientId, String clientUsername) {
-		Log.i(this.getClass().toString(), "onClientDeregistered");
+		//Log.i(this.getClass().toString(), "onClientDeregistered");
 		for (ChatEventListener l : getEventListeners()) {
 			l.onClientDeregistered(clientId, clientUsername);
 		}
@@ -341,7 +339,7 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 
 	@Override
 	public void onClientRegistered(Integer clientId, String clientUsername) {
-		Log.i(this.getClass().toString(), "onClientRegistered");
+		//Log.i(this.getClass().toString(), "onClientRegistered");
 		for (ChatEventListener l : getEventListeners()) {
 			l.onClientRegistered(clientId, clientUsername);
 		}
@@ -349,7 +347,7 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 
 	@Override
 	public void onMessageReceived(String message, int userId, Lamport lamportClock, VectorClock vectorClock) {
-		Log.i(this.getClass().toString(), "onMessageReceived");
+		//Log.i(this.getClass().toString(), "onMessageReceived");
 		//enqueue the message on the sequencers
 		this.lamportClock.update(lamportClock);
 		this.vectorClock.update(vectorClock);
@@ -358,7 +356,7 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 
 	@Override
 	public void onInfoReceived(String message) {
-		Log.i(this.getClass().toString(), "onInfoReceived");
+		//Log.i(this.getClass().toString(), "onInfoReceived");
 		for (ChatEventListener l : getEventListeners()) {
 			l.onInfoReceived(message);
 		}

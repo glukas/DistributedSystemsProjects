@@ -2,12 +2,9 @@ package ch.ethz.inf.vs.android.glukas.protocol;
 
 import android.annotation.SuppressLint;
 import android.util.Log;
-
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -60,7 +57,6 @@ public class VectorClock implements SyntheticClock<VectorClock> {
 	 * @throws JSONException
 	 */
 	public JSONObject convertToJSON() throws JSONException {
-		// TODO Fill me
 		JSONObject returnJSON = new JSONObject();
 		for (Integer key : clock.keySet()) {
 			returnJSON.put(key.toString(), clock.get(key));
@@ -75,8 +71,7 @@ public class VectorClock implements SyntheticClock<VectorClock> {
 	 * @param toCompare
 	 *            The VectorClock that ours should be compared to
 	 */
-	public void update(VectorClock toCompare) {
-		// TODO Fill me			
+	public void update(VectorClock toCompare) {	
 		for (Integer element : toCompare.clock.keySet())
 		{
 			if (this.clock.containsKey(element)){
@@ -124,7 +119,6 @@ public class VectorClock implements SyntheticClock<VectorClock> {
 		}
 	}
 
-	// TODO does this belong in the parser?
 	@Override
 	/**
 	 * This function should return a String representation of the
@@ -132,8 +126,6 @@ public class VectorClock implements SyntheticClock<VectorClock> {
 	 * @return String that represents tha VectorClock
 	 */
 	public String toString() {
-		// TODO Fill me
-
 		String result = "{";
 		for (Map.Entry<Integer, Integer> entry : clock.entrySet()) {
 			result += "\"" + String.valueOf(entry.getKey()) + "\" : "
@@ -159,7 +151,7 @@ public class VectorClock implements SyntheticClock<VectorClock> {
 		Integer isSmaller = 0;
 		
 		for (Integer element : this.clock.keySet()) {
-			if (!toCompare.clock.containsKey(element))//TODO maybe set to 0 by default instead of ignoring?
+			if (!toCompare.clock.containsKey(element))
 				continue;
 			if (this.clock.get(element) < toCompare.clock.get(element)) {
 				if (isSmaller == 1) {
@@ -175,10 +167,7 @@ public class VectorClock implements SyntheticClock<VectorClock> {
 				// Do nothing
 			}
 		}
-
-		// TODO : Is this implementation right?
 		return isSmaller;
-
 	}
 
 	public int IndexcompareTo(VectorClock toCompare) {
@@ -186,17 +175,17 @@ public class VectorClock implements SyntheticClock<VectorClock> {
 		if (this.clock.get(this.ownIndex) < toCompare.clock.get(this.ownIndex)
 				&& this.clock.get(toCompare.ownIndex) < toCompare.clock
 						.get(toCompare.ownIndex)) {
-			Log.v("IndexcompareTo: ", "previous after this");
+			//Log.v("IndexcompareTo: ", "previous after this");
 			return -1;
 		} else if (this.clock.get(this.ownIndex) > toCompare.clock
 				.get(this.ownIndex)
 				&& this.clock.get(toCompare.ownIndex) > toCompare.clock
 						.get(toCompare.ownIndex)) {
 
-			Log.v("IndexcompareTo: ", "this after previous");
+			//Log.v("IndexcompareTo: ", "this after previous");
 			return 1;
 		} else {
-			Log.v("IndexcompareTo:", "couldnt decide!");
+			//Log.v("IndexcompareTo:", "couldnt decide!");
 			return 0;
 		}
 
@@ -257,12 +246,10 @@ public class VectorClock implements SyntheticClock<VectorClock> {
 
 	@Override
 	public void tick() {
-		Log.d("own Index: ", String.valueOf(this.ownIndex));
-		if (this.clock == null)
-			Log.d("This clock is null", "!!");
+		//Log.d("own Index: ", String.valueOf(this.ownIndex));
+		//if (this.clock == null)
+			//Log.d("This clock is null", "!!");
 		Integer newvalue = this.clock.get(this.ownIndex) +1;
 		this.clock.put(this.ownIndex, newvalue);
-		// TODO (YOUNG) Auto-generated method stub
-		
 	}
 }

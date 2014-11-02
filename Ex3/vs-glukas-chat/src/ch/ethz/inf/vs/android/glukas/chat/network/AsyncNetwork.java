@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.util.Log;
 
+
 public class AsyncNetwork {
 
 	private Handler requestHandler;
@@ -27,7 +28,7 @@ public class AsyncNetwork {
 	}
 	
 	private void open() {
-		Log.d(this.getClass().toString(), "open()");
+		//Log.d(this.getClass().toString(), "open()");
 		alive = true;
 		noConnection = false;
 		this.comm = new UDPCommunicator(address, port);
@@ -39,7 +40,7 @@ public class AsyncNetwork {
 		requestThread = new HandlerThread("requestThread");
 		requestThread.start();
 		requestHandler = new Handler(requestThread.getLooper());
-		Log.v(this.getClass().toString(), "setRequestHandling");
+		//Log.v(this.getClass().toString(), "setRequestHandling");
 	}
 	
 	private void setReceiveHandling(){
@@ -71,7 +72,7 @@ public class AsyncNetwork {
 	}
 	
 	public void close() {
-		Log.d(this.getClass().toString(), "close()");
+		//Log.d(this.getClass().toString(), "close()");
 		this.alive = false;
 		try {
 			comm.finishConnection();
