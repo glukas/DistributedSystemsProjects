@@ -146,6 +146,7 @@ public class VectorClock implements SyntheticClock<VectorClock> {
 
 		for (Integer element : this.clock.keySet()) {
 			if (!toCompare.clock.containsKey(element)){
+				if (this.clock.get(element) > 0)
 				isBigger = 1;
 				continue;
 			}
@@ -155,8 +156,8 @@ public class VectorClock implements SyntheticClock<VectorClock> {
 				if (isBigger == 1) { // That means one of this vectors'values
 										// before was bigger than the value of
 										// the vector we are comparing it to
-
-					return this.IndexcompareTo(toCompare);
+					
+					return 0;//this.IndexcompareTo(toCompare);
 				}
 				isBigger = -1;
 				// If this vectors current value is bigger than the value of the
@@ -166,7 +167,7 @@ public class VectorClock implements SyntheticClock<VectorClock> {
 										// before was smaller than the value of
 										// the vector we are comparing it to
 
-					return this.IndexcompareTo(toCompare);
+					return 0;//this.IndexcompareTo(toCompare);
 				}
 				isBigger = 1;
 			} else if (this.clock.get(element) == toCompare.clock.get(element)) {
@@ -176,7 +177,7 @@ public class VectorClock implements SyntheticClock<VectorClock> {
 		return isBigger;
 	}
 
-	public int IndexcompareTo(VectorClock toCompare) {
+/*	public int IndexcompareTo(VectorClock toCompare) {
 		// Just compare the the two values located at the senders own indexes
 		if (this.clock.get(this.ownIndex) < toCompare.clock.get(this.ownIndex)
 				&& this.clock.get(toCompare.ownIndex) < toCompare.clock
@@ -196,7 +197,7 @@ public class VectorClock implements SyntheticClock<VectorClock> {
 		}
 
 	}
-
+ 			*/
 	@Override
 	public boolean isDeliverable(VectorClock lastDeliveredMessage) {
 
