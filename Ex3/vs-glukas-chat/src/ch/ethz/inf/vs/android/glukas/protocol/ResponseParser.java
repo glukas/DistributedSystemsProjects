@@ -233,7 +233,8 @@ class ResponseParser {
 	}
 	
 	private void onUnknown(JSONObject jObject) throws JSONException {
-		Log.e(this.getClass().toString(), "unkown command");
+		this.delegate.onUnknownCommand();
+		Log.e(this.getClass().toString(), "unknown command");
 	}
 	
 	private Lamport getLamport(JSONObject jObject) throws JSONException {

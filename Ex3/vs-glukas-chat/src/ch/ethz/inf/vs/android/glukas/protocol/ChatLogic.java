@@ -361,4 +361,9 @@ public class ChatLogic extends ChatEventSource implements ChatClientRequestInter
 			l.onInfoReceived(message);
 		}
 	}
+
+	@Override
+	public void onUnknownCommand() {
+		dispatchFailure(ChatFailureReason.unknownCommand);
+	}
 }

@@ -40,4 +40,5 @@ public interface ChatServerRawResponseInterface extends EventListener {
 	
 	void onInfoReceived(String message);
 	
+	void onUnknownCommand();
 }
