@@ -1,5 +1,6 @@
 package ch.ethz.inf.vs.android.glukas.protocol;
 
+import java.util.Comparator;
 import java.util.PriorityQueue;
 
 
@@ -31,7 +32,13 @@ class MessageSequencer<T extends SyntheticClock<T>> implements MessageSequencerI
 	public MessageSequencer(MessageSequencerDelegate chat, SyntheticClock<T> initialClock){
 		this.chat = chat;
 		clockOfLastDeliveredMessage = initialClock;
-		this.messageQueue = new PriorityQueue<Pair<SyntheticClock<T>, ChatMessage>>();
+		Comparator<Pair<SyntheticClock<T>, ChatMessage>> comparator = new Comparator<Pair<SyntheticClock<T>, ChatMessage>> () {
+			@Override
+			public int compare(Pair<SyntheticClock<T>, ChatMessage> lhs, Pair<SyntheticClock<T>, ChatMessage> rhs) {
+				return lhs.first.compareTo(rhs.first.getClock());
+			}
+		};
+		this.messageQueue = new PriorityQueue<Pair<SyntheticClock<T>, ChatMessage>>(2, comparator);
 	}	
 	
 	@Override
