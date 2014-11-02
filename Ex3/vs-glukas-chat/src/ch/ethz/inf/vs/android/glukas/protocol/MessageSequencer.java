@@ -2,8 +2,6 @@ package ch.ethz.inf.vs.android.glukas.protocol;
 
 import java.util.Comparator;
 import java.util.PriorityQueue;
-
-
 import android.os.Handler;
 import android.util.Pair;
 

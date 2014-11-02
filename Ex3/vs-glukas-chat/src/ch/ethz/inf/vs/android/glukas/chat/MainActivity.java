@@ -44,10 +44,6 @@ public class MainActivity extends ListActivity implements ChatEventListener {
 	//user
 	private String username;
 	
-	//Logger
-	//TODO : use the logger to log messages
-	//private Logger logger;
-	
 	////
 	//Life cycle
 	////
@@ -76,10 +72,6 @@ public class MainActivity extends ListActivity implements ChatEventListener {
 		displayMessages = new ArrayList<DisplayMessage>();
 		adapter = new DisplayMessageAdapter(this, displayMessages);
 		setListAdapter(adapter);
-		
-		//Logger
-		//TODO : Use logger
-		//logger = new Logger(username, this);
 		
 		//display greetings
 		this.displayMessageSystem(new DisplayMessage(true, getResources().getString(R.string.enter_chat_greetings),

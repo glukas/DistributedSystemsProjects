@@ -49,9 +49,7 @@ class UDPCommunicator {
 		this.port = port;
 		this.address = address;
 		this.receiveBufSize = receiveBufSize;
-		Log.v("", "just set up");
 		setupConnection();
-		Log.v("", "finish to create connection");
 	}
 	
 	/**
@@ -144,11 +142,10 @@ class UDPCommunicator {
 	public String receiveReply() throws IOException {
 		byte[] buf = new byte[receiveBufSize];
 		DatagramPacket packet = new DatagramPacket(buf, buf.length);
-		//TODO : fix the issue of empty packets
 		do {
 			socket.receive(packet);
-			Log.v(this.getClass().toString(),"Received something");
-		} while (packet.getLength() == 0);//ignore empty packets. (Why do we get those?)
+			//Log.v(this.getClass().toString(),"Received something");
+		} while (packet.getLength() == 0);
 		
 		
 		return new String(packet.getData(), packet.getOffset(), packet.getLength());

@@ -1,6 +1,5 @@
 package ch.ethz.inf.vs.android.glukas.protocol;
 
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 

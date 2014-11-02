@@ -45,7 +45,8 @@ public class Logger implements Serializable{
 	public Logger(String username, Context appContext){
 		this.appContext = appContext;
 		this.username = username;
-		ContextWrapper cw = new ContextWrapper(appContext);
+		ContextWrapper cw = new ContextWrapper(this.appContext);
+		@SuppressWarnings("deprecation")
 		File mediaDir = cw.getDir("media", Context.MODE_WORLD_READABLE);
 		
 			{
