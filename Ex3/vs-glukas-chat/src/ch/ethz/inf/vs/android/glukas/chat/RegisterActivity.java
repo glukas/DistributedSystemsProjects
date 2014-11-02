@@ -93,6 +93,7 @@ public class RegisterActivity extends ListActivity implements ChatEventListener 
 		} else if (chatLogic != null){
 			chatLogic.deregister();
 		}
+		setRemember();
 		finish();
 	}
 	
@@ -237,6 +238,7 @@ public class RegisterActivity extends ListActivity implements ChatEventListener 
 		//call back from the network, server accepted connection
 		Intent intent = new Intent(this, MainActivity.class);
 		intent.putExtra(Utils.INTENT_ARG_USERNAME, username);
+		this.logMessage.dismiss();
 		startActivity(intent);
 	}
 

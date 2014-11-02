@@ -86,15 +86,19 @@ import android.widget.TextView;
 	@Override
 	public void onDestroy(){
 		//destroy activity
+		super.onDestroy();
 		chat.deregister();
 	}
 	
 	public void onBackPressed() {
 		//user pressed back button
 		chat.deregister();
+
 		logoutDialog = DialogFactory.createDialogNonErasable(getResources().getString(R.string.please_wait),
 				getResources().getString(R.string.unLogin), this);
 		logoutDialog.show();
+
+	
 	}
 	
 	////
@@ -190,7 +194,10 @@ import android.widget.TextView;
 		//deregistration failed, return to RegisterActivity
 		chat.removeChatEventListener(this);
 		Intent intent = new Intent(this, RegisterActivity.class);
-		startActivity(intent);
+		logoutDialog.dismiss();
+//		startActivity(intent);
+		finish();
+		chat.pause();
 	}
 
 	@Override

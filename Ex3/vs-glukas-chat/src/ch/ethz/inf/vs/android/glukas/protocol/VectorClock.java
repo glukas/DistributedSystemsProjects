@@ -94,7 +94,7 @@ public class VectorClock implements SyntheticClock<VectorClock> {
 			}
 		}
 
-		Log.e("Updated VectorClock if usDeliverable: ", this.toString());
+	//	Log.e("Updated VectorClock if isDeliverable: ", this.toString());
 
 	}
 
