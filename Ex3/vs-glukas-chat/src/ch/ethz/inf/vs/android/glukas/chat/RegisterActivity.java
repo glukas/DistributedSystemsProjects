@@ -83,7 +83,7 @@ public class RegisterActivity extends ListActivity implements ChatEventListener 
 		preferences = this.getSharedPreferences(Settings.SETTINGS_CHAT, MODE_PRIVATE);
 		restoreUserPreferences();
 		
-		test.test();
+		//test.test();
 	}
 	
 	public void onBackPressed() {
