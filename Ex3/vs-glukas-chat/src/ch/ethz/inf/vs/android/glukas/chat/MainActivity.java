@@ -17,11 +17,12 @@ import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-public class MainActivity extends ListActivity implements ChatEventListener {
+@SuppressLint("UseSparseArrays") public class MainActivity extends ListActivity implements ChatEventListener {
 	
 	////
 	//Members
@@ -148,7 +149,10 @@ public class MainActivity extends ListActivity implements ChatEventListener {
 	private String getUsernameById(int id){
 		//get the name of an user name by the id
 		String name = clientIdToUsernameMap.get(id);
-		return name != null ? name : getResources().getString(R.string.unknown);
+		
+		if (name != null) return name;
+		return ""+id;
+		//return name != null ? name : getResources().getString(R.string.unknown);
 	}
 
 	////
@@ -158,7 +162,11 @@ public class MainActivity extends ListActivity implements ChatEventListener {
 	@Override
 	public void onGetClientMapping(Map<Integer, String> clientIdToUsernameMap) {
 		//get the mappings from int to string from the server
-		this.clientIdToUsernameMap = clientIdToUsernameMap;
+		if (this.clientIdToUsernameMap != null) {
+			this.clientIdToUsernameMap.putAll(clientIdToUsernameMap);
+		} else {
+			this.clientIdToUsernameMap = clientIdToUsernameMap;
+		}
 	}
 
 	@Override
@@ -199,21 +207,23 @@ public class MainActivity extends ListActivity implements ChatEventListener {
 
 	@Override
 	public void onClientDeregistered(Integer clientId, String clientUsername) {
-		//a client has left the chat, remove it from the mapping and inform client
-		if (this.clientIdToUsernameMap != null) {
+		//a client has left the chat, inform user
+		//we might still receive delayed messages from that client, so we keep him or her in the mapping
+		/*if (this.clientIdToUsernameMap != null) {
 			clientIdToUsernameMap.remove(clientId);
-		}
-		displayMessageSystem(new DisplayMessage(true, clientUsername+" "+getResources().getString(R.string.left),
+		}*/
+		displayMessageSystem(new DisplayMessage(true, clientUsername+" (" + clientId + ") " +getResources().getString(R.string.left),
 				getResources().getString(R.string.system)));
 	}
 
 	@Override
 	public void onClientRegistered(Integer clientId, String clientUsername) {
 		//a client joined the chat, add the mapping to the user name map and inform client
-		if (this.clientIdToUsernameMap != null) {
-			clientIdToUsernameMap.put(clientId, clientUsername);
+		if (clientIdToUsernameMap == null) {
+			clientIdToUsernameMap = new HashMap<Integer, String>();
 		}
-		displayMessageSystem(new DisplayMessage(true, clientUsername+" "+getResources().getString(R.string.joined),
+		clientIdToUsernameMap.put(clientId, clientUsername);
+		displayMessageSystem(new DisplayMessage(true, clientUsername+" (" + clientId + ") "+getResources().getString(R.string.joined),
 				getResources().getString(R.string.system)));
 	}
 	
