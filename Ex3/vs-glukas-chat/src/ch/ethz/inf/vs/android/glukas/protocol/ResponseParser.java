@@ -91,10 +91,13 @@ class ResponseParser {
 	}
 
 	public String getsendMessageRequest(String msg, Lamport lamport, VectorClock vecClock) {
-		return 	parO + getCmd(Cmd.CMD.getStr(), Arg.MESSAGE.getStr()) + com + spa +
-				getCmd(Cmd.TEXT.getStr(), msg) + com + spa + 
+		String message = msg.replaceAll("\n", spa);
+		String result = parO + getCmd(Cmd.CMD.getStr(), Arg.MESSAGE.getStr()) + com + spa +
+				getCmd(Cmd.TEXT.getStr(), message) + com + spa + 
 				getCmdWQuote(Cmd.VECTOR.getStr(), vecClock.toString()) + com + spa +
 				getCmd(Cmd.LAMPORT.getStr(), lamport.getTimestamp()) + parC;
+		Log.d("sendMessage: ", result);
+		return 	result;
 	}
 
 	public String getClientsRequest() {
@@ -114,6 +117,7 @@ class ResponseParser {
 	}
 
 	private String getCmd(String cmd, String arg){
+		Log.d("String is called", "getCMD");
 		return quo + cmd + quo + col + spa + quo + arg + quo;
 	}
 	
@@ -122,6 +126,7 @@ class ResponseParser {
 	}
 	
 	private String getCmd(String cmd, int arg){
+		Log.d("Int is called", "getCMD");
 		return quo + cmd + quo + col + spa + arg;
 	}
 	
