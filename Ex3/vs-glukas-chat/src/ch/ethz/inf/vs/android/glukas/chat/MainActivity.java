@@ -87,7 +87,7 @@ import android.widget.TextView;
 	public void onDestroy(){
 		//destroy activity
 		super.onDestroy();
-		chat.deregister();
+		//chat.deregister();
 	}
 	
 	public void onBackPressed() {
